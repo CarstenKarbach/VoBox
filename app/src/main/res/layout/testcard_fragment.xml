@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    >
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        >
+
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/switch_languages"
+            android:scaleType="centerCrop"
+            android:id="@+id/button_switch_lang"
+            android:layout_gravity="center_vertical"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="70"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="4dp"
+        android:orientation="vertical"
+        android:id="@+id/testcard_cardframe"
+        android:gravity="center_horizontal"
+        >
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:weightSum="100"
+            android:background="#eee"
+            android:paddingBottom="4dp"
+            android:paddingTop="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            >
+            <ImageView
+                android:src="@drawable/flag_german"
+                android:scaleType="fitCenter"
+                android:layout_weight="20"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/testcard_flag1"
+                />
+            <EditText
+                android:id="@+id/testcard_lang1_text"
+                android:layout_weight="80"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="deutsches Wort"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:editable="false"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:weightSum="100"
+            android:background="#eee"
+            android:paddingBottom="16dp"
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            >
+            <ImageView
+                android:src="@drawable/flag_swedish"
+                android:scaleType="fitCenter"
+                android:layout_weight="20"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/testcard_flag2"
+                />
+            <EditText
+                android:id="@+id/testcard_lang2_text"
+                android:layout_weight="80"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Übersetzung"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:weightSum="100"
+            android:background="#eee"
+            android:paddingBottom="16dp"
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:visibility="gone"
+            android:id="@+id/testcard_solution_row"
+            >
+            <ImageView
+                android:scaleType="fitCenter"
+                android:layout_weight="20"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/light"
+                />
+            <EditText
+                android:id="@+id/testcard_solution_text"
+                android:layout_weight="80"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Lösung"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:editable="false"
+                />
+        </TableRow>
+
+    </LinearLayout>
+
+    <Button
+        android:text="prüfen"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="30"
+        android:layout_margin="8dp"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/testcard_check_button"
+        />
+
+    </TableRow>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:id="@+id/testcard_statustext"
+        android:layout_gravity="center_vertical"
+        />
+
+    <Button
+        android:text="weiter"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="8dp"
+        android:id="@+id/testcard_next_button"
+        />
+
+    </LinearLayout>
+
+</RelativeLayout>

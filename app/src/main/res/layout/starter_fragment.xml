@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="100"
+    >
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="32dp"
+        >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:text="neue Vokabel"
+            android:layout_gravity="center_vertical"
+            android:background="#ffc"
+            android:id="@+id/newcard_button"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:text="Liste Wörterbuch"
+            android:layout_gravity="center_vertical"
+            android:background="#cfc"
+            android:id="@+id/list_button"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:text="Box"
+            android:layout_gravity="center_vertical"
+            android:background="#ccf"
+            android:id="@+id/box_button"
+            />
+
+    </TableRow>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="50"
+        android:layout_gravity="center_vertical|center_horizontal"
+        >
+    <Spinner
+        android:id="@+id/language_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        ></Spinner>
+
+    </FrameLayout>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="exportieren"
+            android:id="@+id/button_export"
+            />
+
+    </TableRow>
+
+</LinearLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:weightSum="100"
+              android:padding="8dp"
+    >
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_weight="10"
+        android:layout_height="match_parent"
+        android:src="@drawable/flag_german"
+        android:scaleType="fitCenter"
+        android:id="@+id/carditem_flag1"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="40"
+        android:layout_height="wrap_content"
+        android:text="Sprache 1"
+        android:textSize="20dp"
+        android:id="@+id/carditem_lang1"
+        />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_weight="10"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/flag_swedish"
+        android:id="@+id/carditem_flag2"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="40"
+        android:layout_height="wrap_content"
+        android:text="Sprache 2"
+        android:textSize="20dp"
+        android:id="@+id/carditem_lang2"
+        />
+
+</LinearLayout>
