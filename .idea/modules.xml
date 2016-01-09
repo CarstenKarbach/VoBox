@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Superapp.iml" filepath="$PROJECT_DIR$/Superapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VoBox.iml" filepath="$PROJECT_DIR$/VoBox.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
