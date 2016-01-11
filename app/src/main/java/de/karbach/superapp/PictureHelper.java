@@ -15,6 +15,9 @@ public class PictureHelper {
         if(language.equals("Schwedisch")){
             return R.drawable.flag_swedish;
         }
+        if(language.equals("Englisch")){
+            return R.drawable.flag_english;
+        }
         return R.drawable.flag_german;
     }
 

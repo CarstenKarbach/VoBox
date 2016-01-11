@@ -70,6 +70,7 @@ public class DictionaryManagement {
         }
 
         Dictionary newDict = new Dictionary(name);
+        newDict.setLanguage(name);
         newDict.loadIfPossible(context);
         dicts.add(newDict);
         selected = newDict;

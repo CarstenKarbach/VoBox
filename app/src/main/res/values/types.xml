@@ -4,5 +4,7 @@
         <item>Substantiv</item>
         <item>Verb</item>
         <item>Präposition</item>
+        <item>Adjektiv</item>
+        <item>Sonstiges</item>
     </string-array>
 </resources>

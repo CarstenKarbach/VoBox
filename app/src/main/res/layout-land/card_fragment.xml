@@ -214,6 +214,18 @@
                             android:text="Präposition"
                             android:id="@+id/type_praep"
                             />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Adjektiv"
+                            android:id="@+id/type_adj"
+                            />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sonstiges"
+                            android:id="@+id/type_misc"
+                            />
 
                     </RadioGroup>
                 </HorizontalScrollView>
