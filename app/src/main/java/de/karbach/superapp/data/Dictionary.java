@@ -262,11 +262,15 @@ public class Dictionary implements Serializable {
         String language = "";
         if(lines.length > 0){
             language = lines[0];
+            language = language.trim();
+            if(language.endsWith(";")){
+                language = language.substring(0, language.length()-1 );
+            }
         }
         Dictionary result = new Dictionary(language);
         result.setLanguage(language);
         for(int i=1; i<lines.length; i++){
-            Card card = Card.loadImported(lines[i], loadAll);
+            Card card = Card.loadJSONOrCSV(lines[i], loadAll);
             if(card != null) {
                 result.addCard(card);
             }

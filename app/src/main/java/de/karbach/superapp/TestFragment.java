@@ -138,7 +138,19 @@ public class TestFragment extends Fragment {
 
         Card card = getCurrentCard();
 
-        if(lang2Text.getText().toString().equals(solution.getText().toString()) ){
+        boolean solutionCorrect = lang2Text.getText().toString().equals(solution.getText().toString());
+        if(! solutionCorrect){
+            //Try to remove the brackets
+            String longSolution = solution.getText().toString();
+            int bOpen = longSolution.indexOf('(');
+            String shortSolution = longSolution;
+            if(bOpen != -1){
+                shortSolution = longSolution.substring(0, bOpen);
+                shortSolution = shortSolution.trim();
+                solutionCorrect = lang2Text.getText().toString().equals(shortSolution);
+            }
+        }
+        if(solutionCorrect){
             //Correct solution
 
             cardFrame.setBackgroundColor(Color.GREEN);
@@ -205,6 +217,14 @@ public class TestFragment extends Fragment {
             if (list != null) {
                 List<Card> cardsToCopy = (List<Card>) list;
                 testcards.addAll(cardsToCopy);
+
+                //Mix the cards
+                for(int i=0; i<testcards.size()*3; i++){
+                    int switchWith = (int) (Math.random()*testcards.size());
+                    Card tmpCard = testcards.get(switchWith);
+                    testcards.set(switchWith, testcards.get(0));
+                    testcards.set(0, tmpCard);
+                }
 
                 for(int i=0; i< testcards.size(); i++){
                     testCompleted.add(false);

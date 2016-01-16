@@ -10,7 +10,7 @@ import java.io.Writer;
 /**
  * Created by Carsten on 27.12.2015.
  */
-public class Card implements Serializable{
+public class Card implements Serializable {
 
     /**
      * Vocabulary in first language
@@ -75,62 +75,116 @@ public class Card implements Serializable{
         this.lang1 = lang1;
     }
 
-    public Card(String lang1, String lang2){
+    public Card(String lang1, String lang2) {
         this.lang1 = lang1;
         this.lang2 = lang2;
     }
 
-    public boolean boxUp(){
+    public boolean boxUp() {
         box++;
-        if(box <= 5){
+        if (box <= 5) {
             return true;
-        }
-        else{
+        } else {
             box = 5;
             return false;
         }
     }
 
-    public boolean boxDown(){
+    public boolean boxDown() {
         box--;
-        if(box < 1){
+        if (box < 1) {
             box = 1;
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
 
-    public String export(){
+    public String export() {
         JSONArray array = new JSONArray();
         String[] values = new String[]{lang1, lang2, type, lesson, String.valueOf(box)};
 
-        for(String value : values){
+        for (String value : values) {
             array.put(value);
         }
 
         return array.toString();
     }
 
-    public static Card loadImported(String jsonString, boolean loadAll){
+    public static Card loadJSONOrCSV(String anyString, boolean loadAll){
+        if(anyString.startsWith("[") ){
+            return loadImported(anyString, loadAll);
+        }
+        else{
+            return loadImportedCSV(anyString, loadAll);
+        }
+    }
+
+    public static Card loadImportedCSV(String csvString, boolean loadAll) {
+        csvString = csvString.trim();
+        String[] delimiters = new String[]{";", ",", "|"};
+        String delimiter = ";";
+        //Find the used delimiter in this string
+        for (String pd : delimiters) {
+            if (csvString.contains(pd)) {
+                delimiter = pd;
+                break;
+            }
+        }
+        String[] array = csvString.split(delimiter);
+
+        String lang1 = null;
+        if (array.length > 0) {
+            lang1 = array[0];
+            lang1 = lang1.trim();
+        }
+        String lang2 = null;
+        if (array.length > 1) {
+            lang2 = array[1];
+            lang2 = lang2.trim();
+        }
+        String type = null;
+        if (array.length > 2) {
+            type = array[2];
+        }
+        String lesson = null;
+        if (array.length > 3) {
+            lesson = array[3];
+        }
+
+        Card result = new Card(lang1, lang2);
+        result.setType(type);
+        result.setLesson(lesson);
+
+        if (loadAll) {
+            int box = 1;
+            if (array.length > 4) {
+                box = Integer.parseInt(array[4]);
+            }
+            result.setBox(box);
+        }
+
+        return result;
+    }
+
+    public static Card loadImported(String jsonString, boolean loadAll) {
         try {
             JSONArray array = new JSONArray(jsonString);
 
             String lang1 = null;
-            if(array.length() >  0){
+            if (array.length() > 0) {
                 lang1 = array.getString(0);
             }
             String lang2 = null;
-            if(array.length() >  1){
+            if (array.length() > 1) {
                 lang2 = array.getString(1);
             }
             String type = null;
-            if(array.length() >  2){
+            if (array.length() > 2) {
                 type = array.getString(2);
             }
             String lesson = null;
-            if(array.length() >  3){
+            if (array.length() > 3) {
                 lesson = array.getString(3);
             }
 
@@ -138,7 +192,7 @@ public class Card implements Serializable{
             result.setType(type);
             result.setLesson(lesson);
 
-            if(loadAll) {
+            if (loadAll) {
                 int box = 1;
                 if (array.length() > 4) {
                     box = Integer.parseInt(array.getString(4));

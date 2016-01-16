@@ -58,7 +58,8 @@
                 android:hint="deutsches Wort"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:editable="false"
+                android:focusable="false"
+                android:clickable="true"
                 />
         </TableRow>
 
@@ -118,7 +119,8 @@
                 android:hint="Lösung"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:editable="false"
+                android:focusable="false"
+                android:clickable="true"
                 />
         </TableRow>
 
