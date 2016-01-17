@@ -2,6 +2,7 @@ package de.karbach.superapp;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import de.karbach.superapp.data.Dictionary;
@@ -26,36 +28,51 @@ public class StarterFragment extends Fragment {
         View result = inflater.inflate(R.layout.starter_fragment, container, false);
 
         Button newCardButton = (Button) result.findViewById(R.id.newcard_button);
+        View.OnClickListener newCardOnClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CardActivity.class);
+                startActivity(intent);
+            }
+        };
         if(newCardButton != null){
-            newCardButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), CardActivity.class);
-                    startActivity(intent);
-                }
-            });
+            newCardButton.setOnClickListener(newCardOnClick);
+        }
+        ImageButton newCardImage = (ImageButton) result.findViewById(R.id.newcard_imagebutton);
+        if(newCardImage != null){
+            newCardImage.setOnClickListener(newCardOnClick);
         }
 
         Button listButton = (Button) result.findViewById(R.id.list_button);
+        View.OnClickListener listOnClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CardListActivity.class);
+                startActivity(intent);
+            }
+        };
         if(listButton != null){
-            listButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), CardListActivity.class);
-                    startActivity(intent);
-                }
-            });
+            listButton.setOnClickListener(listOnClick);
+        }
+        ImageButton listImage = (ImageButton) result.findViewById(R.id.list_imagebutton);
+        if(listImage != null){
+            listImage.setOnClickListener(listOnClick);
         }
 
         Button boxButton = (Button) result.findViewById(R.id.box_button);
+        View.OnClickListener boxOnClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), BoxActivity.class);
+                startActivity(intent);
+            }
+        };
         if(boxButton != null){
-            boxButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), BoxActivity.class);
-                    startActivity(intent);
-                }
-            });
+            boxButton.setOnClickListener(boxOnClick);
+        }
+        ImageButton boxImage = (ImageButton) result.findViewById(R.id.box_imagebutton);
+        if(boxImage != null){
+            boxImage.setOnClickListener(boxOnClick);
         }
 
         final Spinner select = (Spinner) result.findViewById(R.id.language_selection);

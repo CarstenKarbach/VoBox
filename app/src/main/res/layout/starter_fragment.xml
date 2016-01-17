@@ -11,36 +11,81 @@
         android:layout_width="match_parent"
         android:layout_marginTop="32dp"
         >
-
-        <Button
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="10"
+            >
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:src="@drawable/newcard"
+                android:scaleType="fitCenter"
+                android:background="#ffc"
+                android:padding="4dp"
+                android:id="@+id/newcard_imagebutton"
+                />
+        <Button
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
             android:text="neue Vokabel"
             android:layout_gravity="center_vertical"
             android:background="#ffc"
             android:id="@+id/newcard_button"
+           android:padding="0dp"
             />
+        </LinearLayout>
 
-        <Button
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="10"
+            >
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:src="@drawable/wordlist"
+            android:scaleType="fitCenter"
+            android:background="#cfc"
+            android:padding="4dp"
+            android:id="@+id/list_imagebutton"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="Liste Wörterbuch"
             android:layout_gravity="center_vertical"
             android:background="#cfc"
             android:id="@+id/list_button"
             />
+        </LinearLayout>
 
-        <Button
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="10"
+            >
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:src="@drawable/boxpart"
+            android:scaleType="fitCenter"
+            android:background="#ccf"
+            android:padding="4dp"
+            android:id="@+id/box_imagebutton"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="Box"
             android:layout_gravity="center_vertical"
             android:background="#ccf"
             android:id="@+id/box_button"
             />
+        </LinearLayout>
 
     </TableRow>
 
