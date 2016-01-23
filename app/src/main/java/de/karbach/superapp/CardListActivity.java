@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,6 +44,20 @@ public class CardListActivity extends SingleFragmentActivity {
         }
 
         return cards;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(! addOptions()){
+            return false;
+        }
+
+        MenuInflater inflater = getMenuInflater();
+        if(inflater != null){
+            inflater.inflate(R.menu.main_menu_forlist, menu);
+        }
+
+        return true;
     }
 
     private Bundle getArgumentsBundle(){
