@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:compat="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_item_list"
+          android:icon="@drawable/wordlist"
+          android:title="Liste"
+          compat:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/menu_item_box"
+          android:icon="@drawable/boxpart"
+          android:title="Box"
+          compat:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/menu_item_newword"
+          android:icon="@drawable/newcard"
+          android:title="Neu"
+          compat:showAsAction="ifRoom|withText"/>
+</menu>

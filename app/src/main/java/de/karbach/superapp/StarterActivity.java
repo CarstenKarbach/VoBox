@@ -1,5 +1,6 @@
 package de.karbach.superapp;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -88,5 +89,10 @@ public class StarterActivity extends SingleFragmentActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean addOptions() {
+        return false;
     }
 }

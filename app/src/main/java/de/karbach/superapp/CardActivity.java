@@ -3,6 +3,7 @@ package de.karbach.superapp;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.Menu;
 
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
@@ -24,4 +25,5 @@ public class CardActivity extends SingleFragmentSaveOnPauseActivity {
 
         return result;
     }
+
 }
