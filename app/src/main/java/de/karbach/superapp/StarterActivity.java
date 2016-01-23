@@ -52,7 +52,7 @@ public class StarterActivity extends SingleFragmentActivity {
          */
         if (TextUtils.equals(action, Intent.ACTION_VIEW)) {
             // Get the URI from the Intent
-            Uri dataUri = intent.getData();
+            final Uri dataUri = intent.getData();
             /*
              * Test for the type of URI, by getting its scheme value
              */
@@ -77,9 +77,10 @@ public class StarterActivity extends SingleFragmentActivity {
 
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ersetzen", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            Dictionary allLoaded = Dictionary.loadFromUri(dataUri, true, StarterActivity.this);
                             DictionaryManagement dm = DictionaryManagement.getInstance(StarterActivity.this);
-                            dm.replaceDictionary(loaded);
-                            Toast.makeText(StarterActivity.this, "Wörterbuch "+loaded.getLanguage()+" ersetzt", Toast.LENGTH_SHORT).show();
+                            dm.replaceDictionary(allLoaded);
+                            Toast.makeText(StarterActivity.this, "Wörterbuch "+allLoaded.getLanguage()+" ersetzt", Toast.LENGTH_SHORT).show();
                         }
                     });
 

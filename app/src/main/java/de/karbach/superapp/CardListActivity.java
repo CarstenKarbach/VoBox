@@ -1,6 +1,8 @@
 package de.karbach.superapp;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 
 import java.io.Serializable;
@@ -16,8 +18,6 @@ import de.karbach.superapp.data.DictionaryManagement;
 public class CardListActivity extends SingleFragmentActivity {
 
     public static final String PARAMBOX = "de.karbach.superapp.CardListActivity.box";
-
-    private Fragment createdFragment;
 
     private ArrayList<Card> getCardsToShow(){
         int box = getIntent().getIntExtra(PARAMBOX, -1);
@@ -55,20 +55,40 @@ public class CardListActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         Fragment result = new CardListFragment();
-
-        createdFragment = result;
-
         return result;
+    }
+
+    private void updateCardsInFragment(){
+        CardListFragment cardlist = getMyFragment();
+        if(cardlist != null){
+            ArrayList<Card> cards = getCardsToShow();
+            cardlist.updateCards(cards);
+        }
+    }
+
+    private CardListFragment getMyFragment(){
+        FragmentManager fm = getFragmentManager();
+        Fragment f = fm.findFragmentById(R.id.fragment_container);
+        if(f != null){
+            return (CardListFragment) f;
+        }
+        else{
+            return null;
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(createdFragment != null){
-            CardListFragment cardlist = (CardListFragment)createdFragment;
 
-            ArrayList<Card> cards = getCardsToShow();
-            cardlist.updateCards(cards);
+        updateCardsInFragment();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CardListFragment.CARDCHANGERESULT){
+            updateCardsInFragment();
         }
     }
 }

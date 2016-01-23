@@ -29,6 +29,8 @@ public class CardListFragment extends ListFragment{
 
     public static final String PARAMCARDS = "de.karbach.superapp.CardListFragment.cards";
 
+    public static final int CARDCHANGERESULT = 1;
+
     private class CardAdapter extends ArrayAdapter<Card> {
 
         public String getLang1() {
@@ -181,7 +183,7 @@ public class CardListFragment extends ListFragment{
             String lang1Key = card.getLang1();
             Intent intent  = new Intent(getActivity(), CardActivity.class);
             intent.putExtra(CardFragment.PARAMLANG1KEY, lang1Key);
-            startActivity(intent);
+            getActivity().startActivityForResult(intent, CARDCHANGERESULT);
         }
     }
 

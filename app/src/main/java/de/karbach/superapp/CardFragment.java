@@ -32,6 +32,8 @@ public class CardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
+
         Bundle arguments = getArguments();
         if(arguments != null) {
             lang1Key = arguments.getString(PARAMLANG1KEY);
@@ -175,8 +177,10 @@ public class CardFragment extends Fragment {
 
                         if(lang1Key != null && !lang1Key.equals(newCard.getLang1())){
                             Card oldCard = dict.getCardByLang1(lang1Key);
-                            newCard.setBox( oldCard.getBox() );
-                            dict.deleteCard(oldCard);
+                            if(oldCard != null) {
+                                newCard.setBox(oldCard.getBox());
+                                dict.deleteCard(oldCard);
+                            }
                         }
                     }
                     if(lang1Key != null){
