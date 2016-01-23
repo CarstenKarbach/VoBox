@@ -203,6 +203,17 @@ public class TestFragment extends Fragment {
         Card card = getCurrentCard();
         loadCard(card, getView());
         answerShown = false;
+        //Show keyboard
+        View rootView = getView();
+        if(rootView == null){
+            return;
+        }
+        EditText lang2Text = (EditText) rootView.findViewById(R.id.testcard_lang2_text);
+        if(lang2Text == null){
+            return;
+        }
+        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.showSoftInput(lang2Text, InputMethodManager.SHOW_IMPLICIT);
     }
 
     @Override
