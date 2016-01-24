@@ -132,6 +132,9 @@ public class Card implements Serializable {
             }
         }
         String[] array = csvString.split(delimiter);
+        if(array == null){
+            return null;
+        }
 
         String lang1 = null;
         if (array.length > 0) {
@@ -143,11 +146,11 @@ public class Card implements Serializable {
             lang2 = array[1];
             lang2 = lang2.trim();
         }
-        String type = null;
+        String type = "Substantiv";
         if (array.length > 2) {
             type = array[2];
         }
-        String lesson = null;
+        String lesson = "1";
         if (array.length > 3) {
             lesson = array[3];
         }

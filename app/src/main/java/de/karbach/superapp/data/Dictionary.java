@@ -37,6 +37,10 @@ public class Dictionary implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     private String name;
 
     public Dictionary(String name){
@@ -46,6 +50,9 @@ public class Dictionary implements Serializable {
 
     public void addCard(Card card){
         String keyLang = card.getLang1();
+        if(keyLang == null){
+            return;
+        }
         for(Card c: cards){
             if(keyLang.equals(c.getLang1())){
                 //Modify existing card
@@ -265,6 +272,7 @@ public class Dictionary implements Serializable {
             language = language.trim();
             if(language.endsWith(";")){
                 language = language.substring(0, language.length()-1 );
+                language = language.trim();
             }
         }
         Dictionary result = new Dictionary(language);
