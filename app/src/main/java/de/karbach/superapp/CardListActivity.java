@@ -2,10 +2,13 @@ package de.karbach.superapp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,6 +63,27 @@ public class CardListActivity extends SingleFragmentActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean result = super.onOptionsItemSelected(item);
+        if(result){
+            return result;
+        }
+        switch(item.getItemId()){
+            case R.id.menu_item_search:
+                boolean searching = onSearchRequested();
+                return true;
+            case R.id.menu_item_clearsearch:
+                CardListFragment cardlist = getMyFragment();
+                if(cardlist != null){
+                    cardlist.search(null);
+                }
+                return true;
+        }
+
+        return false;
+    }
+
     private Bundle getArgumentsBundle(){
         ArrayList<Card> cards = getCardsToShow();
 
@@ -105,6 +129,19 @@ public class CardListActivity extends SingleFragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CardListFragment.CARDCHANGERESULT){
             updateCardsInFragment();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if(Intent.ACTION_SEARCH.equals(intent.getAction()) ){
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            CardListFragment cardlist = getMyFragment();
+            if(cardlist != null){
+                cardlist.search(query);
+            }
         }
     }
 }

@@ -24,13 +24,22 @@
                 <data android:mimeType="text/plain"/>
                 <data android:pathPattern=".*\\.txt" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".CardListActivity" />
         </activity>
         <activity android:name=".CardActivity"
                   android:windowSoftInputMode="stateHidden"
                   android:label="Vokabel"  >
         </activity>
         <activity android:name=".CardListActivity"
-                  android:label="Liste Wörterbuch">
+                  android:label="Liste Wörterbuch"
+                android:launchMode="singleTop"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
         <activity android:name=".TestActivity"
                   android:windowSoftInputMode="stateAlwaysVisible"

@@ -209,4 +209,52 @@ public class Card implements Serializable {
             return null;
         }
     }
+
+    public static String toSimpleString(String input){
+        if(input == null){
+            return null;
+        }
+        input = input.toLowerCase();
+
+        input = input.replace('ä', 'a');
+        input = input.replace('å', 'a');
+        input = input.replace('ö', 'o');
+        input = input.replace('ü', 'u');
+        input = input.replace(" ", "");
+
+        return input;
+    }
+
+    public boolean matchesSearch(String simpleSearch){
+        if(simpleSearch == null){
+            return false;
+        }
+
+        if(type != null){
+            String check = toSimpleString(type);
+            if(check.equals(simpleSearch)){
+                return true;
+            }
+        }
+        if(lesson != null){
+            String check = toSimpleString(lesson);
+            if(check.equals(simpleSearch)){
+                return true;
+            }
+        }
+        if(lang1 != null){
+            String check = toSimpleString(lang1);
+            if(check.contains(simpleSearch)){
+                return true;
+            }
+        }
+        if(lang2 != null){
+            String check = toSimpleString(lang2);
+            if(check.contains(simpleSearch)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

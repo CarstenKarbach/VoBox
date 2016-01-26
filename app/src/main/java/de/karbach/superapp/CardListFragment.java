@@ -102,6 +102,7 @@ public class CardListFragment extends ListFragment{
     }
 
     private List<Card> cards = new ArrayList<Card>();
+    private List<Card> cardsAfterSearch = new ArrayList<Card>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,6 +116,7 @@ public class CardListFragment extends ListFragment{
             if (list != null) {
                 List<Card> cardsToCopy = (List<Card>) list;
                 cards.addAll(cardsToCopy);
+                cardsAfterSearch.addAll(cards);
             }
         }
 
@@ -124,7 +126,7 @@ public class CardListFragment extends ListFragment{
         Dictionary dict = dm.getSelectedDictionary();
         language2 = dict.getLanguage();
 
-        CardAdapter adapter = new CardAdapter(cards);
+        CardAdapter adapter = new CardAdapter(cardsAfterSearch);
         adapter.setLang1(language1);
         adapter.setLang2(language2);
 
@@ -156,7 +158,7 @@ public class CardListFragment extends ListFragment{
         int position = info.position;
 
         if(item.getItemId() == R.id.menu_card_delete){
-            Card card = cards.get(position);
+            Card card = cardsAfterSearch.get(position);
 
             if(card != null) {
                 DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
@@ -164,6 +166,7 @@ public class CardListFragment extends ListFragment{
 
                 dict.deleteCard(card);
                 cards.remove(card);
+                cardsAfterSearch.remove(card);
 
                 CardAdapter adapter = (CardAdapter)getListAdapter();
                 adapter.notifyDataSetChanged();
@@ -178,7 +181,7 @@ public class CardListFragment extends ListFragment{
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        Card card = cards.get(position);
+        Card card = cardsAfterSearch.get(position);
         if(card != null){
             String lang1Key = card.getLang1();
             Intent intent  = new Intent(getActivity(), CardActivity.class);
@@ -190,6 +193,33 @@ public class CardListFragment extends ListFragment{
     public void updateCards(List<Card> newcards){
         this.cards.clear();
         this.cards.addAll(newcards);
+        cardsAfterSearch.clear();
+        cardsAfterSearch.addAll(newcards);
+
+        if(lastSearch != null){
+            search(lastSearch);
+        }
+
+        CardAdapter adapter = (CardAdapter)getListAdapter();
+        adapter.notifyDataSetChanged();
+    }
+
+    private String lastSearch = null;
+
+    public void search(String search){
+        lastSearch = search;
+        cardsAfterSearch.clear();
+        if(search == null || search.equals("")){//Clear search
+            cardsAfterSearch.addAll(cards);
+        }
+        else{
+            String simpleSearch = Card.toSimpleString(search);
+            for(Card card: cards){
+                if(card.matchesSearch(simpleSearch)){
+                    cardsAfterSearch.add(card);
+                }
+            }
+        }
 
         CardAdapter adapter = (CardAdapter)getListAdapter();
         adapter.notifyDataSetChanged();
