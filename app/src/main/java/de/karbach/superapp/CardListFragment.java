@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.karbach.superapp.data.Card;
@@ -219,6 +221,62 @@ public class CardListFragment extends ListFragment{
                     cardsAfterSearch.add(card);
                 }
             }
+        }
+
+        CardAdapter adapter = (CardAdapter)getListAdapter();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void sortByLanguage(String language){
+        Comparator<Card> lang1Comparator = new Comparator<Card>() {
+            @Override
+            public int compare(Card lhs, Card rhs) {
+                if(lhs == null){
+                    return -1;
+                }
+                if(rhs == null){
+                    return 1;
+                }
+                if(lhs.getLang1() == null){
+                    return -1;
+                }
+                String lang1 = Card.toSimpleString(lhs.getLang1());
+                String lang2 = Card.toSimpleString(rhs.getLang1());
+                if(lang1 == null){
+                    return -1;
+                }
+                return lang1.compareTo(lang2);
+            }
+        };
+
+        Comparator<Card> lang2Comparator = new Comparator<Card>() {
+            @Override
+            public int compare(Card lhs, Card rhs) {
+                if(lhs == null){
+                    return -1;
+                }
+                if(rhs == null){
+                    return 1;
+                }
+                if(lhs.getLang1() == null){
+                    return -1;
+                }
+                String lang1 = Card.toSimpleString(lhs.getLang2());
+                String lang2 = Card.toSimpleString(rhs.getLang2());
+                if(lang1 == null){
+                    return -1;
+                }
+                return lang1.compareTo(lang2);
+            }
+        };
+
+        if(language.equals("Deutsch")){
+            Collections.sort(cards, lang1Comparator);
+            Collections.sort(cardsAfterSearch, lang1Comparator);
+        }
+        else{
+            Collections.sort(cards, lang2Comparator);
+            Collections.sort(cardsAfterSearch, lang2Comparator);
         }
 
         CardAdapter adapter = (CardAdapter)getListAdapter();

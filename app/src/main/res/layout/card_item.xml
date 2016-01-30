@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_weight="10"
-        android:layout_height="match_parent"
+        android:layout_height="24dp"
         android:src="@drawable/flag_german"
         android:scaleType="fitCenter"
         android:id="@+id/carditem_flag1"
@@ -28,7 +28,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_weight="10"
-        android:layout_height="match_parent"
+        android:layout_height="24dp"
         android:scaleType="fitCenter"
         android:src="@drawable/flag_swedish"
         android:id="@+id/carditem_flag2"

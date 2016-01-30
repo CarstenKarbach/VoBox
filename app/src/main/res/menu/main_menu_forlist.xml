@@ -8,6 +8,10 @@
           android:icon="@android:drawable/ic_menu_close_clear_cancel"
           android:title="Suche löschen"
           compat:showAsAction="ifRoom"/>
+    <item android:id="@+id/menu_item_sort"
+          android:icon="@android:drawable/ic_menu_sort_alphabetically"
+          android:title="Sortieren"
+          compat:showAsAction="ifRoom"/>
     <item android:id="@+id/menu_item_box"
           android:icon="@drawable/boxpart"
           android:title="Box"
