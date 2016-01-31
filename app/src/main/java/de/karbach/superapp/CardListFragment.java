@@ -201,6 +201,9 @@ public class CardListFragment extends ListFragment{
         if(lastSearch != null){
             search(lastSearch);
         }
+        if(lastSort != null){
+            sortByLanguage(lastSort);
+        }
 
         CardAdapter adapter = (CardAdapter)getListAdapter();
         adapter.notifyDataSetChanged();
@@ -227,7 +230,10 @@ public class CardListFragment extends ListFragment{
         adapter.notifyDataSetChanged();
     }
 
+    private String lastSort = null;
+
     public void sortByLanguage(String language){
+        lastSort = language;
         Comparator<Card> lang1Comparator = new Comparator<Card>() {
             @Override
             public int compare(Card lhs, Card rhs) {
