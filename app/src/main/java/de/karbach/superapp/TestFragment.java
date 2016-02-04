@@ -1,3 +1,21 @@
+/**
+ MoTAC - digital board for TAC board game
+ Copyright (C) 2015-2016  Carsten Karbach
+
+ Contact by mail carstenkarbach@gmx.de
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 package de.karbach.superapp;
 
 import android.app.Fragment;
@@ -28,23 +46,55 @@ import de.karbach.superapp.data.DictionaryManagement;
 
 /**
  * Created by Carsten on 29.12.2015.
+ *
+ * Retained.
+ *
+ * The fragment to test and practise vocabularies in a box.
+ * A list of cards is traversed. The user types in expected translation.
+ * By clicking on the check button the solution is shown and whether
+ * the user answered correctly.
  */
 public class TestFragment extends Fragment {
 
+    /**
+     * Parameter for serialzed cards to test/practise. This contains a list of cards.
+     */
     public final static String PARAMTESTCARDS = "de.karbach.superapp.TestFragment.CARDS";
+    /**
+     * Parameter indicating, whether a real test or only practis is conducted.
+     */
     public final static String PARAMISREALTEST = "de.karbach.superapp.TestFragment.ISTEST";
-
+    /**
+     * The cards, which are tested
+     */
     private List<Card> testcards = new ArrayList<Card>();
+    /**
+     * Stores for each card, if this card was already tested and the user clicked on the check button already
+     */
     private List<Boolean> testCompleted = new ArrayList<Boolean>();
+    /**
+     * Holds the current position in the test card list
+     */
     private int position = 0;
-
+    /**
+     * The language, of which the clear text is shown, and which needs to be translated into lang2
+     */
     private String lang1 = "Deutsch";
+    /**
+     * The language with the unknown word
+     */
     private String lang2 = "Schwedisch";
-
+    /**
+     * Stores, whether this is a real test
+     */
     private boolean realtest = false;
-
+    /**
+     * Stores, whether the check button was clicked already and the solution was shown already
+     */
     private boolean answerShown = false;
-
+    /**
+     * Stores the background of the cardframe to restore in on next card load
+     */
     private Drawable defaultBackground = null;
 
     public void switchLanguages(){

@@ -1,3 +1,21 @@
+/**
+ MoTAC - digital board for TAC board game
+ Copyright (C) 2015-2016  Carsten Karbach
+
+ Contact by mail carstenkarbach@gmx.de
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 package de.karbach.superapp.data;
 
 import org.json.JSONArray;
@@ -9,6 +27,16 @@ import java.io.Writer;
 
 /**
  * Created by Carsten on 27.12.2015.
+ *
+ * Stores one card in the cardbox. A card is a pair of two words in
+ * two different languages. The first language is the root language,
+ * which is the user's mother tongue. The second language is the translation.
+ * A card can have different other attributes, by which cards can be grouped.
+ * E.g. a card has a box, is assigned to a lesson and to a word type.
+ * The box is most important for the learning functionality.
+ * A card starts in box 1 and is moved into higher boxes, if they are
+ * successfully tested. If the user cannot translate the card successfully
+ * the card is moved back into lower boxes.
  */
 public class Card implements Serializable {
 
@@ -183,11 +211,11 @@ public class Card implements Serializable {
                 lang2 = array.getString(1);
             }
             String type = null;
-            if (array.length() > 2) {
+            if (array.length() > 2 && !array.isNull(2)) {
                 type = array.getString(2);
             }
             String lesson = null;
-            if (array.length() > 3) {
+            if (array.length() > 3 && !array.isNull(3)) {
                 lesson = array.getString(3);
             }
 
@@ -197,7 +225,7 @@ public class Card implements Serializable {
 
             if (loadAll) {
                 int box = 1;
-                if (array.length() > 4) {
+                if (array.length() > 4 && !array.isNull(4)) {
                     box = Integer.parseInt(array.getString(4));
                 }
                 result.setBox(box);

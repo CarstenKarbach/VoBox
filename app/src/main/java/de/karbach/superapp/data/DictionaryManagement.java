@@ -1,3 +1,21 @@
+/**
+ MoTAC - digital board for TAC board game
+ Copyright (C) 2015-2016  Carsten Karbach
+
+ Contact by mail carstenkarbach@gmx.de
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 package de.karbach.superapp.data;
 
 import android.app.Activity;
@@ -11,18 +29,46 @@ import de.karbach.superapp.R;
 
 /**
  * Created by Carsten on 28.12.2015.
+ *
+ * This is the main point for storing and accessing dictionaries.
+ * For each language one dictionary is stored and can be accessed from
+ * everywhere in the app via the Singleton pattern. One dictionary is
+ * marked as the selected dictionary, which is the one the user selects
+ * on the starter app (StarterActivity). Convenient save and store
+ * functions are part of the DictionaryManagement functionality.
+ *
+ * Most of the activities use the selected dictionary to work on.
+ * E.g. when a new card is added, it is automatically added to the
+ * currently selected dictionary. Or if a list of all cards should be
+ * shown, the cards of the selected dictionary is shown.
  */
 public class DictionaryManagement {
 
+    /**
+     * Key in preferences to store the selected dictionary
+     */
     private static final String languageSelectKey = "de.karbach.superapp.data.DictionaryManagement.languageSelection";
+    /**
+     * Name of the preferences for the DictionaryManagement class
+     */
     private static final String preferencesName = "de.karbach.superapp.data.DictionaryManagement";
 
+    /**
+     * A list of all available dictionaryies
+     */
     private List<Dictionary> dicts;
 
+    /**
+     * The currently selected dictionary or null, if non was selected yet
+     */
     private Dictionary selected;
-
+    /**
+     * Singleton instance of this class
+     */
     private static DictionaryManagement instance;
-
+    /**
+     * Context from the app to save and load files
+     */
     private Context context;
 
     private DictionaryManagement(Context context){

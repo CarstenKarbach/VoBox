@@ -1,3 +1,21 @@
+/**
+ MoTAC - digital board for TAC board game
+ Copyright (C) 2015-2016  Carsten Karbach
+
+ Contact by mail carstenkarbach@gmx.de
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 package de.karbach.superapp;
 
 import android.app.ListFragment;
@@ -26,11 +44,28 @@ import de.karbach.superapp.data.DictionaryManagement;
 
 /**
  * Created by Carsten on 28.12.2015.
+ *
+ * Retained.
+ *
+ * A listfragment, which shows a list of cards. Depending on the language of
+ * the selected dictionary other flags are shown next to the words. Mainly
+ * the German word and the corresponding translation is shown in each row.
+ * By tapping on a card entry, the CardActivity is called for editing the card.
+ * The card list can be sorted and filtered.
  */
 public class CardListFragment extends ListFragment{
-
+    /**
+     * Parameter name for the parameter holding all cards to show.
+     * This fragment simply needs a list of cards to show. It does not
+     * much care about dictionary, boxes or any filtering. This is all handled
+     * by the calls to its functions, but the fragment does not know about
+     * these semantics. It simply shows a list of cards.
+     */
     public static final String PARAMCARDS = "de.karbach.superapp.CardListFragment.cards";
-
+    /**
+     * The code, with which the CardListActivity is started for result.
+     * On return from the activity the list is updated.
+     */
     public static final int CARDCHANGERESULT = 1;
 
     private class CardAdapter extends ArrayAdapter<Card> {
@@ -103,7 +138,14 @@ public class CardListFragment extends ListFragment{
         }
     }
 
+    /**
+     * The entire original list of cards to be shown.
+     */
     private List<Card> cards = new ArrayList<Card>();
+    /**
+     * The actual list of cards shown. This might be a subset of cards,
+     * when the search function was called.
+     */
     private List<Card> cardsAfterSearch = new ArrayList<Card>();
 
     @Override
@@ -209,6 +251,12 @@ public class CardListFragment extends ListFragment{
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Used for retaining the search query while the fragment is retained.
+     * If this was not used, a configuration change would cause the
+     * CardListActivity to update the shown cards, then the search query
+     * would be lost. (See updateCards for how it is used)
+     */
     private String lastSearch = null;
 
     public void search(String search){
@@ -230,6 +278,10 @@ public class CardListFragment extends ListFragment{
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Same story as for lastSearch. It stores the last used sort argument
+     * to retain the sorting throughout configuration changes. (See updateCards for how it is used)
+     */
     private String lastSort = null;
 
     public void sortByLanguage(String language){

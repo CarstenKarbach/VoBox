@@ -1,3 +1,21 @@
+/**
+ MoTAC - digital board for TAC board game
+ Copyright (C) 2015-2016  Carsten Karbach
+
+ Contact by mail carstenkarbach@gmx.de
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 package de.karbach.superapp;
 
 import android.app.AlertDialog;
@@ -21,9 +39,19 @@ import de.karbach.superapp.data.DictionaryManagement;
 
 /**
  * Created by Carsten on 28.12.2015.
+ *
+ * Activity showing a list of cards. Either a list for a box is shown (use of
+ * PARAMBOX parameter) or a specific selection of serialized cards is shown (
+ * CardListFragment.PARAMCARDS) or all cards of the selected dictionary are shown.
+ * The shown cards are always updated on resume of this activity. This makes
+ * sure that any changes to the dictionary are immediately reflected by the
+ * list. This activity is configured to be searchable. It handles the search
+ * intents and forwards the queries to the CardListFragment.
  */
 public class CardListActivity extends SingleFragmentActivity {
-
+    /**
+     * Parameter for showing a list for a given box. An integer value is expected here.
+     */
     public static final String PARAMBOX = "de.karbach.superapp.CardListActivity.box";
 
     private ArrayList<Card> getCardsToShow(){
@@ -137,6 +165,13 @@ public class CardListActivity extends SingleFragmentActivity {
         }
     }
 
+    /**
+     * Get the CardListFragment, which is the main content of this activity.
+     * The fragment is retained, so that it is sometimes useful to retrieve the
+     * fragment. Not all changes can be done to the fragment during creation.
+     *
+     * @return the active CardListFragment
+     */
     private CardListFragment getMyFragment(){
         FragmentManager fm = getFragmentManager();
         Fragment f = fm.findFragmentById(R.id.fragment_container);

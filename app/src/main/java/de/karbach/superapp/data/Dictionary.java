@@ -1,3 +1,21 @@
+/**
+ MoTAC - digital board for TAC board game
+ Copyright (C) 2015-2016  Carsten Karbach
+
+ Contact by mail carstenkarbach@gmx.de
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 package de.karbach.superapp.data;
 
 import android.app.Activity;
@@ -26,11 +44,24 @@ import java.util.Scanner;
 
 /**
  * Created by Carsten on 27.12.2015.
+ *
+ * A dictionary is in principle a list of cards, where the second language of each card
+ * belongs to the language of the dictionary. A dictionary can be stored to file and
+ * exported to other apps. Wrapper functions for adding, removing, searching and
+ * filtering cards are the main functions of a dictionary. Especially, the boxes are
+ * filled with cards by using the function getCardsForBox. The same could be done to
+ * retrieve a list of all verbs or adjectives and so forth.
  */
 public class Dictionary implements Serializable {
 
+    /**
+     * The cards belonging to this dictionary
+     */
     private ArrayList<Card> cards;
 
+    /**
+     * The language for the second language, the first language is always German currently
+     */
     private String language;
 
     public String getName() {
@@ -41,6 +72,9 @@ public class Dictionary implements Serializable {
         this.name = name;
     }
 
+    /**
+     * The name of the dictionary for identification of the dictionary.
+     */
     private String name;
 
     public Dictionary(String name){

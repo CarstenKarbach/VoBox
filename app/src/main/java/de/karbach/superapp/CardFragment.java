@@ -1,3 +1,21 @@
+/**
+ MoTAC - digital board for TAC board game
+ Copyright (C) 2015-2016  Carsten Karbach
+
+ Contact by mail carstenkarbach@gmx.de
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 package de.karbach.superapp;
 
 import android.app.Fragment;
@@ -21,12 +39,23 @@ import de.karbach.superapp.data.DictionaryManagement;
 
 /**
  * Created by Carsten on 28.12.2015.
+ *
+ * Retained.
+ *
+ * Fragment for a single card for adding a new card or editing an existing card.
+ * If the parameter PARAMLANG1KEY is given, the fragment tries to edit the corresponding
+ * card. If there is no parameter or the card cannot be found, a new card is inserted.
  */
 public class CardFragment extends Fragment {
-
+    /**
+     * Parameter for the German word, which should be edited
+     */
     public static final String PARAMLANG1KEY = "de.karbach.superapp.CardFragment";
-
-    private String lang1Key = null;//Key to use for modification
+    /**
+     * Key to use for modification.
+     * The corresponding card where the first language equals this key is searched and edited.
+     */
+    private String lang1Key = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
