@@ -244,12 +244,10 @@ public class TestFragment extends Fragment {
         }
     }
 
-    protected void goNext(){
-        position++;
-        if(position >= testcards.size()){
-            position = 0;
-        }
-
+    /**
+     * Init the fragment with the new card after moving with next or back
+     */
+    protected void initAfterMovement(){
         Card card = getCurrentCard();
         loadCard(card, getView());
         answerShown = false;
@@ -264,6 +262,29 @@ public class TestFragment extends Fragment {
         }
         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.showSoftInput(lang2Text, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    protected void goNext(){
+        position++;
+        if(position >= testcards.size()){
+            position = 0;
+        }
+
+        initAfterMovement();
+    }
+
+    protected void goBack(){
+        position--;
+        if(position < 0){
+            if(testcards != null && testcards.size() > 0){
+                position = testcards.size()-1;
+            }
+            else{
+                position = 0;
+            }
+        }
+
+        initAfterMovement();
     }
 
     @Override
@@ -332,6 +353,14 @@ public class TestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 goNext();
+            }
+        });
+
+        Button backButton = (Button) result.findViewById(R.id.testcard_back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBack();
             }
         });
 
