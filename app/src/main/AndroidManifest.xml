@@ -30,11 +30,22 @@
         </activity>
         <activity android:name=".CardActivity"
                   android:windowSoftInputMode="stateHidden"
-                  android:label="Vokabel"  >
+                  android:label="Vokabel"
+                  android:parentActivityName=".StarterActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.karbach.superapp.StarterActivity" />
+
+            >
         </activity>
         <activity android:name=".CardListActivity"
                   android:label="Liste Wörterbuch"
                 android:launchMode="singleTop"
+                  android:parentActivityName=".StarterActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.karbach.superapp.StarterActivity" />
+
             >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -44,10 +55,19 @@
         <activity android:name=".TestActivity"
                   android:windowSoftInputMode="stateAlwaysVisible"
                   android:label="Test"
+                  android:parentActivityName=".BoxActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.karbach.superapp.BoxActivity" />
+
             >
         </activity>
         <activity android:name=".BoxActivity"
-                  android:label="Box">
+                  android:label="Box"
+                  android:parentActivityName=".StarterActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.karbach.superapp.StarterActivity" />
         </activity>
     </application>
 

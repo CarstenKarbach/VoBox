@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -53,6 +54,14 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     *
+     * @return true, if activity should create the up button. False if this is not required.
+     */
+    protected boolean showUpButton(){
+        return true;
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -64,6 +73,12 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         if(f==null){
             f = createFragment();
             fm.beginTransaction().add(R.id.fragment_container, f).commit();
+        }
+
+        if(showUpButton()){
+            if( getSupportActionBar() != null){
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
         }
     }
 
@@ -110,6 +125,9 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
             case R.id.menu_item_newword:
                 goToActivity(CardActivity.class);
 
+                return true;
+            case android.R.id.home://Up button
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
 

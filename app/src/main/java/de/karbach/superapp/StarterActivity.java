@@ -87,6 +87,11 @@ public class StarterActivity extends SingleFragmentActivity {
         handleViewIntent();
     }
 
+    @Override
+    protected boolean showUpButton() {
+        return false;
+    }
+
     private void showImportDictDialog(final Dictionary newDict, final Uri dataUri){
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Wörterbuch importieren");
