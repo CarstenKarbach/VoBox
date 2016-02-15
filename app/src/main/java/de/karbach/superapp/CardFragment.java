@@ -18,7 +18,9 @@
 
 package de.karbach.superapp;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -51,6 +53,18 @@ public class CardFragment extends Fragment {
      * Parameter for the German word, which should be edited
      */
     public static final String PARAMLANG1KEY = "de.karbach.superapp.CardFragment";
+
+    /**
+     * Request code for editing the current card.
+     * Call this in combination with parameter CardFragment.PARAMLANG1KEY
+     */
+    public final static int REQUESTEDIT = 1;
+
+    /**
+     * This string is used to indicate, that a the card was deleted
+     */
+    public static final String DELETEDVALUE = "**DELETED**";
+
     /**
      * Key to use for modification.
      * The corresponding card where the first language equals this key is searched and edited.
@@ -177,6 +191,11 @@ public class CardFragment extends Fragment {
                             Card cCard = cdict.getCardByLang1(lang1Key);
                             if(cCard != null){
                                 cdict.deleteCard(cCard);
+
+                                Intent result = new Intent();
+                                result.putExtra(PARAMLANG1KEY, DELETEDVALUE);//Return deleted value
+                                getActivity().setResult(Activity.RESULT_CANCELED, result);
+
                                 getActivity().finish();
                             }
                         }
@@ -228,6 +247,9 @@ public class CardFragment extends Fragment {
                     else{
                         //Modified card
                         Toast.makeText(getActivity(), "Änderungen gespeichert.", Toast.LENGTH_LONG).show();
+                        Intent result = new Intent();
+                        result.putExtra(PARAMLANG1KEY, lang1Key);//Return the new identifier of the card
+                        getActivity().setResult(Activity.RESULT_OK, result);
                     }
                 }
             });

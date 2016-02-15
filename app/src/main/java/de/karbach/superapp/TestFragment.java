@@ -18,8 +18,10 @@
 
 package de.karbach.superapp;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -64,6 +66,7 @@ public class TestFragment extends Fragment {
      * Parameter indicating, whether a real test or only practis is conducted.
      */
     public final static String PARAMISREALTEST = "de.karbach.superapp.TestFragment.ISTEST";
+
     /**
      * The cards, which are tested
      */
@@ -372,7 +375,62 @@ public class TestFragment extends Fragment {
             }
         });
 
+        Button editButton = (Button) result.findViewById(R.id.testcard_edit);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Card currentCard = getCurrentCard();
+                if(currentCard == null){
+                    Toast.makeText(getActivity(), "Keine Karte zum Bearbeiten verfügbar.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent editIntent = new Intent(getActivity(), CardActivity.class);
+                editIntent.putExtra(CardFragment.PARAMLANG1KEY, currentCard.getLang1());
+                startActivityForResult(editIntent, CardFragment.REQUESTEDIT);
+            }
+        });
+
         return result;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CardFragment.REQUESTEDIT && resultCode == Activity.RESULT_OK){
+            String newlang1 = data.getStringExtra(CardFragment.PARAMLANG1KEY);
+            if(newlang1 != null){
+                Dictionary selected = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
+                if(selected != null){
+                    Card newcard = selected.getCardByLang1(newlang1);
+                    if(newcard != null){
+                        testcards.set(this.position, newcard);
+                        this.testCompleted.set(position, false);
+                        initAfterMovement();
+                    }
+                }
+            }
+        }
+        else if(requestCode == CardFragment.REQUESTEDIT && resultCode == Activity.RESULT_CANCELED){
+            boolean deleted = CardFragment.DELETEDVALUE.equals(data.getStringExtra(CardFragment.PARAMLANG1KEY));
+            if(deleted) {
+                //Card was deleted
+                if (testcards.size() <= 1) {
+                    getActivity().finish();
+                } else {
+                    testcards.remove(position);
+                    testCompleted.remove(position);
+
+                    if (position >= testcards.size()) {
+                        position = 0;
+                    }
+
+                    initAfterMovement();
+                }
+            }
+        }
+
     }
 
     @Override
