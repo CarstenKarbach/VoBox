@@ -412,7 +412,7 @@ public class TestFragment extends Fragment {
                 }
             }
         }
-        else if(requestCode == CardFragment.REQUESTEDIT && resultCode == Activity.RESULT_CANCELED){
+        else if(requestCode == CardFragment.REQUESTEDIT && resultCode == Activity.RESULT_CANCELED && data != null){
             boolean deleted = CardFragment.DELETEDVALUE.equals(data.getStringExtra(CardFragment.PARAMLANG1KEY));
             if(deleted) {
                 //Card was deleted
