@@ -24,4 +24,8 @@
           android:icon="@drawable/wordlist"
           android:title="Liste"
           compat:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/menu_item_training"
+          android:icon="@android:drawable/ic_menu_edit"
+          android:title="Übung"
+          compat:showAsAction="ifRoom|withText"/>
 </menu>

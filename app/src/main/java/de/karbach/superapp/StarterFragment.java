@@ -150,6 +150,17 @@ public class StarterFragment extends Fragment {
             });
         }
 
+        Button listGen = (Button) result.findViewById(R.id.button_selectcards);
+        if(listGen != null){
+            listGen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent listGenIntent = new Intent(getActivity(), ListGeneratorActivity.class);
+                    startActivity(listGenIntent);
+                }
+            });
+        }
+
         return result;
     }
 }

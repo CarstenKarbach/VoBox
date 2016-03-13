@@ -69,6 +69,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.karbach.superapp.StarterActivity" />
         </activity>
+        <activity android:name=".ListGeneratorActivity"
+                  android:label="Flexible Listen"
+                  android:parentActivityName=".StarterActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.karbach.superapp.StarterActivity" />
+        </activity>
     </application>
 
 </manifest>

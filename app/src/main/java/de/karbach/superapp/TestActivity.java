@@ -45,19 +45,29 @@ public class TestActivity extends SingleFragmentSaveOnPauseActivity {
      */
     public static final String PARAMREALTEST = "de.karbach.superapp.TestActivity.REALTEST";
 
+    /**
+     * Set a list of cards with this parameter to generate a test/training with a given list of cards
+     */
+    public static final String PARAMDIRECTCARDS = "de.karbach.superapp.TestActivity.DIRECTCARDS";
+
     @Override
     protected Fragment createFragment() {
 
-        int box = getIntent().getIntExtra(PARAMBOX, 1);
+        ArrayList<Card> testCards = (ArrayList<Card>) getIntent().getSerializableExtra(PARAMDIRECTCARDS);
+
         Boolean realTest = getIntent().getBooleanExtra(PARAMREALTEST, false);
 
-        DictionaryManagement dm = DictionaryManagement.getInstance(this);
-        Dictionary dict = dm.getSelectedDictionary();
+        if(testCards == null) {
+            int box = getIntent().getIntExtra(PARAMBOX, 1);
+            DictionaryManagement dm = DictionaryManagement.getInstance(this);
+            Dictionary dict = dm.getSelectedDictionary();
 
-        ArrayList<Card> boxCards = dict.getCardsForBox(box);
+            ArrayList<Card> boxCards = dict.getCardsForBox(box);
+            testCards = boxCards;
+        }
 
         Bundle arguments  = new Bundle();
-        arguments.putSerializable(TestFragment.PARAMTESTCARDS, boxCards);
+        arguments.putSerializable(TestFragment.PARAMTESTCARDS, testCards);
         arguments.putBoolean(TestFragment.PARAMISREALTEST, realTest);
 
         TestFragment result = new TestFragment();

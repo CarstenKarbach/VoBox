@@ -114,6 +114,12 @@
             android:text="exportieren"
             android:id="@+id/button_export"
             />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="flexible Liste"
+            android:id="@+id/button_selectcards"
+            />
 
     </TableRow>
 

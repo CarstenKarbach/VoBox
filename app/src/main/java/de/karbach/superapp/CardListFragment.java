@@ -340,4 +340,21 @@ public class CardListFragment extends ListFragment{
         CardAdapter adapter = (CardAdapter)getListAdapter();
         adapter.notifyDataSetChanged();
     }
+
+    /**
+     * Start training activity with the currently shown cards
+     */
+    public void startTrainingWithShownCards(){
+        if(cardsAfterSearch == null || cardsAfterSearch.size()==0){
+            return;
+        }
+
+        ArrayList<Card> toTrain = new ArrayList<Card>( cardsAfterSearch );
+
+        Intent training = new Intent(this.getActivity(), TestActivity.class);
+        training.putExtra( TestActivity.PARAMDIRECTCARDS, toTrain );
+        training.putExtra( TestActivity.PARAMREALTEST, Boolean.FALSE);
+
+        startActivity(training);
+    }
 }

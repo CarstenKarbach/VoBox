@@ -109,6 +109,12 @@ public class CardListActivity extends SingleFragmentActivity {
                     cardlist.search(null);
                 }
                 return true;
+            case R.id.menu_item_training:
+                CardListFragment myCardList = getMyFragment();
+                if(myCardList != null){
+                    myCardList.startTrainingWithShownCards();
+                }
+                return true;
             case R.id.menu_item_sort:
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("Sortieren");
