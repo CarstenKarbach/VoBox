@@ -36,7 +36,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.karbach.superapp.StarterActivity" />
 
-            >
         </activity>
         <activity android:name=".CardListActivity"
                   android:label="Liste Wörterbuch"
@@ -46,7 +45,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.karbach.superapp.StarterActivity" />
 
-            >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
@@ -60,7 +58,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.karbach.superapp.BoxActivity" />
 
-            >
         </activity>
         <activity android:name=".BoxActivity"
                   android:label="Box"
