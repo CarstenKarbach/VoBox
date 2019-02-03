@@ -75,11 +75,12 @@ public class DictionaryFragment extends Fragment{
 
         TextView wordcount = view.findViewById(R.id.wordcount);
         Dictionary currentDict = dm.getDictionary(nameview.getText().toString());
-        int count = 0;
+
+        String count = "-";
         if(currentDict != null){
-            count = currentDict.getCards().size();
+            count = String.valueOf(currentDict.getCards().size());
         }
-        wordcount.setText(String.valueOf(count));
+        wordcount.setText(count);
     }
 
     @Nullable
