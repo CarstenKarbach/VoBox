@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,19 @@ public class StarterFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("carsten", "onCreateView Starter");
         View result = inflater.inflate(R.layout.starter_fragment, container, false);
+
+        Button newDictButton = result.findViewById(R.id.add_button);
+        newDictButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), DictionaryActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
 
         Button newCardButton = (Button) result.findViewById(R.id.newcard_button);
         View.OnClickListener newCardOnClick = new View.OnClickListener() {
@@ -102,10 +115,11 @@ public class StarterFragment extends Fragment {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                     R.array.languages_array, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            select.setAdapter(adapter);
-
             DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+            ArrayAdapter<CharSequence> dictChoose = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_dropdown_item, dm.readDictionaryArray() );
+
+            select.setAdapter(dictChoose);
+
             Dictionary selectedDict = dm.getSelectedDictionary();
             if(selectedDict != null) {
                 for (int i = 0; i < select.getCount(); i++) {

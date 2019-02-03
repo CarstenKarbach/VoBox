@@ -37,6 +37,13 @@
                 android:value="de.karbach.superapp.StarterActivity" />
 
         </activity>
+        <activity android:name=".DictionaryActivity"
+            android:label="Wörterbuch"
+            android:parentActivityName=".StarterActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.karbach.superapp.StarterActivity" />
+        </activity>
         <activity android:name=".CardListActivity"
                   android:label="Liste Wörterbuch"
                 android:launchMode="singleTop"

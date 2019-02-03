@@ -21,9 +21,13 @@ package de.karbach.superapp.data;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.karbach.superapp.R;
 
@@ -71,11 +75,30 @@ public class DictionaryManagement {
      */
     private Context context;
 
+    private static final String LANGUAGES_ARRAY = "de.karbach.superapp.data.DictionaryManagement.languageArray";
+
+    public Set<String> readDictionaryList(){
+        Set<String> defaultSet = new HashSet<String>();
+        String[] defaults = context.getResources().getStringArray(R.array.languages_array);
+        defaultSet.addAll(Arrays.asList(defaults));
+
+        SharedPreferences sp = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
+        return sp.getStringSet(DictionaryManagement.LANGUAGES_ARRAY, defaultSet);
+    }
+
+    public String[] readDictionaryArray(){
+        Set<String> set = readDictionaryList();
+        String[] result = set.toArray(new String[0]);
+
+        return result;
+    }
+
     private DictionaryManagement(Context context){
         this.context = context;
         dicts = new ArrayList<Dictionary>();
+
         //Load or create default dictionaries
-        String[] languages = context.getResources().getStringArray(R.array.languages_array);
+        Set<String> languages = readDictionaryList();
         for(String lang: languages){
             addDictionary(lang);
         }
@@ -135,6 +158,12 @@ public class DictionaryManagement {
         newDict.setLanguage(name);
         newDict.loadIfPossible(context);
         dicts.add(newDict);
+
+        Set<String> existing = readDictionaryList();
+        if(! existing.contains(name)){
+            existing.add(name);
+            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE).edit().putStringSet(DictionaryManagement.LANGUAGES_ARRAY, existing).commit();
+        }
     }
 
     public Dictionary getDictionary(String name){
@@ -149,11 +178,29 @@ public class DictionaryManagement {
         return null;
     }
 
+    public boolean dictionaryExists(String name){
+        return getDictionary(name) != null;
+    }
+
     public void deleteDictionary(String name){
         Dictionary dict = getDictionary(name);
         if(dict != null){
             dicts.remove(dict);
             dict.deleteFile(context);
+        }
+
+        Set<String> existing = readDictionaryList();
+        if(existing.contains(name)){
+            existing.remove(name);
+            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE).edit().putStringSet(DictionaryManagement.LANGUAGES_ARRAY, existing).commit();
+        }
+
+        Dictionary selected = getSelectedDictionary();
+        if(selected != null && selected.getName().equals(name)){
+            String[] others = readDictionaryArray();
+            if(others.length > 0){
+                selectDictionary(others[0]);
+            }
         }
     }
 
