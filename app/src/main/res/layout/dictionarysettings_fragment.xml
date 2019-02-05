@@ -46,6 +46,7 @@
                 android:layout_weight="70"
                 android:layout_height="wrap_content"
                 android:paddingRight="10dp"
+                android:prompt="@string/language"
                 ></Spinner>
         </TableRow>
         <TableRow

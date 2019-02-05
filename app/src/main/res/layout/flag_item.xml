@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:weightSum="100"
+              android:padding="8dp"
+    >
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_weight="10"
+        android:layout_height="24dp"
+        android:src="@drawable/flag_german"
+        android:scaleType="fitCenter"
+        android:id="@+id/flagview"
+        android:layout_gravity="center_vertical"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="40"
+        android:layout_height="wrap_content"
+        android:text="Sprache 1"
+        android:id="@+id/flag_language_text"
+        android:layout_gravity="center_vertical"
+        />
+</LinearLayout>

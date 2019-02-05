@@ -30,13 +30,19 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import de.karbach.superapp.data.Card;
@@ -83,10 +89,64 @@ public class DictionaryFragment extends Fragment{
         wordcount.setText(count);
     }
 
+    private class FlagAdapter extends BaseAdapter {
+
+        private List<String> flags;
+
+        public FlagAdapter(List<String> flags) {
+            this.flags = flags;
+        }
+
+        @Override
+        public int getCount() {
+            return flags.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return flags.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView == null){
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.flag_item, parent, false);
+            }
+
+            TextView langtext = (TextView) convertView.findViewById(R.id.flag_language_text);
+            ImageView flag = (ImageView) convertView.findViewById(R.id.flagview);
+
+            String language = flags.get(position);
+
+            int r1 = PictureHelper.getDrawableResourceForLanguage(language);
+            if(flag != null) {
+                flag.setImageResource(r1);
+            }
+
+            langtext.setText(language);
+
+            return convertView;
+        }
+    }
+
+    protected void setupLanguageSpinner(View rootView){
+        Spinner languageSpinner = rootView.findViewById(R.id.flag_selection);
+        List<String> flags = Arrays.asList(new String[]{"Deutsch", "Englisch", "Spanisch", "Schwedisch"});
+        FlagAdapter fa = new FlagAdapter(flags);
+        languageSpinner.setAdapter(fa);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.dictionarysettings_fragment, container, false);
+
+        setupLanguageSpinner(result);
 
         final EditText nameview = result.findViewById(R.id.dictionary_name);
         final DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
