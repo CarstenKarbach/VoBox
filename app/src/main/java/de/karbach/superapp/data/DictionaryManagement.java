@@ -157,6 +157,7 @@ public class DictionaryManagement {
         Dictionary newDict = new Dictionary(name);
         newDict.setLanguage(name);
         newDict.loadIfPossible(context);
+        newDict.setName(name);
         dicts.add(newDict);
 
         Set<String> existing = readDictionaryList();

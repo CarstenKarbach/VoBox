@@ -79,6 +79,12 @@ public class TestFragment extends Fragment {
      * Holds the current position in the test card list
      */
     private int position = 0;
+
+    /**
+     * Base language of underlying dictionary
+     */
+    private String baseLanguage = "Deutsch";
+
     /**
      * The language, of which the clear text is shown, and which needs to be translated into lang2
      */
@@ -141,7 +147,7 @@ public class TestFragment extends Fragment {
         cardFrame.setBackgroundDrawable(defaultBackground);
 
         if(card != null){
-            if(lang1.equals("Deutsch")){
+            if(lang1.equals(baseLanguage)){
                 lang1Text.setText(card.getLang1());
                 solution.setText(card.getLang2());
             }
@@ -324,7 +330,9 @@ public class TestFragment extends Fragment {
         Dictionary selected = dm.getSelectedDictionary();
         if(selected != null){
             if(selected.getLanguage() != null) {
+                lang1 = selected.getBaseLanguage();
                 lang2 = selected.getLanguage();
+                baseLanguage = lang1;
             }
         }
     }

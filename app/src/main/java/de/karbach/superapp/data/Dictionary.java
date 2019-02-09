@@ -60,7 +60,12 @@ public class Dictionary implements Serializable {
     private ArrayList<Card> cards;
 
     /**
-     * The language for the second language, the first language is always German currently
+     * Base language, usually German, but can be changed on a per dictionary basis
+     */
+    private String baseLanguage;
+
+    /**
+     * The language for the second language
      */
     private String language;
 
@@ -80,6 +85,7 @@ public class Dictionary implements Serializable {
     public Dictionary(String name){
         cards = new ArrayList<Card>();
         this.name = name;
+        this.setBaseLanguage("Deutsch");
     }
 
     public void addCard(Card card){
@@ -145,6 +151,14 @@ public class Dictionary implements Serializable {
             }
         }
         return -1;
+    }
+
+    public String getBaseLanguage() {
+        return baseLanguage;
+    }
+
+    public void setBaseLanguage(String language) {
+        this.baseLanguage = language;
     }
 
     public String getLanguage() {
@@ -215,6 +229,7 @@ public class Dictionary implements Serializable {
         }
 
         cards = other.cards;
+        baseLanguage = other.baseLanguage;
         language = other.language;
         name = other.name;
     }
@@ -261,6 +276,8 @@ public class Dictionary implements Serializable {
         StringBuilder result = new StringBuilder();
         result.append(language);
         result.append("\n");
+        result.append(baseLanguage);
+        result.append("\n");
         for(Card card: cards){
             String exportedCard = card.export();
             result.append(exportedCard);
@@ -300,18 +317,26 @@ public class Dictionary implements Serializable {
 
     public static Dictionary loadImported(String dictExportString, boolean loadAll){
         String[] lines = dictExportString.split("\n");
-        String language = "";
-        if(lines.length > 0){
-            language = lines[0];
-            language = language.trim();
-            if(language.endsWith(";")){
-                language = language.substring(0, language.length()-1 );
+        Dictionary result = null;
+        for(int i=0; i<=1; i++) {
+            String language = "";
+            if (lines.length > i) {
+                language = lines[i];
                 language = language.trim();
+                if (language.endsWith(";")) {
+                    language = language.substring(0, language.length() - 1);
+                    language = language.trim();
+                }
+            }
+            if(i == 0) {
+                result = new Dictionary(language);
+                result.setLanguage(language);
+            }
+            else{
+                result.setBaseLanguage(language);
             }
         }
-        Dictionary result = new Dictionary(language);
-        result.setLanguage(language);
-        for(int i=1; i<lines.length; i++){
+        for(int i=2; i<lines.length; i++){
             Card card = Card.loadJSONOrCSV(lines[i], loadAll);
             if(card != null) {
                 result.addCard(card);

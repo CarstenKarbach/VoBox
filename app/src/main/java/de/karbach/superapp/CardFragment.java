@@ -143,10 +143,15 @@ public class CardFragment extends Fragment {
         View result = inflater.inflate(R.layout.card_fragment, container, false);
 
         ImageView flag2 = (ImageView) result.findViewById(R.id.flag2);
+        ImageView flag1 = (ImageView) result.findViewById(R.id.flag1);
 
         Dictionary dict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
         Card card = null;
         if(dict != null){
+            if(flag1 != null){
+                int resource = PictureHelper.getDrawableResourceForLanguage(dict.getBaseLanguage());
+                flag1.setImageResource(resource);
+            }
             if(flag2 != null){
                 int resource = PictureHelper.getDrawableResourceForLanguage(dict.getLanguage());
                 flag2.setImageResource(resource);

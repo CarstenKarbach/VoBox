@@ -37,7 +37,7 @@
                 android:layout_weight="80"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="deutsches Wort"
+                android:hint="Wort"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
                 />

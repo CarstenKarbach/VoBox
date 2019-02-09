@@ -86,6 +86,12 @@ public class CardListFragment extends ListFragment{
             this.lang2 = lang2;
         }
 
+        public void setBaseLanguage(String baseLanguage) {
+            this.baseLanguage = baseLanguage;
+        }
+
+        private String baseLanguage = "Deutsch";
+
         private String lang1 = "Deutsch";
         private String lang2 = "Schwedisch";
 
@@ -117,7 +123,7 @@ public class CardListFragment extends ListFragment{
             Card c = getItem(position);
 
             if(langtext1 != null) {
-                if(lang1.equals("Deutsch")) {
+                if(lang1.equals(baseLanguage)) {
                     langtext1.setText(c.getLang1());
                 }
                 else {
@@ -126,7 +132,7 @@ public class CardListFragment extends ListFragment{
             }
 
             if(langtext2 != null) {
-                if(lang2.equals("Deutsch")) {
+                if(lang2.equals(baseLanguage)) {
                     langtext2.setText(c.getLang1());
                 }
                 else {
@@ -168,11 +174,13 @@ public class CardListFragment extends ListFragment{
         String language2 = "Schwedisch";
         DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
         Dictionary dict = dm.getSelectedDictionary();
+        language1 = dict.getBaseLanguage();
         language2 = dict.getLanguage();
 
         CardAdapter adapter = new CardAdapter(cardsAfterSearch);
         adapter.setLang1(language1);
         adapter.setLang2(language2);
+        adapter.setBaseLanguage(dict.getBaseLanguage());
 
         setListAdapter(adapter);
     }

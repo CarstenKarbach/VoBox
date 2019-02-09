@@ -56,6 +56,8 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class DictionaryFragment extends Fragment{
 
+    public static List<String> languages = Arrays.asList(new String[]{"Deutsch", "Englisch", "Spanisch", "Schwedisch"});
+
     protected void updateSaveLabel(Button button, String currentText){
         final DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
         if(dm.dictionaryExists(currentText)){
@@ -87,6 +89,22 @@ public class DictionaryFragment extends Fragment{
             count = String.valueOf(currentDict.getCards().size());
         }
         wordcount.setText(count);
+
+        Spinner baseLanguageSpinner = view.findViewById(R.id.flag_selection1);
+        Spinner languageSpinner = view.findViewById(R.id.flag_selection2);
+        if(currentDict != null){
+            int pos = 0;
+            pos = languages.indexOf(currentDict.getLanguage());
+            if(pos < 0 ){
+                pos = 0;
+            }
+            languageSpinner.setSelection(pos);
+            pos = languages.indexOf(currentDict.getBaseLanguage());
+            if(pos < 0 ){
+                pos = 0;
+            }
+            baseLanguageSpinner.setSelection(pos);
+        }
     }
 
     private class FlagAdapter extends BaseAdapter {
@@ -135,10 +153,13 @@ public class DictionaryFragment extends Fragment{
     }
 
     protected void setupLanguageSpinner(View rootView){
-        Spinner languageSpinner = rootView.findViewById(R.id.flag_selection);
-        List<String> flags = Arrays.asList(new String[]{"Deutsch", "Englisch", "Spanisch", "Schwedisch"});
-        FlagAdapter fa = new FlagAdapter(flags);
-        languageSpinner.setAdapter(fa);
+        int[] ids = new int[]{R.id.flag_selection1, R.id.flag_selection2};
+        for(int id: ids) {
+            Spinner languageSpinner = rootView.findViewById(id);
+            List<String> flags = languages;
+            FlagAdapter fa = new FlagAdapter(flags);
+            languageSpinner.setAdapter(fa);
+        }
     }
 
     @Nullable
@@ -163,6 +184,15 @@ public class DictionaryFragment extends Fragment{
 
                 dm.addDictionary(newDict);
                 dm.selectDictionary(newDict);
+
+                Dictionary dict = dm.getSelectedDictionary();
+                Spinner languageSpinner = getView().findViewById(R.id.flag_selection2);
+                Spinner baselanguageSpinner = getView().findViewById(R.id.flag_selection1);
+                String language = (String) languageSpinner.getSelectedItem();
+                String baselanguage = (String) baselanguageSpinner.getSelectedItem();
+                dict.setLanguage(language);
+                dict.setBaseLanguage(baselanguage);
+                dict.save(getActivity());
 
                 String toast = "Neues Wörterbuch '"+newDict+"' gespeichert";
                 if(existing){
