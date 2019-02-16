@@ -19,7 +19,9 @@
 package de.karbach.superapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -30,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -56,21 +59,35 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class DictionaryFragment extends Fragment{
 
+    public static String PARAMMODE = "de.karbach.superapp.DictionaryFragment.mode";
+
     public static List<String> languages = Arrays.asList(new String[]{"Deutsch", "Englisch", "Spanisch", "Schwedisch"});
 
-    protected void updateSaveLabel(Button button, String currentText){
-        final DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-        if(dm.dictionaryExists(currentText)){
+    protected void updateSaveLabel(Button button, View rootView){
+        if(mode == Mode.EDIT){
             button.setText("speichern");
         }
         else{
             button.setText("hinzufügen");
+            button.setEnabled(true);
+            if(rootView != null){
+                final EditText nameview = rootView.findViewById(R.id.dictionary_name);
+                if(nameview != null){
+                    String name = nameview.getText().toString();
+                    DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+                    boolean existing = dm.dictionaryExists(name);
+                    if(existing){
+                        button.setEnabled(false);
+                    }
+                }
+            }
         }
     }
 
     protected void reloadDictionaryData(View fragmentView, boolean updateselected){
         View view = fragmentView == null ? getView(): fragmentView;
         final EditText nameview = view.findViewById(R.id.dictionary_name);
+        nameview.setEnabled(mode == Mode.NEW);
         final DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
         Dictionary dict = dm.getSelectedDictionary();
         if(updateselected) {
@@ -79,7 +96,7 @@ public class DictionaryFragment extends Fragment{
             }
         }
         final Button saveButton = view.findViewById(R.id.save_button);
-        updateSaveLabel(saveButton, nameview.getText().toString());
+        updateSaveLabel(saveButton, view);
 
         TextView wordcount = view.findViewById(R.id.wordcount);
         Dictionary currentDict = dm.getDictionary(nameview.getText().toString());
@@ -104,6 +121,20 @@ public class DictionaryFragment extends Fragment{
                 pos = 0;
             }
             baseLanguageSpinner.setSelection(pos);
+        }
+
+        TextView actionLabel = view.findViewById(R.id.actionlabel);
+        if(mode == Mode.EDIT){
+            actionLabel.setText("Wörterbuch editieren");
+        }
+        else{
+            actionLabel.setText("Neues Wörterbuch");
+        }
+
+        final Button deleteButton = view.findViewById(R.id.delete_button);
+        deleteButton.setVisibility(View.VISIBLE);
+        if(mode == Mode.NEW){
+            deleteButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -159,6 +190,29 @@ public class DictionaryFragment extends Fragment{
             List<String> flags = languages;
             FlagAdapter fa = new FlagAdapter(flags);
             languageSpinner.setAdapter(fa);
+
+            if(id == R.id.flag_selection2){
+                languageSpinner.setSelection(1);
+            }
+        }
+    }
+
+    public enum Mode {
+        NEW, EDIT
+    }
+
+    private Mode mode = Mode.NEW;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+
+        Bundle arguments = getArguments();
+        if(arguments != null) {
+            int paramvalue = arguments.getInt(PARAMMODE, Mode.NEW.ordinal());
+            mode = Mode.values()[paramvalue];
         }
     }
 
@@ -172,7 +226,7 @@ public class DictionaryFragment extends Fragment{
         final EditText nameview = result.findViewById(R.id.dictionary_name);
         final DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
 
-        reloadDictionaryData(result, true);
+        reloadDictionaryData(result, mode == Mode.EDIT);
 
         final Button saveButton = result.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +235,11 @@ public class DictionaryFragment extends Fragment{
                 String newDict = nameview.getText().toString();
 
                 boolean existing = dm.dictionaryExists(newDict);
+
+                if(mode == Mode.NEW && existing){
+                    Toast.makeText(getActivity(), "Name schon vergeben.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 dm.addDictionary(newDict);
                 dm.selectDictionary(newDict);
@@ -195,11 +254,16 @@ public class DictionaryFragment extends Fragment{
                 dict.save(getActivity());
 
                 String toast = "Neues Wörterbuch '"+newDict+"' gespeichert";
-                if(existing){
+                if(mode==Mode.EDIT){
                     toast = "Änderungen am Wörterbuch '"+newDict+"' gespeichert";
                 }
 
                 Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
+
+                if(mode == Mode.NEW){
+                    mode = Mode.EDIT;
+                }
+
                 reloadDictionaryData(null, true);
             }
         });

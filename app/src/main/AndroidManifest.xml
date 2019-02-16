@@ -39,6 +39,7 @@
         </activity>
         <activity android:name=".DictionaryActivity"
             android:label="Wörterbuch"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".StarterActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -33,6 +33,13 @@ public class DictionaryActivity extends SingleFragmentSaveOnPauseActivity {
     protected Fragment createFragment() {
         DictionaryFragment result =  new DictionaryFragment();
 
+        int modeKey = getIntent().getIntExtra(DictionaryFragment.PARAMMODE, -1);
+        if(modeKey != -1){
+            Bundle arguments = new Bundle();
+            arguments.putInt(DictionaryFragment.PARAMMODE, modeKey);
+            result.setArguments(arguments);
+        }
+
         return result;
     }
 

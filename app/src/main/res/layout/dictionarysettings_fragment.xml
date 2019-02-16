@@ -17,6 +17,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:paddingTop="10dp"
             android:textSize="15pt"
+            android:id="@+id/actionlabel"
             />
 
         <EditText

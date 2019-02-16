@@ -57,6 +57,18 @@ public class StarterFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(getActivity(), DictionaryActivity.class);
+                        intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.NEW.ordinal());
+                        startActivity(intent);
+                    }
+                }
+        );
+        Button editDictButton = result.findViewById(R.id.edit_button);
+        editDictButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), DictionaryActivity.class);
+                        intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.EDIT.ordinal());
                         startActivity(intent);
                     }
                 }
