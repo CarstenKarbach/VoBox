@@ -93,6 +93,7 @@
                 android:layout_weight="70"
                 android:layout_height="wrap_content"
                 android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 ></TextView>
         </TableRow>
         <TableRow
@@ -104,11 +105,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/save_button"
+            style="@style/BlueButton"
             android:text="speichern"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/delete_button"
+            style="@style/BlueButton"
             android:text="löschen"/>
         </TableRow>
 

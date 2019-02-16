@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/button_showlist"
         android:text="zur Liste"
+        style="@style/BlueButton"
         />
 
 </LinearLayout>

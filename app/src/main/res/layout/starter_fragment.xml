@@ -6,6 +6,29 @@
               android:weightSum="100"
     >
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="50"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        >
+        <Spinner
+            android:id="@+id/language_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            ></Spinner>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/fa_bars"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:id="@+id/actions_button"/>
+    </LinearLayout>
+
     <TableRow
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -20,7 +43,7 @@
             <ImageButton
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:src="@drawable/newcard"
+                android:src="@drawable/fa_pencil_square"
                 android:scaleType="fitCenter"
                 android:background="#ffc"
                 android:padding="4dp"
@@ -46,7 +69,7 @@
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:src="@drawable/wordlist"
+            android:src="@drawable/fa_list_alt"
             android:scaleType="fitCenter"
             android:background="#cfc"
             android:padding="4dp"
@@ -72,7 +95,7 @@
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:src="@drawable/boxpart"
+            android:src="@drawable/fa_cubes"
             android:scaleType="fitCenter"
             android:background="#ccf"
             android:padding="4dp"
@@ -88,53 +111,6 @@
             android:id="@+id/box_button"
             />
         </LinearLayout>
-
-    </TableRow>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="50"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
-        >
-    <Spinner
-        android:id="@+id/language_selection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        ></Spinner>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="editieren"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:id="@+id/edit_button"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="neu"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:id="@+id/add_button"/>
-
-    </LinearLayout>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="exportieren"
-            android:id="@+id/button_export"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="flexible Liste"
-            android:id="@+id/button_selectcards"
-            />
 
     </TableRow>
 

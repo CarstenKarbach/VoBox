@@ -25,13 +25,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
@@ -45,34 +48,29 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class StarterFragment extends Fragment {
 
+    private void updateSelectedDictionary(Spinner select){
+        DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+
+        ArrayAdapter<CharSequence> dictChoose = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_dropdown_item, dm.readDictionaryArray() );
+        select.setAdapter(dictChoose);
+
+        Dictionary selectedDict = dm.getSelectedDictionary();
+        if(selectedDict != null) {
+            for (int i = 0; i < select.getCount(); i++) {
+                String name = select.getItemAtPosition(i).toString();
+                if (name.equals(selectedDict.getName())) {
+                    select.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("carsten", "onCreateView Starter");
         View result = inflater.inflate(R.layout.starter_fragment, container, false);
-
-        Button newDictButton = result.findViewById(R.id.add_button);
-        newDictButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(), DictionaryActivity.class);
-                        intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.NEW.ordinal());
-                        startActivity(intent);
-                    }
-                }
-        );
-        Button editDictButton = result.findViewById(R.id.edit_button);
-        editDictButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(), DictionaryActivity.class);
-                        intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.EDIT.ordinal());
-                        startActivity(intent);
-                    }
-                }
-        );
 
         Button newCardButton = (Button) result.findViewById(R.id.newcard_button);
         View.OnClickListener newCardOnClick = new View.OnClickListener() {
@@ -127,21 +125,8 @@ public class StarterFragment extends Fragment {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                     R.array.languages_array, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-            ArrayAdapter<CharSequence> dictChoose = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_dropdown_item, dm.readDictionaryArray() );
 
-            select.setAdapter(dictChoose);
-
-            Dictionary selectedDict = dm.getSelectedDictionary();
-            if(selectedDict != null) {
-                for (int i = 0; i < select.getCount(); i++) {
-                    String name = select.getItemAtPosition(i).toString();
-                    if (name.equals(selectedDict.getName())) {
-                        select.setSelection(i);
-                        break;
-                    }
-                }
-            }
+            updateSelectedDictionary(select);
 
             select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -158,31 +143,62 @@ public class StarterFragment extends Fragment {
             });
         }
 
-        Button exporter = (Button) result.findViewById(R.id.button_export);
-        if(exporter != null){
-            exporter.setOnClickListener(new View.OnClickListener() {
+        final ImageButton actionsButton = (ImageButton) result.findViewById(R.id.actions_button);
+        if(actionsButton != null){
+            actionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-                    if(dm == null){
-                        return;
-                    }
-                    Dictionary selected = dm.getSelectedDictionary();
-                    if(selected == null){
-                        return;
-                    }
-                    selected.sendExportedDictionary(getActivity());
-                }
-            });
-        }
 
-        Button listGen = (Button) result.findViewById(R.id.button_selectcards);
-        if(listGen != null){
-            listGen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent listGenIntent = new Intent(getActivity(), ListGeneratorActivity.class);
-                    startActivity(listGenIntent);
+                    PopupMenu popup = new PopupMenu(getActivity(), actionsButton);
+                    popup.getMenuInflater().inflate(R.menu.dictionary_actions, popup.getMenu());
+
+                    //registering popup with OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getItemId() == R.id.dict_edit){
+                                Intent intent = new Intent(getActivity(), DictionaryActivity.class);
+                                intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.EDIT.ordinal());
+                                startActivity(intent);
+                                return true;
+                            }
+                            if(item.getItemId() == R.id.dict_export){
+                                DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+                                if(dm == null){
+                                    return true;
+                                }
+                                Dictionary selected = dm.getSelectedDictionary();
+                                if(selected == null){
+                                    return true;
+                                }
+                                selected.sendExportedDictionary(getActivity());
+                            }
+                            if(item.getItemId() == R.id.dict_new){
+                                Intent intent = new Intent(getActivity(), DictionaryActivity.class);
+                                intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.NEW.ordinal());
+                                startActivity(intent);
+                            }
+                            if(item.getItemId() == R.id.dict_delete){
+                                DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+                                if(dm == null){
+                                    return true;
+                                }
+                                Dictionary selected = dm.getSelectedDictionary();
+                                if(selected == null){
+                                    return true;
+                                }
+                                String todelete = selected.getName();
+                                dm.deleteDictionary(selected.getName());
+
+                                Toast.makeText(getActivity(), "Wörterbuch '"+todelete+"' gelöscht", Toast.LENGTH_SHORT).show();
+
+                                updateSelectedDictionary(select);
+                            }
+
+                            return true;
+                        }
+                    });
+
+                    popup.show();
                 }
             });
         }
