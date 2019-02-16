@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import java.io.BufferedOutputStream;
@@ -352,8 +353,9 @@ public class Dictionary implements Serializable {
             return;
         }
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setType("text/plain");
-        Uri uri = Uri.fromFile(exportedFile);
+        Uri uri = FileProvider.getUriForFile(context, "de.karbach.superapp.fileprovider", exportedFile);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         context.startActivity(intent);
     }
