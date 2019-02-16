@@ -12,6 +12,7 @@
         android:layout_weight="50"
         android:layout_gravity="center_vertical|center_horizontal"
         android:orientation="horizontal"
+        android:weightSum="100"
         >
         <Spinner
             android:id="@+id/language_selection"
