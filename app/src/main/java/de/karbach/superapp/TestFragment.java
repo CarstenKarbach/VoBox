@@ -197,7 +197,7 @@ public class TestFragment extends Fragment {
 
         Card card = getCurrentCard();
 
-        boolean solutionCorrect = lang2Text.getText().toString().equals(solution.getText().toString());
+        boolean solutionCorrect = lang2Text.getText().toString().trim().equals(solution.getText().toString().trim());
         if(! solutionCorrect){
             //Try to remove the brackets
             String longSolution = solution.getText().toString();
@@ -206,7 +206,7 @@ public class TestFragment extends Fragment {
             if(bOpen != -1){
                 shortSolution = longSolution.substring(0, bOpen);
                 shortSolution = shortSolution.trim();
-                solutionCorrect = lang2Text.getText().toString().equals(shortSolution);
+                solutionCorrect = lang2Text.getText().toString().trim().equals(shortSolution);
             }
         }
         if(solutionCorrect){

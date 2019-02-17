@@ -216,7 +216,7 @@ public class CardFragment extends Fragment {
                 public void onClick(View v) {
                     Dictionary dict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
                     if(dict != null && lang1 != null && lang2 != null){
-                        Card newCard = new Card(lang1.getText().toString(), lang2.getText().toString());
+                        Card newCard = new Card(lang1.getText().toString().trim(), lang2.getText().toString().trim());
                         if(lessons != null){
                             String lesson = getCheckedValueInRadiogroup(lessons);
                             newCard.setLesson(lesson);
@@ -237,7 +237,7 @@ public class CardFragment extends Fragment {
                         }
                     }
                     if(lang1Key != null){
-                       lang1Key = lang1.getText().toString();
+                       lang1Key = lang1.getText().toString().trim();
                     }
                     if(lang1Key == null) {
                         lang1.setText("");

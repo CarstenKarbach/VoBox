@@ -12,112 +12,41 @@
         android:padding="8dp"
         >
 
-    <RelativeLayout
-        style="@style/RelativeBox"
-        >
-        <Button
-            android:text="5"
-            android:id="@+id/box5_button"
-            style="@style/BoxButton"
-            />
-        <LinearLayout
-            style="@style/CardStackLinearLayout"
-            android:layout_toRightOf="@id/box5_button"
-            android:layout_alignTop = "@id/box5_button"
-            >
-            <include layout="@layout/cardstack_image"/>
-            <TextView
-                style="@style/CardStackText"
-                android:id="@+id/box5_text"
-                />
-        </LinearLayout>
-    </RelativeLayout>
+    <de.karbach.superapp.BoxView
+        android:layout_height="64dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview5"
+        android:layout_marginTop="8dp"
+        />
 
-    <RelativeLayout
-        style="@style/RelativeBox"
-        >
-        <Button
-            android:text="4"
-            android:id="@+id/box4_button"
-            style="@style/BoxButton"
-            />
-        <LinearLayout
-            style="@style/CardStackLinearLayout"
-            android:layout_toRightOf="@id/box4_button"
-            android:layout_alignTop = "@id/box4_button"
-            >
-            <include layout="@layout/cardstack_image"/>
-            <TextView
-                style="@style/CardStackText"
-                android:id="@+id/box4_text"
-                />
-        </LinearLayout>
-    </RelativeLayout>
+    <de.karbach.superapp.BoxView
+        android:layout_height="64dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview4"
+        android:layout_marginTop="8dp"
+        />
 
-    <RelativeLayout
-        style="@style/RelativeBox"
-        >
-        <Button
-            android:text="3"
-            android:id="@+id/box3_button"
-            style="@style/BoxButton"
-            />
-        <LinearLayout
-            style="@style/CardStackLinearLayout"
-            android:layout_toRightOf="@id/box3_button"
-            android:layout_alignTop = "@id/box3_button"
-            >
-            <include layout="@layout/cardstack_image"/>
-            <TextView
-                style="@style/CardStackText"
-                android:id="@+id/box3_text"
-                />
-        </LinearLayout>
-    </RelativeLayout>
+    <de.karbach.superapp.BoxView
+        android:layout_height="64dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview3"
+        android:layout_marginTop="8dp"
+        />
 
-    <RelativeLayout
-        style="@style/RelativeBox"
-        >
-        <Button
-            android:text="2"
-            android:id="@+id/box2_button"
-            style="@style/BoxButton"
-            />
-        <LinearLayout
-            style="@style/CardStackLinearLayout"
-            android:layout_toRightOf="@id/box2_button"
-            android:layout_alignTop = "@id/box2_button"
-            >
-            <include layout="@layout/cardstack_image"/>
-            <TextView
-                style="@style/CardStackText"
-                android:id="@+id/box2_text"
-                />
-        </LinearLayout>
-    </RelativeLayout>
+    <de.karbach.superapp.BoxView
+        android:layout_height="64dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview2"
+        android:layout_marginTop="8dp"
+        />
 
 
-    <RelativeLayout
-        style="@style/RelativeBox"
-        >
-        <Button
-            android:text="1"
-            android:id="@+id/box1_button"
-            style="@style/BoxButton"
-            />
-        <LinearLayout
-            style="@style/CardStackLinearLayout"
-            android:layout_toRightOf="@id/box1_button"
-            android:layout_alignTop = "@id/box1_button"
-            >
-            <include layout="@layout/cardstack_image"/>
-            <TextView
-                style="@style/CardStackText"
-                android:id="@+id/box1_text"
-                />
-        </LinearLayout>
-    </RelativeLayout>
-
+    <de.karbach.superapp.BoxView
+        android:layout_height="64dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview1"
+        android:layout_marginTop="8dp"
+        />
 
 </LinearLayout>
 

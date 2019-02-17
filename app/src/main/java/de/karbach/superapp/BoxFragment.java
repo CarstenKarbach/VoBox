@@ -19,11 +19,15 @@
 package de.karbach.superapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
@@ -78,50 +83,6 @@ public class BoxFragment extends Fragment{
         startActivity(intent);
     }
 
-    private Button getButtonForBox(int box, View rootView){
-        if(rootView == null){
-            return null;
-        }
-
-        if(box == 1){
-            return (Button) rootView.findViewById(R.id.box1_button);
-        }
-        else if(box == 2) {
-            return (Button) rootView.findViewById(R.id.box2_button);
-        }
-        else if(box == 3) {
-            return (Button) rootView.findViewById(R.id.box3_button);
-        }
-        else if(box == 4) {
-            return (Button) rootView.findViewById(R.id.box4_button);
-        }
-        else {
-            return (Button) rootView.findViewById(R.id.box5_button);
-        }
-    }
-
-    private TextView getCardsNumberTextViewForBox(int box, View rootView){
-        if(rootView == null){
-            return null;
-        }
-
-        if(box == 1){
-            return (TextView) rootView.findViewById(R.id.box1_text);
-        }
-        else if(box == 2) {
-            return (TextView) rootView.findViewById(R.id.box2_text);
-        }
-        else if(box == 3) {
-            return (TextView) rootView.findViewById(R.id.box3_text);
-        }
-        else if(box == 4) {
-            return (TextView) rootView.findViewById(R.id.box4_text);
-        }
-        else {
-            return (TextView) rootView.findViewById(R.id.box5_text);
-        }
-    }
-
     protected void showPopup(int box){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
@@ -129,14 +90,14 @@ public class BoxFragment extends Fragment{
             return;
         }
 
-        Button boxButton = getButtonForBox(box, getView());
-        if(boxButton == null){
+        BoxView bv = getView().findViewById(boxids[box-1]);
+        if(bv == null){
             return;
         }
 
         final int currentBox = box;
 
-        PopupMenu popup = new PopupMenu(getActivity(), boxButton);
+        PopupMenu popup = new PopupMenu(getActivity(), bv);
         //Inflating the Popup using xml file
         popup.getMenuInflater().inflate(R.menu.boxpopup, popup.getMenu());
 
@@ -160,16 +121,64 @@ public class BoxFragment extends Fragment{
         popup.show();//showing popup menu
     }
 
+    private static int[] boxids = new int[]{R.id.boxview1, R.id.boxview2, R.id.boxview3, R.id.boxview4, R.id.boxview5};
 
-    public void updateCardNumbers(View root){
+    public void updateBoxViews(View root){
         if(root == null){
             return;
         }
-        for(int i=1; i<=5; i++){
-            TextView texti = getCardsNumberTextViewForBox(i, root);
-            int cards = getCardNumberInBox(i);
-            texti.setText(String.valueOf(cards));
+        DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+        Dictionary dict = dm.getSelectedDictionary();
+
+        for(int box=1; box<=5; box++){
+            BoxView bv = root.findViewById(boxids[box-1]);
+            bv.setLevel(box);
+            ArrayList<Card> boxCards = dict.getCardsForBox(box);
+            bv.setCards(boxCards);
         }
+    }
+
+    public void initGestureDetection(final BoxView boxview, final int currentbox){
+        final GestureDetectorCompat mDetector = new GestureDetectorCompat(getActivity(),
+                new GestureDetector.OnGestureListener(){
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onShowPress(MotionEvent e) {
+                    }
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        showPopup(currentbox);
+                        return true;
+                    }
+                    @Override
+                    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                        boxview.setOffset( (int)(boxview.getOffset() + distanceX) );
+                        return true;
+                    }
+
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                        return true;
+                    }
+                }
+        );
+        boxview.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mDetector.onTouchEvent(event)) {
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Nullable
@@ -178,22 +187,9 @@ public class BoxFragment extends Fragment{
         View result = inflater.inflate(R.layout.boxes_fragment, container, false);
 
         for(int i=1; i<=5; i++){
-            Button boxi = getButtonForBox(i, result);
+            BoxView boxi = result.findViewById(boxids[i-1]);
             final int currentBox = i;
-            boxi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showPopup(currentBox);
-                }
-            });
-
-            TextView texti = getCardsNumberTextViewForBox(i, result);
-            texti.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showList(currentBox);
-                }
-            });
+            initGestureDetection(boxi, currentBox);
         }
 
         return result;
@@ -202,6 +198,6 @@ public class BoxFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        updateCardNumbers(getView());
+        updateBoxViews(getView());
     }
 }
