@@ -8,8 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
+import android.text.format.Time;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -23,27 +25,48 @@ import de.karbach.superapp.data.Card;
 
 public class BoxView extends View {
 
-    private Paint linePaint, textpaint, fillPaint, levelPaint;
+    private Paint linePaint, textpaint, centertextpaint, fillPaint, levelPaint;
 
-    private String exampleWord = "EXAMPLEWORDTest";
+    private String exampleWord = "EXAMPLEWORDT";
 
-    private Bitmap note, box, cardsbmp;
-    private Rect src,boxsrc,stacksrc;
+    private Bitmap note, box, cardsbmp, flag1, flag2;
+    private Rect src,boxsrc,stacksrc, flagsrc;
 
     private int offset = 0;
+
+    private float flingvelocity = 0;
+    private long startTime;
+
+    public void fling(float velo){
+        flingvelocity = velo*0.05f;
+        startTime = System.currentTimeMillis();
+        lastFlingUpdate = startTime;
+        postInvalidate();
+    }
 
     private List<Card> cards = new ArrayList<Card>();
 
     public void setCards(List<Card> cards){
         this.cards = cards;
-        invalidate();
+        postInvalidate();
     }
 
     private int level = 0;
 
+    public void setLanguage1(String lang1){
+        Resources res = getResources();
+        flag1 = BitmapFactory.decodeResource(res, PictureHelper.getDrawableResourceForLanguage(lang1));
+        flagsrc = new Rect(0,0, flag1.getWidth()-1, flag1.getHeight()-1);
+    }
+
+    public void setLanguage2(String lang2){
+        Resources res = getResources();
+        flag2 = BitmapFactory.decodeResource(res, PictureHelper.getDrawableResourceForLanguage(lang2));
+    }
+
     public void setLevel(int level){
         this.level = level;
-        invalidate();
+        postInvalidate();
     }
 
     public int getOffset(){
@@ -51,6 +74,7 @@ public class BoxView extends View {
     }
 
     public void setOffset(int offset){
+        int origOffset = this.offset;
         if(offset > maxOffset){
             offset = maxOffset;
         }
@@ -58,7 +82,10 @@ public class BoxView extends View {
             offset = 0;
         }
         this.offset = offset;
-        invalidate();
+
+        if(origOffset != offset){
+            postInvalidate();
+        }
     }
 
     public BoxView(Context context, AttributeSet attrs){
@@ -70,8 +97,13 @@ public class BoxView extends View {
 
         textpaint = new Paint();
         textpaint.setAntiAlias(true);
-        textpaint.setColor( Color.BLACK );
-        textpaint.setTextAlign(Paint.Align.CENTER);
+        textpaint.setColor( ContextCompat.getColor(context,R.color.colorPrimary) );
+        textpaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+        centertextpaint = new Paint();
+        centertextpaint.setAntiAlias(true);
+        centertextpaint.setTextAlign(Paint.Align.CENTER);
+        centertextpaint.setColor( Color.BLACK );
 
         levelPaint = new Paint();
         levelPaint.setAntiAlias(true);
@@ -108,11 +140,12 @@ public class BoxView extends View {
             textpaint.getTextBounds(exampleWord, 0, exampleWord.length(), textrect);
         }
         exampleWordHeight = textrect.height();
+        centertextpaint.setTextSize(textpaint.getTextSize());
     }
 
     private int width, height;
 
-    private Rect boxdest, dest, stackdest;
+    private Rect boxdest, dest, stackdest, flagrect;
     private Rect textrect = new Rect();
 
     private int maxOffset;
@@ -135,6 +168,8 @@ public class BoxView extends View {
         levelheight = textrect.height();
 
         stackdest = new Rect(height*2/3, height*3/6, height, height*4/6);
+
+        flagrect = new Rect();
     }
 
     @Override
@@ -144,9 +179,34 @@ public class BoxView extends View {
         measure();
     }
 
+    private long lastFlingUpdate = 0;
+
+    protected void handleFling(){
+        if(flingvelocity == 0){
+            return;
+        }
+
+        long currentT = System.currentTimeMillis();
+
+        long absolutedeltaT = currentT-startTime;
+        float currentVelo = flingvelocity/absolutedeltaT;
+
+        float drawDeltaT = currentT-lastFlingUpdate;
+        float dist = drawDeltaT*currentVelo;
+
+        setOffset(this.offset-(int)dist);
+
+        lastFlingUpdate = System.currentTimeMillis();
+
+        if(Math.abs(dist ) <= 1){
+            flingvelocity = 0;
+        }
+    }
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        handleFling();
 
         int padding = 5;
 
@@ -167,24 +227,32 @@ public class BoxView extends View {
         canvas.drawText(String.valueOf(level), height/4, height/2+levelheight, levelPaint);
         canvas.drawBitmap(cardsbmp, stacksrc, stackdest, levelPaint);
 
-        canvas.drawText(String.valueOf(cards.size()), height*5/6, height*5/6, textpaint);
+        canvas.drawText(String.valueOf(cards.size()), height*5/6, height*5/6, centertextpaint);
     }
 
     protected void drawCard(Card card, Rect dest, Canvas canvas){
         canvas.drawBitmap(note, src, dest, linePaint);
 
         String text1 = card.getLang1();
-        if(text1.length() > exampleWord.length()){
-            text1 = text1.substring(0, exampleWord.length()-3)+"...";
+        int maxlength = exampleWord.length()-3;
+        if(text1.length() > maxlength){
+            text1 = text1.substring(0, maxlength-3)+"...";
         }
 
-        canvas.drawText(text1, dest.left+dest.width()/2, dest.top+exampleWordHeight*3, textpaint);
+        int flagleft = dest.left+dest.width()/11;
+        int flagright = dest.left+dest.width()/11+exampleWordHeight*3/2;
+
+        canvas.drawText(text1, flagright, dest.top+exampleWordHeight*3, textpaint);
+        flagrect.set(flagleft, dest.top+exampleWordHeight*2, flagright, dest.top+exampleWordHeight*3);
+        canvas.drawBitmap(flag1, flagsrc, flagrect, textpaint);
 
         String text2 = card.getLang2();
-        if(text2.length() > exampleWord.length()){
-            text2 = text2.substring(0, exampleWord.length()-3)+"...";
+        if(text2.length() > maxlength){
+            text2 = text2.substring(0, maxlength-3)+"...";
         }
 
-        canvas.drawText(text2, dest.left+dest.width()/2, dest.top+exampleWordHeight*5, textpaint);
+        canvas.drawText(text2, flagright, dest.top+exampleWordHeight*5, textpaint);
+        flagrect.set(flagleft, dest.top+exampleWordHeight*4, flagright, dest.top+exampleWordHeight*5);
+        canvas.drawBitmap(flag2, flagsrc, flagrect, textpaint);
     }
 }

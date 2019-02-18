@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -132,6 +133,8 @@ public class BoxFragment extends Fragment{
 
         for(int box=1; box<=5; box++){
             BoxView bv = root.findViewById(boxids[box-1]);
+            bv.setLanguage1(dict.getBaseLanguage());
+            bv.setLanguage2(dict.getLanguage());
             bv.setLevel(box);
             ArrayList<Card> boxCards = dict.getCardsForBox(box);
             bv.setCards(boxCards);
@@ -143,6 +146,7 @@ public class BoxFragment extends Fragment{
                 new GestureDetector.OnGestureListener(){
                     @Override
                     public boolean onDown(MotionEvent e) {
+                        boxview.fling(0);
                         return true;
                     }
 
@@ -157,6 +161,7 @@ public class BoxFragment extends Fragment{
                     @Override
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                         boxview.setOffset( (int)(boxview.getOffset() + distanceX) );
+                        boxview.fling(0);
                         return true;
                     }
 
@@ -167,6 +172,7 @@ public class BoxFragment extends Fragment{
 
                     @Override
                     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                        boxview.fling(velocityX);
                         return true;
                     }
                 }
