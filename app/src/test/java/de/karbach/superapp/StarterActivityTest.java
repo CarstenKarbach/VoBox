@@ -11,9 +11,15 @@ import static org.junit.Assert.*;
 public class StarterActivityTest {
 
     @Test
-    public void startActivityTest(){
+    public void startActivityTest() {
         StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
         assertFalse(activity.showUpButton());
+    }
+
+    @Test
+    public void startDictionaryActivity(){
+        DictionaryActivity activity = Robolectric.setupActivity(DictionaryActivity.class);
+        assertTrue(activity.showUpButton());
     }
 
 }
