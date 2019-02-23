@@ -1,6 +1,6 @@
 /*
- MoTAC - digital board for TAC board game
- Copyright (C) 2015-2016  Carsten Karbach
+ VoBox - train your vocabulary
+ Copyright (C) 2015-2019  Carsten Karbach
 
  Contact by mail carstenkarbach@gmx.de
  This program is free software; you can redistribute it and/or modify
