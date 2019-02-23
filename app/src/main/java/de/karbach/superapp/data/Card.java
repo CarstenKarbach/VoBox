@@ -1,4 +1,4 @@
-/**
+/*
  MoTAC - digital board for TAC board game
  Copyright (C) 2015-2016  Carsten Karbach
 
@@ -21,9 +21,7 @@ package de.karbach.superapp.data;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.Writer;
 
 /**
  * Created by Carsten on 27.12.2015.
@@ -149,6 +147,9 @@ public class Card implements Serializable {
     }
 
     public static Card loadImportedCSV(String csvString, boolean loadAll) {
+        if(csvString == null ){
+            return null;
+        }
         csvString = csvString.trim();
         String[] delimiters = new String[]{";", ",", "|"};
         String delimiter = ";";
@@ -159,10 +160,8 @@ public class Card implements Serializable {
                 break;
             }
         }
+
         String[] array = csvString.split(delimiter);
-        if(array == null){
-            return null;
-        }
 
         String lang1 = null;
         if (array.length > 0) {
