@@ -18,10 +18,14 @@
 
 package de.karbach.superapp;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.android.controller.ActivityController;
 
 import static org.junit.Assert.*;
 
@@ -42,7 +46,13 @@ public class StartActivitiesTest {
 
     @Test
     public void startCardActivity(){
-        CardActivity activity = Robolectric.setupActivity(CardActivity.class);
+        StarterActivity starteractivity = Robolectric.setupActivity(StarterActivity.class);
+
+        Intent intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(CardFragment.PARAMLANG1KEY, "example");
+        ActivityController<CardActivity> actController = Robolectric.buildActivity(CardActivity.class);
+        actController.get().setIntent(intent);
+        actController.create();
     }
 
     @Test
