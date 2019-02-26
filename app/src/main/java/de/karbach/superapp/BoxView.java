@@ -41,14 +41,19 @@ import java.util.List;
 
 import de.karbach.superapp.data.Card;
 
+/**
+ * Symbolizes one cardbox of a single level.
+ * Shows box, number of cards, and some cards in the box.
+ * Allows for scroll and fling gesture.
+ */
 public class BoxView extends View {
 
     private Paint linePaint, textpaint, centertextpaint, fillPaint, levelPaint;
 
     private String exampleWord = "EXAMPLEWORDT";
 
-    private Bitmap note, box, cardsbmp, flag1, flag2;
-    private Rect src,boxsrc,stacksrc, flagsrc;
+    private Bitmap note, box, boxend, drawer, cardsbmp, flag1, flag2;
+    private Rect src,boxsrc,boxendsrc, drawersrc,stacksrc, flagsrc;
 
     private int offset = 0;
 
@@ -142,12 +147,34 @@ public class BoxView extends View {
 
         Resources res = getResources();
         note = BitmapFactory.decodeResource(res, R.drawable.fa_sticky_note);
-        box = BitmapFactory.decodeResource(res, R.drawable.flat_cardboard_box);
+        box = BitmapFactory.decodeResource(res, R.drawable.box_no_end);
+        boxend = BitmapFactory.decodeResource(res, R.drawable.boxend);
         cardsbmp = BitmapFactory.decodeResource(res, R.drawable.cardstack);
+        drawer = BitmapFactory.decodeResource(res, R.drawable.drawer);
 
         src = new Rect(0,0, note.getWidth()-1, note.getHeight()-1);
         boxsrc = new Rect(0,0, box.getWidth()-1, box.getHeight()-1);
+        boxendsrc = new Rect(0,0, boxend.getWidth()-1, boxend.getHeight()-1);
+        drawersrc = new Rect(0,0, drawer.getWidth()-1, drawer.getHeight()-1);
         stacksrc = new Rect(0,0, cardsbmp.getWidth()-1, cardsbmp.getHeight()-1);
+    }
+
+    private Rect rescaleRectBox = new Rect();
+    private Rect rescaleRectBoxEnd = new Rect();
+    private Rect rescaleRectDrawer = new Rect();
+
+    /**
+     * Rescale the rect to the target height, but keep the aspect ratio.
+     * @param rect
+     * @param targetHeight
+     */
+    private void scaleRect(Rect rect, int targetHeight){
+        if(targetHeight <= 0){
+            return;
+        }
+        float ratio = rect.height()/(float)rect.width();
+        int newWidth = Math.round(targetHeight/ratio);
+        rect.set(rect.left, rect.top, rect.left+newWidth-1,rect.top+targetHeight-1);
     }
 
     private int exampleWordHeight;
@@ -187,7 +214,7 @@ public class BoxView extends View {
         boxdest = new Rect(0, 0, height - 1, height - 1);
         dest = new Rect(0,0,0,0);
 
-        maxOffset = height+cards.size()*height-width;
+        maxOffset = cards.size()*height;
 
         levelPaint.setTextSize(height/2);
         levelPaint.getTextBounds(String.valueOf(level), 0, String.valueOf(level).length(), textrect);
@@ -196,6 +223,12 @@ public class BoxView extends View {
         stackdest = new Rect(height*2/3, height*3/6, height, height*4/6);
 
         flagrect = new Rect();
+
+        rescaleRectBox.set(boxsrc);
+        scaleRect( rescaleRectBox, height);
+        rescaleRectBoxEnd.set(boxendsrc);
+        scaleRect( rescaleRectBoxEnd, height);
+        rescaleRectDrawer.set(0, 0, height-1, Math.round(drawersrc.height()/(float)drawersrc.width()*(height)) );
     }
 
     @Override
@@ -236,7 +269,7 @@ public class BoxView extends View {
 
         handleFling();
 
-        int padding = 5;
+        int padding = 10;
 
         for(int i=0; i<cards.size(); i++) {
             Card card = cards.get(i);
@@ -251,17 +284,26 @@ public class BoxView extends View {
                 continue;
             }
 
+            drawerTarget.set(dest.left-padding, dest.bottom+1-rescaleRectDrawer.height()+padding, dest.right+padding+1, dest.bottom+padding );
+            canvas.drawBitmap(drawer, drawersrc, drawerTarget, linePaint);
             drawCard(card, dest, canvas);
         }
 
         canvas.drawRect(0,0, height-1, height-1, fillPaint);
-        canvas.drawBitmap(box, boxsrc, boxdest, linePaint);
+        canvas.drawBitmap(box, boxsrc, rescaleRectBox, linePaint);
+
+        //Draw Box end
+        int leftEnd = (cards.size()+1)*height-offset;
+        rescaleRectBoxEnd.set(leftEnd, 0, leftEnd+rescaleRectBoxEnd.width(), rescaleRectBoxEnd.height());
+        canvas.drawBitmap(boxend, boxendsrc, rescaleRectBoxEnd, linePaint);
 
         canvas.drawText(String.valueOf(level), height/4, height/2+levelheight, levelPaint);
         canvas.drawBitmap(cardsbmp, stacksrc, stackdest, levelPaint);
 
         canvas.drawText(String.valueOf(cards.size()), height*5/6, height*5/6, centertextpaint);
     }
+
+    private Rect drawerTarget = new Rect();
 
     protected void drawCard(Card card, Rect dest, Canvas canvas){
         canvas.drawBitmap(note, src, dest, linePaint);
