@@ -27,6 +27,9 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
+import de.karbach.superapp.data.Dictionary;
+import de.karbach.superapp.data.DictionaryManagement;
+
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -53,6 +56,11 @@ public class StartActivitiesTest {
         ActivityController<CardActivity> actController = Robolectric.buildActivity(CardActivity.class);
         actController.get().setIntent(intent);
         actController.create();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        Dictionary dict = dm.getSelectedDictionary();
+        assertNotNull(dict.getBaseLanguage());
+        System.out.println(dict.getBaseLanguage());
     }
 
     @Test

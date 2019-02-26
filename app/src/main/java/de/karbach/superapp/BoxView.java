@@ -54,9 +54,12 @@ public class BoxView extends View {
 
     private float flingvelocity = 0;
     private long startTime;
+    private int maxflingcount = 50;
+    private int flingCount = 0;
 
     public void fling(float velo){
         flingvelocity = velo*0.05f;
+        flingCount = 0;
         startTime = System.currentTimeMillis();
         lastFlingUpdate = startTime;
         postInvalidate();
@@ -91,7 +94,7 @@ public class BoxView extends View {
         return offset;
     }
 
-    public void setOffset(int offset){
+    public void setOffset(int offset, boolean fromUIThread){
         int origOffset = this.offset;
         if(offset > maxOffset){
             offset = maxOffset;
@@ -102,7 +105,12 @@ public class BoxView extends View {
         this.offset = offset;
 
         if(origOffset != offset){
-            postInvalidate();
+            if(fromUIThread) {
+                invalidate();
+            }
+            else{
+                postInvalidate();
+            }
         }
     }
 
@@ -204,6 +212,8 @@ public class BoxView extends View {
             return;
         }
 
+        flingCount ++;
+
         long currentT = System.currentTimeMillis();
 
         long absolutedeltaT = currentT-startTime;
@@ -212,11 +222,11 @@ public class BoxView extends View {
         float drawDeltaT = currentT-lastFlingUpdate;
         float dist = drawDeltaT*currentVelo;
 
-        setOffset(this.offset-(int)dist);
+        setOffset(this.offset-(int)dist, true);
 
         lastFlingUpdate = System.currentTimeMillis();
 
-        if(Math.abs(dist ) <= 1){
+        if(Math.abs(dist ) <= 1 || flingCount >= maxflingcount){
             flingvelocity = 0;
         }
     }
@@ -232,7 +242,12 @@ public class BoxView extends View {
             Card card = cards.get(i);
             dest.set((i+1)*height-offset+padding, padding, (i+2)*height - 1 -offset-padding, height - 1-padding);
 
-            if(dest.left > width || dest.right < 0){
+            //Stop if new cards are no longer visible
+            if(dest.left > width){
+                break;
+            }
+            //Continue until card is visible from the left
+            if(dest.right < 0){
                 continue;
             }
 

@@ -160,7 +160,7 @@ public class BoxFragment extends Fragment{
                     }
                     @Override
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                        boxview.setOffset( (int)(boxview.getOffset() + distanceX) );
+                        boxview.setOffset( (int)(boxview.getOffset() + distanceX), false );
                         boxview.fling(0);
                         return true;
                     }
@@ -204,6 +204,6 @@ public class BoxFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        //updateBoxViews(getView());
+        updateBoxViews(getView());
     }
 }
