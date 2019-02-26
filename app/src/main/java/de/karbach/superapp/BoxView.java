@@ -294,8 +294,10 @@ public class BoxView extends View {
 
         //Draw Box end
         int leftEnd = (cards.size()+1)*height-offset;
-        rescaleRectBoxEnd.set(leftEnd, 0, leftEnd+rescaleRectBoxEnd.width(), rescaleRectBoxEnd.height());
-        canvas.drawBitmap(boxend, boxendsrc, rescaleRectBoxEnd, linePaint);
+        if(leftEnd < width) {
+            rescaleRectBoxEnd.set(leftEnd, 0, leftEnd + rescaleRectBoxEnd.width(), rescaleRectBoxEnd.height());
+            canvas.drawBitmap(boxend, boxendsrc, rescaleRectBoxEnd, linePaint);
+        }
 
         canvas.drawText(String.valueOf(level), height/4, height/2+levelheight, levelPaint);
         canvas.drawBitmap(cardsbmp, stacksrc, stackdest, levelPaint);
