@@ -73,4 +73,9 @@ public class StartActivitiesTest {
         TestActivity activity = Robolectric.setupActivity(TestActivity.class);
     }
 
+    @Test
+    public void testPictureHelperNull(){
+        int res = PictureHelper.getDrawableResourceForLanguage(null);
+        assertEquals(R.drawable.flag_german, res);
+    }
 }
