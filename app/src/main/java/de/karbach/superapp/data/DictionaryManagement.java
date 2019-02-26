@@ -138,13 +138,13 @@ public class DictionaryManagement {
             }
         }
 
-        Dictionary newDict = new Dictionary(name);
-        newDict.setLanguage(name);
-        newDict.loadIfPossible(context);
-        dicts.add(newDict);
-        selected = newDict;
-        storeSelectedInPreferences(name);
-        return selected;
+        //Not found => create new
+        addDictionary(name);
+        Dictionary newDict = getDictionary(name);
+        if(newDict != null){
+            return selectDictionary(name);
+        }
+        return null;
     }
 
     public void addDictionary(String name){

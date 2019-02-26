@@ -90,6 +90,9 @@ public class Dictionary implements Serializable {
     }
 
     public void addCard(Card card){
+        if(card == null){
+            return;
+        }
         String keyLang = card.getLang1();
         if(keyLang == null){
             return;
@@ -208,7 +211,7 @@ public class Dictionary implements Serializable {
     }
 
     /**
-     * Save this board data to file
+     * Save this dictionary to file
      * @param context needed context to save data.
      */
     public boolean saveToObj(Context context){
