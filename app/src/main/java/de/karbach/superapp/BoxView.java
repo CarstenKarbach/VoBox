@@ -50,7 +50,7 @@ import de.karbach.superapp.data.Card;
  */
 public class BoxView extends View {
 
-    private Paint linePaint, textpaint, centertextpaint, fillPaint, levelPaint;
+    private Paint linePaint, transparentPaint, textpaint, centertextpaint, centertextpaintBlue, fillPaint, levelPaint;
 
     private String exampleWord = "EXAMPLEWORDT";
 
@@ -176,6 +176,8 @@ public class BoxView extends View {
         linePaint.setStrokeWidth(10);
         linePaint.setColor( ContextCompat.getColor(context,R.color.colorPrimary) );
 
+        transparentPaint = new Paint();
+
         textpaint = new Paint();
         textpaint.setAntiAlias(true);
         textpaint.setColor( ContextCompat.getColor(context,R.color.colorPrimary) );
@@ -185,6 +187,11 @@ public class BoxView extends View {
         centertextpaint.setAntiAlias(true);
         centertextpaint.setTextAlign(Paint.Align.CENTER);
         centertextpaint.setColor( Color.BLACK );
+
+        centertextpaintBlue = new Paint();
+        centertextpaintBlue.setAntiAlias(true);
+        centertextpaintBlue.setTextAlign(Paint.Align.CENTER);
+        centertextpaintBlue.setColor( ContextCompat.getColor(context,R.color.colorPrimary) );
 
         levelPaint = new Paint();
         levelPaint.setAntiAlias(true);
@@ -244,6 +251,7 @@ public class BoxView extends View {
         }
         exampleWordHeight = textrect.height();
         centertextpaint.setTextSize(textpaint.getTextSize());
+        centertextpaintBlue.setTextSize(textpaint.getTextSize());
     }
 
     private int width, height;
@@ -331,18 +339,21 @@ public class BoxView extends View {
         if(maximumI >= cards.size()){
             maximumI = cards.size()-1;
         }
+        int cardssize = cards.size();
         for(int i = minimumI; i<= maximumI; i++) {
             dest.set((i+1)*height-offset+padding, padding, (i+2)*height - 1 -offset-padding, height - 1-padding);
 
             drawerTarget.set(dest.left-padding, dest.bottom+1-rescaleRectDrawer.height()+padding, dest.right+padding+1, dest.bottom+padding );
-            canvas.drawBitmap(drawer, drawersrc, drawerTarget, linePaint);
+            int alpha = (cardssize == 0 || i<0) ? 255 : (255-( (i*120)/ cardssize));
+            transparentPaint.setAlpha(alpha);
+            canvas.drawBitmap(drawer, drawersrc, drawerTarget, transparentPaint);
 
             Card card = null;
             if(i>=0){
                 card = cards.get(i);
             }
             if(card != null) {
-                drawCard(card, dest, canvas);
+                drawCard(card, dest, canvas, i);
             }
         }
 
@@ -368,7 +379,7 @@ public class BoxView extends View {
 
     private Rect drawerTarget = new Rect();
 
-    protected void drawCard(Card card, Rect dest, Canvas canvas){
+    protected void drawCard(Card card, Rect dest, Canvas canvas, int index){
         canvas.drawBitmap(note, src, dest, linePaint);
 
         CardInfo cardInfo = cardsInfo.get(card);
@@ -383,5 +394,7 @@ public class BoxView extends View {
         canvas.drawText(cardInfo.displayText2, flagright, dest.top+exampleWordHeight*5, textpaint);
         flagrect.set(flagleft, dest.top+exampleWordHeight*4, flagright, dest.top+exampleWordHeight*5);
         canvas.drawBitmap(flag2, flagsrc, flagrect, textpaint);
+
+        canvas.drawText(String.valueOf(index+1), (dest.left+dest.right)/2, dest.bottom-exampleWordHeight, centertextpaintBlue);
     }
 }
