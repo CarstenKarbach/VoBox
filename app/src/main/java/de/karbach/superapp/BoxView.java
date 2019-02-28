@@ -37,7 +37,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.karbach.superapp.data.Card;
 
@@ -59,21 +61,68 @@ public class BoxView extends View {
 
     private float flingvelocity = 0;
     private long startTime;
-    private int maxflingcount = 50;
-    private int flingCount = 0;
+    private int startOffset, turningPointTime, turningPointOffset;
+    private float acceleration;
 
     public void fling(float velo){
-        flingvelocity = velo*0.05f;
-        flingCount = 0;
+        flingvelocity = -velo*0.001f;
         startTime = System.currentTimeMillis();
-        lastFlingUpdate = startTime;
+        startOffset = getOffset();
+
+        int sign = flingvelocity < 0 ? -1 : 1;
+        acceleration = (-sign)*0.005f;
+        turningPointTime = Math.round( -flingvelocity / (2*acceleration) );
+        turningPointOffset = Math.round( acceleration * turningPointTime*turningPointTime+flingvelocity*turningPointTime+startOffset );
+
         postInvalidate();
     }
 
+    private class CardInfo{
+        public int lang1Length;
+        public int lang2Length;
+
+        public String displayText1;
+        public String displayText2;
+
+        public CardInfo(int lang1Length, int lang2Length, String displayText1, String displayText2){
+            this.lang1Length = lang1Length;
+            this.lang2Length = lang2Length;
+            this.displayText1 = displayText1;
+            this.displayText2 = displayText2;
+        }
+    }
+
     private List<Card> cards = new ArrayList<Card>();
+    private Map<Card,CardInfo> cardsInfo = new HashMap<Card, CardInfo>();
 
     public void setCards(List<Card> cards){
         this.cards = cards;
+        cardsInfo.clear();
+        if(cards != null){
+            for(Card card: cards){
+                int length1 = 0;
+                String displayText1 = "";
+                if(card.getLang1()!=null){
+                    length1 = card.getLang1().length();
+                    displayText1 = card.getLang1();
+                }
+                int length2 = 0;
+                String displayText2 = "";
+                if(card.getLang2()!=null){
+                    length2 = card.getLang2().length();
+                    displayText2 = card.getLang2();
+                }
+                int maxlength = exampleWord.length()-3;
+                if(length1 > maxlength){
+                    displayText1 = displayText1.substring(0, maxlength-3)+"...";
+                }
+                if(length2 > maxlength){
+                    displayText2 = displayText2.substring(0, maxlength-3)+"...";
+                }
+                cardsInfo.put(card, new CardInfo(length1, length2, displayText1, displayText2));
+            }
+        }
+
         postInvalidate();
     }
 
@@ -110,10 +159,7 @@ public class BoxView extends View {
         this.offset = offset;
 
         if(origOffset != offset){
-            if(fromUIThread) {
-                invalidate();
-            }
-            else{
+            if(! fromUIThread) {
                 postInvalidate();
             }
         }
@@ -209,9 +255,15 @@ public class BoxView extends View {
 
     private int levelheight;
 
+    private int exampleWordLength;
+
+    private int flagOffset, flagWidth;
+
     protected void measure(){
         width = getWidth();
         height = getHeight();
+
+        exampleWordLength = exampleWord.length();
 
         measureTextSize(height);
 
@@ -233,6 +285,9 @@ public class BoxView extends View {
         rescaleRectBoxEnd.set(boxendsrc);
         scaleRect( rescaleRectBoxEnd, height);
         rescaleRectDrawer.set(0, 0, height-1, Math.round(drawersrc.height()/(float)drawersrc.width()*(height)) );
+
+        flagOffset = height / 12;
+        flagWidth = exampleWordHeight*3/2;
     }
 
     @Override
@@ -242,28 +297,22 @@ public class BoxView extends View {
         measure();
     }
 
-    private long lastFlingUpdate = 0;
-
     protected void handleFling(){
         if(flingvelocity == 0){
             return;
         }
 
-        flingCount ++;
+        long absolutedeltaT = System.currentTimeMillis()-startTime;
 
-        long currentT = System.currentTimeMillis();
+        int calcOffset = Math.round( absolutedeltaT*absolutedeltaT*acceleration+flingvelocity*absolutedeltaT+startOffset );
 
-        long absolutedeltaT = currentT-startTime;
-        float currentVelo = flingvelocity/absolutedeltaT;
+        if(absolutedeltaT > turningPointTime){
+            calcOffset = turningPointOffset;
+        }
 
-        float drawDeltaT = currentT-lastFlingUpdate;
-        float dist = drawDeltaT*currentVelo;
+        setOffset(calcOffset, true);
 
-        setOffset(this.offset-(int)dist, true);
-
-        lastFlingUpdate = System.currentTimeMillis();
-
-        if(Math.abs(dist ) <= 1 || flingCount >= maxflingcount){
+        if(absolutedeltaT > turningPointTime || getOffset() != calcOffset){//Time ended or offset cannot be changed anymore
             flingvelocity = 0;
         }
     }
@@ -271,28 +320,27 @@ public class BoxView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        int oldoffset = getOffset();
         handleFling();
+        int newoffset = getOffset();
 
         int padding = 10;
 
-        for(int i=-1; i<cards.size(); i++) {
+        int minimumI = (1+offset+padding)/height-2;//Derived from (i+2)*height-1-offset-padding >= 0 ; in other words dest.right >= 0
+        int maximumI = (width+offset-padding)/height-1;//Derived from (i+1)*height-offset+padding >= width ; in other words dest.left <= width
+        if(maximumI >= cards.size()){
+            maximumI = cards.size()-1;
+        }
+        for(int i = minimumI; i<= maximumI; i++) {
+            dest.set((i+1)*height-offset+padding, padding, (i+2)*height - 1 -offset-padding, height - 1-padding);
+
+            drawerTarget.set(dest.left-padding, dest.bottom+1-rescaleRectDrawer.height()+padding, dest.right+padding+1, dest.bottom+padding );
+            canvas.drawBitmap(drawer, drawersrc, drawerTarget, linePaint);
+
             Card card = null;
             if(i>=0){
                 card = cards.get(i);
             }
-            dest.set((i+1)*height-offset+padding, padding, (i+2)*height - 1 -offset-padding, height - 1-padding);
-
-            //Stop if new cards are no longer visible
-            if(dest.left > width){
-                break;
-            }
-            //Continue until card is visible from the left
-            if(dest.right < 0){
-                continue;
-            }
-
-            drawerTarget.set(dest.left-padding, dest.bottom+1-rescaleRectDrawer.height()+padding, dest.right+padding+1, dest.bottom+padding );
-            canvas.drawBitmap(drawer, drawersrc, drawerTarget, linePaint);
             if(card != null) {
                 drawCard(card, dest, canvas);
             }
@@ -312,6 +360,10 @@ public class BoxView extends View {
         canvas.drawBitmap(cardsbmp, stacksrc, stackdest, levelPaint);
 
         canvas.drawText(String.valueOf(cards.size()), height*5/6, height*5/6, centertextpaint);
+
+        if(flingvelocity != 0){
+            invalidate();
+        }
     }
 
     private Rect drawerTarget = new Rect();
@@ -319,25 +371,16 @@ public class BoxView extends View {
     protected void drawCard(Card card, Rect dest, Canvas canvas){
         canvas.drawBitmap(note, src, dest, linePaint);
 
-        String text1 = card.getLang1();
-        int maxlength = exampleWord.length()-3;
-        if(text1.length() > maxlength){
-            text1 = text1.substring(0, maxlength-3)+"...";
-        }
+        CardInfo cardInfo = cardsInfo.get(card);
 
-        int flagleft = dest.left+dest.width()/11;
-        int flagright = dest.left+dest.width()/11+exampleWordHeight*3/2;
+        int flagleft = dest.left+flagOffset;
+        int flagright = dest.left+flagOffset+flagWidth;
 
-        canvas.drawText(text1, flagright, dest.top+exampleWordHeight*3, textpaint);
+        canvas.drawText(cardInfo.displayText1, flagright, dest.top+exampleWordHeight*3, textpaint);
         flagrect.set(flagleft, dest.top+exampleWordHeight*2, flagright, dest.top+exampleWordHeight*3);
         canvas.drawBitmap(flag1, flagsrc, flagrect, textpaint);
 
-        String text2 = card.getLang2();
-        if(text2.length() > maxlength){
-            text2 = text2.substring(0, maxlength-3)+"...";
-        }
-
-        canvas.drawText(text2, flagright, dest.top+exampleWordHeight*5, textpaint);
+        canvas.drawText(cardInfo.displayText2, flagright, dest.top+exampleWordHeight*5, textpaint);
         flagrect.set(flagleft, dest.top+exampleWordHeight*4, flagright, dest.top+exampleWordHeight*5);
         canvas.drawBitmap(flag2, flagsrc, flagrect, textpaint);
     }
