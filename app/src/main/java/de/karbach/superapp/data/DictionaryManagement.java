@@ -147,6 +147,25 @@ public class DictionaryManagement {
         return null;
     }
 
+    public boolean addDictionaryObject(Dictionary dict){
+        if(dict == null || dict.getName() == null){
+            return false;
+        }
+        if(getDictionary(dict.getName()) != null){
+            return false;
+        }
+
+        dicts.add(dict);
+
+        Set<String> existing = readDictionaryList();
+        if(! existing.contains(dict.getName())){
+            existing.add(dict.getName());
+            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE).edit().putStringSet(DictionaryManagement.LANGUAGES_ARRAY, existing).commit();
+        }
+
+        return true;
+    }
+
     public void addDictionary(String name){
         for(Dictionary dict: dicts){
             if(dict.getName().equals(name)){
@@ -158,13 +177,8 @@ public class DictionaryManagement {
         newDict.setLanguage(name);
         newDict.loadIfPossible(context);
         newDict.setName(name);
-        dicts.add(newDict);
 
-        Set<String> existing = readDictionaryList();
-        if(! existing.contains(name)){
-            existing.add(name);
-            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE).edit().putStringSet(DictionaryManagement.LANGUAGES_ARRAY, existing).commit();
-        }
+        addDictionaryObject(newDict);
     }
 
     public Dictionary getDictionary(String name){
@@ -203,6 +217,23 @@ public class DictionaryManagement {
                 selectDictionary(others[0]);
             }
         }
+    }
+
+    public boolean renameDictionary(String oldname, String newName){
+        if(newName == null || newName.length()<=0){
+            return false;
+        }
+
+        Dictionary dict = getDictionary(oldname);
+        if(dict == null){
+            return false;
+        }
+
+        deleteDictionary(oldname);
+
+        dict.setName(newName);
+
+        return addDictionaryObject(dict);
     }
 
     /**

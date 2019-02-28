@@ -10,11 +10,15 @@
         <item>Englisch</item>
         <item>Spanisch</item>
         <item>Schwedisch</item>
+        <item>Portugiesisch</item>
+        <item>Italienisch</item>
     </string-array>
     <array name="flags">
         <item>@drawable/flag_german</item>
         <item>@drawable/flag_english</item>
         <item>@drawable/flag_spanish</item>
         <item>@drawable/flag_swedish</item>
+        <item>@drawable/flag_port</item>
+        <item>@drawable/flag_italy</item>
     </array>
 </resources>
