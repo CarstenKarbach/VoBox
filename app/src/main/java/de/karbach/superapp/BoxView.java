@@ -81,13 +81,13 @@ public class BoxView extends View {
 
     public void setLanguage1(String lang1){
         Resources res = getResources();
-        flag1 = BitmapFactory.decodeResource(res, PictureHelper.getDrawableResourceForLanguage(lang1));
+        flag1 = BitmapFactory.decodeResource(res, pictureHelper.getDrawableResourceForLanguage(lang1));
         flagsrc = new Rect(0,0, flag1.getWidth()-1, flag1.getHeight()-1);
     }
 
     public void setLanguage2(String lang2){
         Resources res = getResources();
-        flag2 = BitmapFactory.decodeResource(res, PictureHelper.getDrawableResourceForLanguage(lang2));
+        flag2 = BitmapFactory.decodeResource(res, pictureHelper.getDrawableResourceForLanguage(lang2));
     }
 
     public void setLevel(int level){
@@ -104,8 +104,8 @@ public class BoxView extends View {
         if(offset > maxOffset){
             offset = maxOffset;
         }
-        if(offset < 0 ){
-            offset = 0;
+        if(offset < -height ){
+            offset = -height;
         }
         this.offset = offset;
 
@@ -119,8 +119,12 @@ public class BoxView extends View {
         }
     }
 
+    private PictureHelper pictureHelper;
+
     public BoxView(Context context, AttributeSet attrs){
         super(context, attrs);
+
+        pictureHelper = new PictureHelper(context);
 
         linePaint = new Paint();
         linePaint.setStrokeWidth(10);
@@ -271,8 +275,11 @@ public class BoxView extends View {
 
         int padding = 10;
 
-        for(int i=0; i<cards.size(); i++) {
-            Card card = cards.get(i);
+        for(int i=-1; i<cards.size(); i++) {
+            Card card = null;
+            if(i>=0){
+                card = cards.get(i);
+            }
             dest.set((i+1)*height-offset+padding, padding, (i+2)*height - 1 -offset-padding, height - 1-padding);
 
             //Stop if new cards are no longer visible
@@ -286,7 +293,9 @@ public class BoxView extends View {
 
             drawerTarget.set(dest.left-padding, dest.bottom+1-rescaleRectDrawer.height()+padding, dest.right+padding+1, dest.bottom+padding );
             canvas.drawBitmap(drawer, drawersrc, drawerTarget, linePaint);
-            drawCard(card, dest, canvas);
+            if(card != null) {
+                drawCard(card, dest, canvas);
+            }
         }
 
         canvas.drawRect(0,0, height-1, height-1, fillPaint);

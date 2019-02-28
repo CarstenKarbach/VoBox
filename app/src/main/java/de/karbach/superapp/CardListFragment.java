@@ -111,8 +111,9 @@ public class CardListFragment extends ListFragment{
             ImageView flag1 = (ImageView) convertView.findViewById(R.id.carditem_flag1);
             ImageView flag2 = (ImageView) convertView.findViewById(R.id.carditem_flag2);
 
-            int r1 = PictureHelper.getDrawableResourceForLanguage(lang1);
-            int r2 = PictureHelper.getDrawableResourceForLanguage(lang2);
+            PictureHelper ph = new PictureHelper(getActivity());
+            int r1 = ph.getDrawableResourceForLanguage(lang1);
+            int r2 = ph.getDrawableResourceForLanguage(lang2);
             if(flag1 != null) {
                 flag1.setImageResource(r1);
             }

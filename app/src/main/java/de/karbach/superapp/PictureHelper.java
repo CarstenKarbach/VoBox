@@ -18,6 +18,15 @@
 
 package de.karbach.superapp;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Carsten on 28.12.2015.
  *
@@ -26,20 +35,24 @@ package de.karbach.superapp;
  */
 public class PictureHelper {
 
-    public static int getDrawableResourceForLanguage(String language){
-        if(language == null){
+    private List<String> allLanguages;
+    private List<Integer> allFlags;
+
+    public PictureHelper(Context context){
+        allLanguages = Arrays.asList( context.getResources().getStringArray(R.array.all_languages_array) );
+        TypedArray flagarray = context.getResources().obtainTypedArray(R.array.flags);
+        allFlags = new ArrayList<Integer>();
+        for(int i = 0; i< flagarray.length(); i++){
+            allFlags.add(flagarray.getResourceId(i, R.drawable.flag_german));
+        }
+    }
+
+    public int getDrawableResourceForLanguage(String language){
+        int index = allLanguages.indexOf(language);
+        if(index == -1) {
             return R.drawable.flag_german;
         }
-        if(language.equals("Spanisch")){
-            return R.drawable.flag_spanish;
-        }
-        if(language.equals("Schwedisch")){
-            return R.drawable.flag_swedish;
-        }
-        if(language.equals("Englisch")){
-            return R.drawable.flag_english;
-        }
-        return R.drawable.flag_german;
+        return allFlags.get(index);
     }
 
 }

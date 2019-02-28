@@ -79,7 +79,7 @@ public class DictionaryManagement {
 
     public Set<String> readDictionaryList(){
         Set<String> defaultSet = new HashSet<String>();
-        String[] defaults = context.getResources().getStringArray(R.array.languages_array);
+        String[] defaults = context.getResources().getStringArray(R.array.default_languages_array);
         defaultSet.addAll(Arrays.asList(defaults));
 
         SharedPreferences sp = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);

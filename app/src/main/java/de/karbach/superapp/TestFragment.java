@@ -160,8 +160,9 @@ public class TestFragment extends Fragment {
         ImageView flag1 = (ImageView) rootView.findViewById(R.id.testcard_flag1);
         ImageView flag2 = (ImageView) rootView.findViewById(R.id.testcard_flag2);
 
-        int r1 = PictureHelper.getDrawableResourceForLanguage(lang1);
-        int r2 = PictureHelper.getDrawableResourceForLanguage(lang2);
+        PictureHelper ph = new PictureHelper(getActivity());
+        int r1 = ph.getDrawableResourceForLanguage(lang1);
+        int r2 = ph.getDrawableResourceForLanguage(lang2);
 
         flag1.setImageResource(r1);
         flag2.setImageResource(r2);

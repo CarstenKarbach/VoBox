@@ -92,11 +92,12 @@ public class StarterFragment extends Fragment {
             Dictionary dict = dm.getDictionary(nameValue);
 
             if(dict != null) {
-                int r1 = PictureHelper.getDrawableResourceForLanguage(dict.getBaseLanguage());
+                PictureHelper ph = new PictureHelper(getActivity());
+                int r1 = ph.getDrawableResourceForLanguage(dict.getBaseLanguage());
                 if (flag1 != null) {
                     flag1.setImageResource(r1);
                 }
-                int r2 = PictureHelper.getDrawableResourceForLanguage(dict.getLanguage());
+                int r2 = ph.getDrawableResourceForLanguage(dict.getLanguage());
                 if (flag2 != null) {
                     flag2.setImageResource(r2);
                 }
@@ -129,7 +130,6 @@ public class StarterFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("carsten", "onCreateView Starter");
         View result = inflater.inflate(R.layout.starter_fragment, container, false);
 
         Button newCardButton = (Button) result.findViewById(R.id.newcard_button);
@@ -182,10 +182,6 @@ public class StarterFragment extends Fragment {
 
         final Spinner select = (Spinner) result.findViewById(R.id.language_selection);
         if(select != null){
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                    R.array.languages_array, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
             updateSelectedDictionary(select);
 
             select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

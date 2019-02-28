@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="languages_array">
-        <item>Schwedisch</item>
-        <item>Spanisch</item>
+    <string-array name="default_languages_array">
         <item>Englisch</item>
+        <item>Spanisch</item>
+        <item>Schwedisch</item>
     </string-array>
+    <string-array name="all_languages_array">
+        <item>Deutsch</item>
+        <item>Englisch</item>
+        <item>Spanisch</item>
+        <item>Schwedisch</item>
+    </string-array>
+    <array name="flags">
+        <item>@drawable/flag_german</item>
+        <item>@drawable/flag_english</item>
+        <item>@drawable/flag_spanish</item>
+        <item>@drawable/flag_swedish</item>
+    </array>
 </resources>

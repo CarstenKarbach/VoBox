@@ -148,12 +148,13 @@ public class CardFragment extends Fragment {
         Dictionary dict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
         Card card = null;
         if(dict != null){
+            PictureHelper ph = new PictureHelper(getActivity());
             if(flag1 != null){
-                int resource = PictureHelper.getDrawableResourceForLanguage(dict.getBaseLanguage());
+                int resource = ph.getDrawableResourceForLanguage(dict.getBaseLanguage());
                 flag1.setImageResource(resource);
             }
             if(flag2 != null){
-                int resource = PictureHelper.getDrawableResourceForLanguage(dict.getLanguage());
+                int resource = ph.getDrawableResourceForLanguage(dict.getLanguage());
                 flag2.setImageResource(resource);
             }
             if(lang1Key != null) {

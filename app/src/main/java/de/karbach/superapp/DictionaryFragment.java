@@ -61,7 +61,7 @@ public class DictionaryFragment extends Fragment{
 
     public static String PARAMMODE = "de.karbach.superapp.DictionaryFragment.mode";
 
-    public static List<String> languages = Arrays.asList(new String[]{"Deutsch", "Englisch", "Spanisch", "Schwedisch"});
+    public static List<String> languages;
 
     protected void updateSaveLabel(Button button, View rootView){
         if(mode == Mode.EDIT){
@@ -171,8 +171,8 @@ public class DictionaryFragment extends Fragment{
             ImageView flag = (ImageView) convertView.findViewById(R.id.flagview);
 
             String language = flags.get(position);
-
-            int r1 = PictureHelper.getDrawableResourceForLanguage(language);
+            PictureHelper ph = new PictureHelper(getActivity());
+            int r1 = ph.getDrawableResourceForLanguage(language);
             if(flag != null) {
                 flag.setImageResource(r1);
             }
@@ -206,6 +206,9 @@ public class DictionaryFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String[] allLanguages = getActivity().getResources().getStringArray(R.array.all_languages_array);
+        languages = Arrays.asList(allLanguages);
 
         setRetainInstance(true);
 
