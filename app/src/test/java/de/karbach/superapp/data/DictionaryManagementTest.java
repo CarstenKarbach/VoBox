@@ -107,6 +107,23 @@ public class DictionaryManagementTest {
         assertEquals(3, existing.getCards().size());
     }
 
+    @Test
+    public void testRename(){
+        StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
+        DictionaryManagement dm = DictionaryManagement.getInstance(activity);
+
+        Dictionary newDict = new Dictionary("jupp");
+        dm.addDictionaryObject(newDict);
+
+        Dictionary found = dm.getDictionary("jupp");
+        assertNotNull(found);
+
+        boolean success = dm.renameDictionary("jupp", "juppie");
+        assertTrue(success);
+        assertNull(dm.getDictionary("jupp"));
+        assertNotNull(dm.getDictionary("juppie"));
+    }
+
 }
 
 

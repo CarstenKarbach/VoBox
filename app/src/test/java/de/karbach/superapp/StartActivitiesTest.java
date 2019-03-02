@@ -20,6 +20,8 @@ package de.karbach.superapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +29,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 
+import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
 
@@ -51,16 +54,36 @@ public class StartActivitiesTest {
     public void startCardActivity(){
         StarterActivity starteractivity = Robolectric.setupActivity(StarterActivity.class);
 
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        Dictionary selected = dm.getSelectedDictionary();
+        Card exampleCard = new Card("Beispiel", "example");
+        assertEquals("example", exampleCard.getLang2());
+        selected.addCard(exampleCard);
+
         Intent intent = new Intent(starteractivity,CardActivity.class);
-        intent.putExtra(CardFragment.PARAMLANG1KEY, "example");
+        intent.putExtra(CardFragment.PARAMLANG1KEY, "Beispiel");
         ActivityController<CardActivity> actController = Robolectric.buildActivity(CardActivity.class);
         actController.get().setIntent(intent);
         actController.create();
 
-        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
         Dictionary dict = dm.getSelectedDictionary();
         assertNotNull(dict.getBaseLanguage());
         System.out.println(dict.getBaseLanguage());
+
+        //Button clicks
+        CardActivity ca = actController.get();
+        final TextView lang2 = (TextView) ca.findViewById(R.id.lang2_text);
+        lang2.setText("example_test");
+        Button save = (Button) ca.findViewById(R.id.save_button);
+        save.performClick();
+        selected = dm.getSelectedDictionary();
+        exampleCard = selected.getCardByLang1("Beispiel");
+        assertEquals("example_test", exampleCard.getLang2());
+
+        Button delete = (Button) ca.findViewById(R.id.delete_button);
+        delete.performClick();
+        exampleCard = selected.getCardByLang1("Beispiel");
+        assertNull(exampleCard);
     }
 
     @Test

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Superapp</string>
+    <string name="app_name">VoBox</string>
     <string name="search_label">Suche...</string>
     <string name="search_hint">Wort</string>
     <string name="language">Sprache</string>

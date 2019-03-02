@@ -17,10 +17,13 @@
  */
 package de.karbach.superapp.data;
 
+import android.os.Environment;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowEnvironment;
 
 import java.io.IOException;
 
@@ -120,6 +123,7 @@ public class DictionaryTest {
 
     @Test
     public void testSaveAndLoad(){
+        ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
         StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
         Dictionary dict = new Dictionary("test");
         Card card1 = new Card("a", "b");
