@@ -21,6 +21,9 @@ package de.karbach.superapp;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -92,39 +95,6 @@ public class StarterActivity extends SingleFragmentActivity {
         return false;
     }
 
-    private void showImportDictDialog(final Dictionary newDict, final Uri dataUri){
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("Wörterbuch importieren");
-        alertDialog.setMessage("Wie soll das Wörterbuch importiert werden?");
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "integrieren", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                DictionaryManagement dm = DictionaryManagement.getInstance(StarterActivity.this);
-                dm.integrateDictionary(newDict);
-                Toast.makeText(StarterActivity.this, "Integration in Wörterbuch "+newDict.getLanguage()+" abgeschlossen", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "abbrechen", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-            }});
-
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ersetzen", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Dictionary allLoaded = Dictionary.loadFromUri(dataUri, true, StarterActivity.this);
-                allLoaded.setLanguage(newDict.getLanguage());
-                allLoaded.setName(newDict.getName());
-                DictionaryManagement dm = DictionaryManagement.getInstance(StarterActivity.this);
-                dm.replaceDictionary(allLoaded);
-                Toast.makeText(StarterActivity.this, "Wörterbuch "+allLoaded.getLanguage()+" ("+allLoaded.getCards().size()+" Wörter)"+" ersetzt", Toast.LENGTH_SHORT).show();
-
-                Dictionary sel = dm.getSelectedDictionary();
-            }
-        });
-
-        alertDialog.show();
-    }
-
     /*
          * Called from onNewIntent() for a SINGLE_TOP Activity
          * or onCreate() for a new Activity. For onNewIntent(),
@@ -149,33 +119,68 @@ public class StarterActivity extends SingleFragmentActivity {
             if (TextUtils.equals(dataUri.getScheme(), "file") || TextUtils.equals(dataUri.getScheme(), "content")) {
                 final Dictionary loaded = Dictionary.loadFromUri(dataUri, false, this);
                 if(loaded != null){
-                    String dictInteract = loaded.getLanguage();
-                    DictionaryManagement dm = DictionaryManagement.getInstance(StarterActivity.this);
-                    Dictionary otherDict = dm.getDictionary(dictInteract);
-                    final Dictionary selected = dm.getSelectedDictionary();
-                    if(otherDict == null && selected != null){
-                        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                        alertDialog.setTitle("Wörterbuch importieren");
-                        alertDialog.setMessage("Kein passendes Wörterbuch gefunden. Vokabeln mit aktuellem Wörterbuch ("+selected.getLanguage()+") abgleichen?");
-                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "ja", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                loaded.setName(selected.getName());
-                                loaded.setLanguage(selected.getLanguage());
-                                showImportDictDialog(loaded, dataUri);
+                    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                    final Context context = this;
+                    alertDialog.setTitle("Wörterbuch importieren");
+                    alertDialog.setMessage("Wie möchten Sie das Wörterbuch importieren?");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "als neues Wörterbuch", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            DictionaryManagement dm = DictionaryManagement.getInstance(context);
+                            String loadedname = loaded.getName();
+                            String newname = loadedname;
+                            int trials = 2;
+                            while( dm.dictionaryExists(newname) && trials<100 ){
+                                newname = loadedname+trials;
+                                trials++;
                             }
-                        });
-
-                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "abbrechen", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                            }});
-                        alertDialog.show();
-                    }
-                    else{
-                        if(otherDict != null) {
-                            showImportDictDialog(loaded, dataUri);
+                            loaded.setName(newname);
+                            boolean success = dm.addDictionaryObject(loaded);
+                            if(! success){
+                                Toast.makeText(context, "Wörterbuch konnte nicht erstellt werden.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            else {
+                                dm.saveAll();
+                                dm.selectDictionary(newname);
+                                Intent intent = new Intent(context, DictionaryActivity.class);
+                                intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.EDIT.ordinal());
+                                startActivity(intent);
+                            }
                         }
-                    }
+                    });
+
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "in Wörterbuch integrieren", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //Show dicionary selection dialog
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+                            ft.addToBackStack(null);
+                            DictionarySelectionFragment dsf = new DictionarySelectionFragment();
+                            dsf.setCallback(new DictionarySelectionFragment.OnDictionarySelected() {
+                                @Override
+                                public void onDictionarySelected(String selected) {
+                                    DictionaryManagement dm = DictionaryManagement.getInstance(StarterActivity.this);
+                                    loaded.setName(selected);
+                                    dm.integrateDictionary(loaded);
+                                    dm.selectDictionary(selected);
+                                    Toast.makeText(StarterActivity.this, "Integration in Wörterbuch "+selected+" abgeschlossen", Toast.LENGTH_SHORT).show();
+
+                                    FragmentManager fm = getFragmentManager();
+                                    Fragment f = fm.findFragmentById(R.id.fragment_container);
+                                    if(f != null && f instanceof StarterFragment){
+                                        ((StarterFragment) f).updateSelection();
+                                    }
+                                }
+                            });
+                            dsf.show(ft, "dialog");
+                        }});
+                    alertDialog.show();
+                }
+                else{
+                    Toast.makeText(this, "Wörterbuch konnte nicht gelesen werden.", Toast.LENGTH_SHORT).show();
                 }
             }
         }

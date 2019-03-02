@@ -53,77 +53,11 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class StarterFragment extends Fragment {
 
-    private class DictionaryAdapter extends BaseAdapter {
+    private DictSpinnerPresenter dictSpinnerPresenter;
 
-        private String[] dictNames;
-
-        public DictionaryAdapter(String[] dictNames) {
-            this.dictNames = dictNames;
-        }
-
-        @Override
-        public int getCount() {
-            return dictNames.length;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return dictNames[i];
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.flagdict_item, parent, false);
-            }
-
-            TextView name = (TextView) convertView.findViewById(R.id.dict_name);
-            ImageView flag1 = (ImageView) convertView.findViewById(R.id.flagview1);
-            ImageView flag2 = (ImageView) convertView.findViewById(R.id.flagview2);
-
-            String nameValue = dictNames[position];
-
-            DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-            Dictionary dict = dm.getDictionary(nameValue);
-
-            if(dict != null) {
-                PictureHelper ph = new PictureHelper(getActivity());
-                int r1 = ph.getDrawableResourceForLanguage(dict.getBaseLanguage());
-                if (flag1 != null) {
-                    flag1.setImageResource(r1);
-                }
-                int r2 = ph.getDrawableResourceForLanguage(dict.getLanguage());
-                if (flag2 != null) {
-                    flag2.setImageResource(r2);
-                }
-
-                name.setText(nameValue);
-            }
-
-            return convertView;
-        }
-    }
-
-    private void updateSelectedDictionary(Spinner select){
-        DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-
-        DictionaryAdapter dapter = new DictionaryAdapter(dm.readDictionaryArray());
-        select.setAdapter(dapter);
-
-        Dictionary selectedDict = dm.getSelectedDictionary();
-        if(selectedDict != null) {
-            for (int i = 0; i < select.getCount(); i++) {
-                String name = select.getItemAtPosition(i).toString();
-                if (name.equals(selectedDict.getName())) {
-                    select.setSelection(i);
-                    break;
-                }
-            }
+    public void updateSelection(){
+        if(dictSpinnerPresenter != null){
+            dictSpinnerPresenter.updateSelectedDictionary();
         }
     }
 
@@ -182,7 +116,8 @@ public class StarterFragment extends Fragment {
 
         final Spinner select = (Spinner) result.findViewById(R.id.language_selection);
         if(select != null){
-            updateSelectedDictionary(select);
+            dictSpinnerPresenter = new DictSpinnerPresenter(getActivity(), select);
+            dictSpinnerPresenter.updateSelectedDictionary();
 
             select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -247,7 +182,7 @@ public class StarterFragment extends Fragment {
 
                                 Toast.makeText(getActivity(), "Wörterbuch '"+todelete+"' gelöscht", Toast.LENGTH_SHORT).show();
 
-                                updateSelectedDictionary(select);
+                                dictSpinnerPresenter.updateSelectedDictionary();
                             }
 
                             return true;
@@ -260,5 +195,12 @@ public class StarterFragment extends Fragment {
         }
 
         return result;
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        this.dictSpinnerPresenter.freeMe();
+        this.dictSpinnerPresenter = null;
     }
 }

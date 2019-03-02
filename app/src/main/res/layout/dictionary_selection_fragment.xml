@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wörterbuch auswählen"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:textSize="10pt"
+        />
+
+    <Spinner
+        android:id="@+id/dictionary_language_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        ></Spinner>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:text="ok"
+        style="@style/BlueButton"
+        android:id="@+id/dictionary_selected_button"
+        />
+
+</LinearLayout>
