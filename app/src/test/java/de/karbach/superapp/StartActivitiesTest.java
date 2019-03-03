@@ -40,19 +40,19 @@ public class StartActivitiesTest {
 
     @Test
     public void startActivityTest() {
-        StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         assertFalse(activity.showUpButton());
     }
 
     @Test
     public void startDictionaryActivity(){
-        DictionaryActivity activity = Robolectric.setupActivity(DictionaryActivity.class);
+        DictionaryActivity activity = Robolectric.buildActivity(DictionaryActivity.class).setup().get();
         assertTrue(activity.showUpButton());
     }
 
     @Test
     public void startCardActivity(){
-        StarterActivity starteractivity = Robolectric.setupActivity(StarterActivity.class);
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
 
         DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
         Dictionary selected = dm.getSelectedDictionary();
@@ -88,19 +88,28 @@ public class StartActivitiesTest {
 
     @Test
     public void startListGenActivity(){
-        ListGeneratorActivity activity = Robolectric.setupActivity(ListGeneratorActivity.class);
+        ListGeneratorActivity activity = Robolectric.buildActivity(ListGeneratorActivity.class).setup().get();
     }
 
     @Test
     public void startTestActivity(){
-        TestActivity activity = Robolectric.setupActivity(TestActivity.class);
+        TestActivity activity = Robolectric.buildActivity(TestActivity.class).setup().get();
     }
 
     @Test
     public void testPictureHelperNull(){
-        TestActivity activity = Robolectric.setupActivity(TestActivity.class);
+        TestActivity activity = Robolectric.buildActivity(TestActivity.class).setup().get();
         PictureHelper ph = new PictureHelper(activity);
         int res = ph.getDrawableResourceForLanguage(null);
         assertEquals(R.drawable.flag_german, res);
+    }
+
+    @Test
+    public void startBoxActivity(){
+        ActivityController<BoxActivity> controller = Robolectric.buildActivity(BoxActivity.class);
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(controller.get());
+        dm.selectDictionary("Englisch");
+        controller.create().start().postCreate(null).resume();
     }
 }

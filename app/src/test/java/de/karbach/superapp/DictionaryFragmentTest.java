@@ -31,7 +31,7 @@ public class DictionaryFragmentTest {
 
     @Test
     public void testButtonClicks(){
-        DictionaryActivity activity = Robolectric.setupActivity(DictionaryActivity.class);
+        DictionaryActivity activity = Robolectric.buildActivity(DictionaryActivity.class).setup().get();
         final Button saveButton = activity.findViewById(R.id.save_button);
         saveButton.performClick();
 

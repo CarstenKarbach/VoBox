@@ -33,7 +33,7 @@ public class DictionaryManagementTest {
 
     @Test
     public void testReadDictionaryList(){
-        StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         DictionaryManagement dm = DictionaryManagement.getInstance(activity);
         Set<String> dictList = dm.readDictionaryList();
         assertTrue(dictList.size() > 0);
@@ -41,7 +41,7 @@ public class DictionaryManagementTest {
 
     @Test
     public void testSelectNewDictionary(){
-        StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         DictionaryManagement dm = DictionaryManagement.getInstance(activity);
         int oldLength = dm.readDictionaryArray().length;
         Dictionary dict = dm.selectDictionary("hahagibtsnicht");
@@ -60,7 +60,7 @@ public class DictionaryManagementTest {
 
     @Test
     public void testReplaceDictionary(){
-        StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         DictionaryManagement dm = DictionaryManagement.getInstance(activity);
 
         Dictionary newenglish = new Dictionary("Englisch");
@@ -80,7 +80,7 @@ public class DictionaryManagementTest {
 
     @Test
     public void testIntegrateDictionary(){
-        StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         DictionaryManagement dm = DictionaryManagement.getInstance(activity);
 
         dm.selectDictionary("Englisch");
@@ -109,7 +109,7 @@ public class DictionaryManagementTest {
 
     @Test
     public void testRename(){
-        StarterActivity activity = Robolectric.setupActivity(StarterActivity.class);
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         DictionaryManagement dm = DictionaryManagement.getInstance(activity);
 
         Dictionary newDict = new Dictionary("jupp");
