@@ -31,6 +31,9 @@ import de.karbach.superapp.StarterActivity;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests for a dictionary.
+ */
 @RunWith(RobolectricTestRunner.class)
 public class DictionaryTest {
 

@@ -10,6 +10,10 @@ import android.widget.TextView;
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
 
+/**
+ * Adapter for dicationary selection.
+ * Shows two flags and dictionary name in every item.
+ */
 public class DictionaryAdapter extends BaseAdapter {
 
     private String[] dictNames;

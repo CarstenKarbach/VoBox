@@ -44,6 +44,9 @@ import de.karbach.superapp.data.DictionaryManagement;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static org.junit.Assert.*;
 
+/**
+ * Start all activities you can find. Run basic behaviour on each activity.
+ */
 @RunWith(RobolectricTestRunner.class)
 public class StartActivitiesTest {
 
@@ -89,10 +92,37 @@ public class StartActivitiesTest {
         exampleCard = selected.getCardByLang1("Beispiel");
         assertEquals("example_test", exampleCard.getLang2());
 
+        //Change lang1
+        final TextView lang1 = (TextView) ca.findViewById(R.id.lang1_text);
+        lang1.setText("AnotherExample");
+
+        save.performClick();
+        exampleCard = selected.getCardByLang1("AnotherExample");
+        assertNotNull(exampleCard);
+
+
         Button delete = (Button) ca.findViewById(R.id.delete_button);
         delete.performClick();
         exampleCard = selected.getCardByLang1("Beispiel");
         assertNull(exampleCard);
+    }
+
+    @Test
+    public void startCardActivityForNewCard(){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        Intent intent = new Intent(starteractivity,CardActivity.class);
+        ActivityController<CardActivity> actController = Robolectric.buildActivity(CardActivity.class);
+        actController.get().setIntent(intent);
+        actController.create();
+
+        //Button clicks
+        CardActivity ca = actController.get();
+        Button save = (Button) ca.findViewById(R.id.save_button);
+        save.performClick();
+
+        Button delete = (Button) ca.findViewById(R.id.delete_button);
+        delete.performClick();
     }
 
     @Test

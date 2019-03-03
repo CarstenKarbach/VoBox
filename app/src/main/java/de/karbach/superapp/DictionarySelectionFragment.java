@@ -13,6 +13,9 @@ import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
 
+/**
+ * Allow selection of dictionary into which to integrate an imported dictionary.
+ */
 public class DictionarySelectionFragment extends DialogFragment {
 
     public interface OnDictionarySelected{

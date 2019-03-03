@@ -26,6 +26,9 @@ import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.*;
 
+/**
+ * Start dictionary activity and click buttons.
+ */
 @RunWith(RobolectricTestRunner.class)
 public class DictionaryFragmentTest {
 

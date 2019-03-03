@@ -28,6 +28,9 @@ import de.karbach.superapp.StarterActivity;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests DictionaryManagement class.
+ */
 @RunWith(RobolectricTestRunner.class)
 public class DictionaryManagementTest {
 
@@ -67,8 +70,10 @@ public class DictionaryManagementTest {
         Dictionary existing = dm.getDictionary("Englisch");
         assertNotNull(existing);
 
+        int originalSize = existing.getCards().size();
+
         newenglish.addCard(new Card("a", "b"));
-        assertEquals(0, existing.getCards().size());
+        assertEquals(originalSize, existing.getCards().size());
         assertEquals(1, newenglish.getCards().size());
 
         dm.replaceDictionary(newenglish);
@@ -86,6 +91,8 @@ public class DictionaryManagementTest {
         dm.selectDictionary("Englisch");
 
         Dictionary newenglish = new Dictionary("Englisch");
+        dm.replaceDictionary(newenglish);
+        newenglish = new Dictionary("Englisch");
         Dictionary existing = dm.getDictionary("Englisch");
         assertNotNull(existing);
 

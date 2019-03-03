@@ -6,6 +6,9 @@ import android.widget.Spinner;
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
 
+/**
+ * Connect dictionary adapter to a spinner holding all dictionaries.
+ */
 public class DictSpinnerPresenter {
 
     private Activity activity;

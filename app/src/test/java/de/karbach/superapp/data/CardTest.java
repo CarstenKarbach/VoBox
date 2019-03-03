@@ -26,6 +26,9 @@ import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests for cards.
+ */
 @RunWith(RobolectricTestRunner.class)
 public class CardTest {
 

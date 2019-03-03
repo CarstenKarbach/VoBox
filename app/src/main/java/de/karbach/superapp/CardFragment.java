@@ -83,60 +83,6 @@ public class CardFragment extends Fragment {
         }
     }
 
-    private void setCheckedInRadiogroup(RadioGroup group, String value){
-        for(int i=0; i<group.getChildCount(); i++){
-            View childView = group.getChildAt(i);
-            if(childView instanceof LinearLayout){
-                LinearLayout linlayout = (LinearLayout)childView;
-                for(int j=0; j<linlayout.getChildCount(); j++){
-                    View child = linlayout.getChildAt(j);
-                    if(child instanceof  RadioButton) {
-                        RadioButton childRadio = (RadioButton) child;
-                        String childvalue = childRadio.getText().toString();
-                        if (value != null && value.equals(childvalue)) {
-                            childRadio.setChecked(true);
-                            return;
-                        }
-                    }
-                }
-            }
-            else if(childView instanceof RadioButton){
-                RadioButton child = (RadioButton) childView;
-                String childvalue = child.getText().toString();
-                if(value != null && value.equals(childvalue)){
-                    child.setChecked(true);
-                    return;
-                }
-            }
-        }
-    }
-
-    private String getCheckedValueInRadiogroup(RadioGroup group){
-        for(int i=0; i<group.getChildCount(); i++){
-            View childView = group.getChildAt(i);
-            if(childView instanceof LinearLayout){
-                LinearLayout linlayout = (LinearLayout)childView;
-                for(int j=0; j<linlayout.getChildCount(); j++){
-                    View child = linlayout.getChildAt(j);
-                    if(child instanceof  RadioButton) {
-                        RadioButton childRadio = (RadioButton) child;
-                        if(childRadio.isChecked()){
-                            return childRadio.getText().toString();
-                        }
-                    }
-                }
-            }
-            else if(childView instanceof RadioButton){
-                RadioButton child = (RadioButton) childView;
-                if(child.isChecked()){
-                    return child.getText().toString();
-                }
-            }
-        }
-
-        return null;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -165,25 +111,12 @@ public class CardFragment extends Fragment {
         final TextView lang1 = (TextView) result.findViewById(R.id.lang1_text);
         final TextView lang2 = (TextView) result.findViewById(R.id.lang2_text);
 
-        final RadioGroup lessons = (RadioGroup) result.findViewById(R.id.lesson_selection);
-        final RadioGroup types = (RadioGroup) result.findViewById(R.id.type_selection);
-
         if(card != null){
             if(lang1 != null){
                 lang1.setText(card.getLang1());
             }
             if(lang2 != null){
                 lang2.setText(card.getLang2());
-            }
-            if(lessons != null){
-                String lesson = card.getLesson();
-                if(lesson != null){
-                    setCheckedInRadiogroup(lessons, lesson);
-                }
-            }
-            if(types != null){
-                String type = card.getType();
-                setCheckedInRadiogroup(types, type);
             }
 
             Button delete = (Button) result.findViewById(R.id.delete_button);
@@ -218,14 +151,6 @@ public class CardFragment extends Fragment {
                     Dictionary dict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
                     if(dict != null && lang1 != null && lang2 != null){
                         Card newCard = new Card(lang1.getText().toString().trim(), lang2.getText().toString().trim());
-                        if(lessons != null){
-                            String lesson = getCheckedValueInRadiogroup(lessons);
-                            newCard.setLesson(lesson);
-                        }
-                        if(types != null){
-                            String type = getCheckedValueInRadiogroup(types);
-                            newCard.setType(type);
-                        }
 
                         dict.addCard(newCard);//Might modify an existing card
 
