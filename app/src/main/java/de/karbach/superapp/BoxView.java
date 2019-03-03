@@ -77,6 +77,22 @@ public class BoxView extends View {
         postInvalidate();
     }
 
+    private int scrollAlpha = 0;
+    private int startAlpha = 0;
+    private long scrollStartTime;
+
+    public void startScrollIndicator(){
+        setScrollAlpha(120);
+    }
+
+    public void setScrollAlpha(int alpha){
+        if(alpha <= 255 && alpha >= 0) {
+            scrollAlpha = alpha;
+            scrollStartTime = System.currentTimeMillis();
+            startAlpha = alpha;
+        }
+    }
+
     private class CardInfo{
         public int lang1Length;
         public int lang2Length;
@@ -259,6 +275,8 @@ public class BoxView extends View {
     private Rect boxdest, dest, stackdest, flagrect;
     private Rect textrect = new Rect();
 
+    private Rect scrollIndicatorRect = new Rect();
+
     private int maxOffset;
 
     private int levelheight;
@@ -319,9 +337,26 @@ public class BoxView extends View {
         }
 
         setOffset(calcOffset, true);
+        startScrollIndicator();
 
         if(absolutedeltaT > turningPointTime || getOffset() != calcOffset){//Time ended or offset cannot be changed anymore
             flingvelocity = 0;
+        }
+    }
+
+    protected void handleScrollAlpha(){
+        if(scrollAlpha == 0){
+            return;
+        }
+        long diff = System.currentTimeMillis()-scrollStartTime;
+        if(diff < 500){
+            scrollAlpha = startAlpha;
+        }
+        else {
+            scrollAlpha = startAlpha - (int) ((diff-500) / 4);
+        }
+        if(scrollAlpha < 0){
+            scrollAlpha = 0;
         }
     }
 
@@ -330,6 +365,7 @@ public class BoxView extends View {
 
         int oldoffset = getOffset();
         handleFling();
+        handleScrollAlpha();
         int newoffset = getOffset();
 
         int padding = 10;
@@ -340,8 +376,26 @@ public class BoxView extends View {
             maximumI = cards.size()-1;
         }
         int cardssize = cards.size();
+        float minleft = 0.0f;
+        float maxright = 0.0f;
         for(int i = minimumI; i<= maximumI; i++) {
             dest.set((i+1)*height-offset+padding, padding, (i+2)*height - 1 -offset-padding, height - 1-padding);
+
+            if(i== minimumI){
+                if(dest.left < height){
+                    minleft = height;
+                }
+                else {
+                    minleft = dest.left;
+                }
+            }else if(i==maximumI){
+                if(dest.right > width){
+                    maxright = width;
+                }
+                else {
+                    maxright = dest.right;
+                }
+            }
 
             drawerTarget.set(dest.left-padding, dest.bottom+1-rescaleRectDrawer.height()+padding, dest.right+padding+1, dest.bottom+padding );
             int alpha = (cardssize == 0 || i<0) ? 255 : (255-( (i*120)/ cardssize));
@@ -357,11 +411,13 @@ public class BoxView extends View {
             }
         }
 
+        int leftEnd = (cards.size()+1)*height-offset;
+        drawScrollIndicator(canvas, leftEnd, maxright, minleft, cardssize);
+
         canvas.drawRect(0,0, height-1, height-1, fillPaint);
         canvas.drawBitmap(box, boxsrc, rescaleRectBox, linePaint);
 
         //Draw Box end
-        int leftEnd = (cards.size()+1)*height-offset;
         if(leftEnd < width) {
             rescaleRectBoxEnd.set(leftEnd, 0, leftEnd + rescaleRectBoxEnd.width(), rescaleRectBoxEnd.height());
             canvas.drawBitmap(boxend, boxendsrc, rescaleRectBoxEnd, linePaint);
@@ -372,8 +428,31 @@ public class BoxView extends View {
 
         canvas.drawText(String.valueOf(cards.size()), height*5/6, height*5/6, centertextpaint);
 
-        if(flingvelocity != 0){
+        if(flingvelocity != 0 || scrollAlpha > 0){
             invalidate();
+        }
+    }
+
+    private void drawScrollIndicator(Canvas canvas, int leftEnd, float maxright, float minleft, int cardssize){
+        if(scrollAlpha > 0 && leftEnd >= width) {
+            float displayCardsWidth = maxright - minleft;
+            float fullWidth = (cardssize + 1) * height;//Width of fully drawn drawer
+            float percent = displayCardsWidth / fullWidth;//Percent of shown drawer
+            if (percent < 0.5f) {
+                float scrollWidth = width - height;//absolute size of possible drawer display
+                float scrollIndicatorWidth = percent * scrollWidth;//width of scroll indicator
+                float percentOffset = (offset + height) / fullWidth;//percentage of offset
+                float scrollLeft = height + percentOffset * scrollWidth;//left start of scroll indicator
+                float scrollRight = scrollLeft + scrollIndicatorWidth - 1;//Right end of scroll indicator
+                scrollIndicatorRect.set(
+                        Math.round(scrollLeft),
+                        0,
+                        Math.round(scrollRight),
+                        height / 20);
+                centertextpaint.setAlpha(scrollAlpha);
+                canvas.drawRect(scrollIndicatorRect, centertextpaint);
+                centertextpaint.setAlpha(255);
+            }
         }
     }
 

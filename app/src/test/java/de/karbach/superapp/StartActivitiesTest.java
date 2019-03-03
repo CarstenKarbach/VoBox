@@ -18,8 +18,11 @@
 
 package de.karbach.superapp;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -27,12 +30,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowApplication;
 
+import androidx.test.core.app.ApplicationProvider;
 import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
 
+import static android.view.MotionEvent.ACTION_DOWN;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -106,10 +115,54 @@ public class StartActivitiesTest {
 
     @Test
     public void startBoxActivity(){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        dm.selectDictionary("Englisch");
+        //Put some cards in all the boxes
+        Dictionary dict = dm.getSelectedDictionary();
+        for(int i=0; i<5; i++){
+            for(int j=0; j<10; j++){
+                Card card = new Card(String.valueOf(i)+"//"+String.valueOf(j), String.valueOf(i)+"//"+String.valueOf(j+j));
+                card.setBox(i+1);
+                dict.addCard(card);
+            }
+        }
+
         ActivityController<BoxActivity> controller = Robolectric.buildActivity(BoxActivity.class);
 
-        DictionaryManagement dm = DictionaryManagement.getInstance(controller.get());
-        dm.selectDictionary("Englisch");
         controller.create().start().postCreate(null).resume();
+
+        BoxActivity ba = controller.get();
+        ShadowActivity shadow = Shadows.shadowOf(ba);
+
+        for(int box=1; box<=5; box++) {
+            BoxView bv = ba.findViewById(BoxFragment.boxids[box - 1]);
+            assertNotNull(bv);
+            bv.fling(10000);
+            bv.fling(-10000);
+
+            FragmentManager fm = ba.getFragmentManager();
+            Fragment f = fm.findFragmentById(R.id.fragment_container);
+            assertTrue(f instanceof BoxFragment);
+
+            BoxFragment bf = (BoxFragment) f;
+            bf.showPopup(box);
+
+            bf.startBoxTraining(box, false);
+
+            Intent expectedIntentTest = new Intent(ba, TestActivity.class);
+            Intent expectedIntentList = new Intent(ba, CardListActivity.class);
+            Intent actual = shadow.getNextStartedActivity();
+            assertEquals(actual.getComponent(), expectedIntentTest.getComponent());
+
+            bf.startBoxTraining(box, true);
+            actual = shadow.getNextStartedActivity();
+            assertEquals(actual.getComponent(), expectedIntentTest.getComponent());
+
+            bf.showList(box);
+            actual = shadow.getNextStartedActivity();
+            assertEquals(actual.getComponent(), expectedIntentList.getComponent());
+        }
     }
 }

@@ -59,7 +59,7 @@ public class BoxFragment extends Fragment{
         return boxCards.size();
     }
 
-    protected void startBoxTraining(int box, boolean realTest){
+    public void startBoxTraining(int box, boolean realTest){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
             Toast.makeText(getActivity(), "Keine Karten in der Box", Toast.LENGTH_SHORT).show();
@@ -72,7 +72,7 @@ public class BoxFragment extends Fragment{
         startActivity(intent);
     }
 
-    protected void showList(int box){
+    public void showList(int box){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
             Toast.makeText(getActivity(), "Keine Karten in der Box", Toast.LENGTH_SHORT).show();
@@ -84,7 +84,7 @@ public class BoxFragment extends Fragment{
         startActivity(intent);
     }
 
-    protected void showPopup(int box){
+    public void showPopup(int box){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
             Toast.makeText(getActivity(), "Keine Karten in der Box", Toast.LENGTH_SHORT).show();
@@ -122,7 +122,7 @@ public class BoxFragment extends Fragment{
         popup.show();//showing popup menu
     }
 
-    private static int[] boxids = new int[]{R.id.boxview1, R.id.boxview2, R.id.boxview3, R.id.boxview4, R.id.boxview5};
+    public final static int[] boxids = new int[]{R.id.boxview1, R.id.boxview2, R.id.boxview3, R.id.boxview4, R.id.boxview5};
 
     public void updateBoxViews(View root){
         if(root == null){
@@ -162,6 +162,7 @@ public class BoxFragment extends Fragment{
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                         boxview.setOffset( (int)(boxview.getOffset() + distanceX), false );
                         boxview.fling(0);
+                        boxview.startScrollIndicator();
                         return true;
                     }
 
