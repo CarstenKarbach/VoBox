@@ -40,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -289,7 +290,26 @@ public class StartActivitiesTest {
 
     @Test
     public void startListGenActivity(){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        dm.selectDictionary("Englisch");
+
+        Dictionary dict = dm.getSelectedDictionary();
+        dict.addCard(new Card("eins", "one"));
+        dict.addCard(new Card("zwei", "two"));
+        dict.addCard(new Card("drei", "three"));
+        dict.addCard(new Card("test", "ey1(-et"));
+        dict.addCard(new Card("test2", "ey2(-en"));
+
         ListGeneratorActivity activity = Robolectric.buildActivity(ListGeneratorActivity.class).setup().get();
+        Button show = activity.findViewById(R.id.button_showlist);
+        show.performClick();
+
+        CheckBox ettCheck = activity.findViewById(R.id.ettCheck);
+        CheckBox enCheck = activity.findViewById(R.id.enCheck);
+        ettCheck.setChecked(true);
+        enCheck.setChecked(true);
+        show.performClick();
     }
 
     @Test
