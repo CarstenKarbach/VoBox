@@ -24,6 +24,8 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -48,6 +50,7 @@ import org.robolectric.Shadows;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.fakes.RoboMenu;
 import org.robolectric.fakes.RoboMenuItem;
+import org.robolectric.shadow.api.Shadow;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
@@ -178,6 +181,10 @@ public class StartActivitiesTest {
             }
         }
 
+        Card longcard = new Card("kjaskdlasldaskfjasjfkaskaslf", "saldalsflaskfjafjakslalasaggdsgs saa ");
+        longcard.setBox(3);
+        dict.addCard(longcard);
+
         ActivityController<BoxActivity> controller = Robolectric.buildActivity(BoxActivity.class);
 
         controller.create().start().postCreate(null).resume();
@@ -185,8 +192,36 @@ public class StartActivitiesTest {
         BoxActivity ba = controller.get();
         ShadowActivity shadow = Shadows.shadowOf(ba);
 
+        controller.visible();
+
         for(int box=1; box<=5; box++) {
             BoxView bv = ba.findViewById(BoxFragment.boxids[box - 1]);
+            Canvas canvas = new Canvas(Shadow.newInstanceOf(Bitmap.class));
+
+            bv.drawBox(canvas);
+
+            bv.startScrollIndicator();
+            bv.fling(77);
+            for(int offset= -10; offset<10; offset++){
+                bv.setOffset(offset*78, false);
+                bv.drawBox(canvas);
+            }
+            bv.drawBox(canvas);
+
+            if(box == 1){
+                //Test scroll bar indicator alpha change
+                try {
+                    Thread.sleep(600);
+                } catch (InterruptedException e) {
+                }
+                bv.drawBox(canvas);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                }
+                bv.drawBox(canvas);
+            }
+
             assertNotNull(bv);
             bv.fling(10000);
             bv.fling(-10000);

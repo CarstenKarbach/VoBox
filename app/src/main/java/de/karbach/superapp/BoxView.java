@@ -242,10 +242,9 @@ public class BoxView extends View {
         if(note == null){
             return;
         }
-        android.graphics.Bitmap.Config bitmapConfig =
-                note.getConfig();
-        if(bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        android.graphics.Bitmap.Config bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        if(note.getConfig() != null) {
+            bitmapConfig = note.getConfig();
         }
 
         dest.set(0, 0, height -1 - 2*padding, height -1 - 2*padding);
@@ -277,10 +276,9 @@ public class BoxView extends View {
             return;
         }
 
-        android.graphics.Bitmap.Config bitmapConfig =
-                drawer.getConfig();
-        if(bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        android.graphics.Bitmap.Config bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        if(note.getConfig() != null) {
+            bitmapConfig = drawer.getConfig();
         }
 
         drawerTarget.set(0, 0, height, rescaleRectDrawer.height()-1 );
@@ -316,12 +314,15 @@ public class BoxView extends View {
     protected void measureTextSize(int cardlength){
         float textsize = textpaint.getTextSize();
         textpaint.getTextBounds(exampleWord, 0, exampleWord.length(), textrect);
-        while(textrect.width() < cardlength){
+        int maxtries = 1000;
+        int tries = 0;
+        while(textrect.width() < cardlength && ++tries < maxtries ){
             textsize+=1.0f;
             textpaint.setTextSize(textsize);
             textpaint.getTextBounds(exampleWord, 0, exampleWord.length(), textrect);
         }
-        while(textrect.width() > cardlength && textsize > 0){
+        tries = 0;
+        while(textrect.width() > cardlength && textsize > 0  && ++tries < maxtries){
             textsize-=1.0f;
             textpaint.setTextSize(textsize);
             textpaint.getTextBounds(exampleWord, 0, exampleWord.length(), textrect);
@@ -428,13 +429,16 @@ public class BoxView extends View {
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        this.drawBox(canvas);
+    }
 
+    public void drawBox(Canvas canvas) {
         int oldoffset = getOffset();
         handleFling();
         handleScrollAlpha();
         int newoffset = getOffset();
 
-        int minimumI = (1+offset+padding)/height-2;//Derived from (i+2)*height-1-offset-padding >= 0 ; in other words dest.right >= 0
+        int minimumI = (1+offset+padding)/height-1;//Derived from (i+2)*height-1-offset-padding >= height ; in other words dest.right >= 0
         int maximumI = (width+offset-padding)/height-1;//Derived from (i+1)*height-offset+padding >= width ; in other words dest.left <= width
         if(maximumI >= cards.size()){
             maximumI = cards.size()-1;
