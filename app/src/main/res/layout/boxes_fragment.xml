@@ -15,14 +15,14 @@
     <de.karbach.superapp.BoxView
         android:layout_height="72dp"
         android:layout_width="match_parent"
-        android:id="@+id/boxview5"
+        android:id="@+id/boxview1"
         android:layout_marginTop="8dp"
         />
 
     <de.karbach.superapp.BoxView
         android:layout_height="72dp"
         android:layout_width="match_parent"
-        android:id="@+id/boxview4"
+        android:id="@+id/boxview2"
         android:layout_marginTop="8dp"
         />
 
@@ -36,7 +36,7 @@
     <de.karbach.superapp.BoxView
         android:layout_height="72dp"
         android:layout_width="match_parent"
-        android:id="@+id/boxview2"
+        android:id="@+id/boxview4"
         android:layout_marginTop="8dp"
         />
 
@@ -44,7 +44,7 @@
     <de.karbach.superapp.BoxView
         android:layout_height="72dp"
         android:layout_width="match_parent"
-        android:id="@+id/boxview1"
+        android:id="@+id/boxview5"
         android:layout_marginTop="8dp"
         />
 
