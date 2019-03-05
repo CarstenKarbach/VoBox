@@ -356,7 +356,9 @@ public class TestFragment extends Fragment {
                 checkSolution();
 
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                if(imm != null && getActivity().getCurrentFocus() != null) {
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                }
             }
         });
 

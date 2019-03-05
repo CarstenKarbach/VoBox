@@ -130,6 +130,11 @@ public class DictionaryManagement {
     }
 
     public Dictionary selectDictionary(String name){
+        if(name == null){
+            selected = null;
+            storeSelectedInPreferences(name);
+            return null;
+        }
         for(Dictionary dict: dicts){
             if(dict.getName().equals(name)){
                 selected = dict;

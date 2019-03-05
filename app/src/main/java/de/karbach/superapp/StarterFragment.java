@@ -129,7 +129,6 @@ public class StarterFragment extends Fragment {
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
                 }
             });
         }
@@ -154,9 +153,6 @@ public class StarterFragment extends Fragment {
                             }
                             if(item.getItemId() == R.id.dict_export){
                                 DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-                                if(dm == null){
-                                    return true;
-                                }
                                 Dictionary selected = dm.getSelectedDictionary();
                                 if(selected == null){
                                     return true;
@@ -170,9 +166,6 @@ public class StarterFragment extends Fragment {
                             }
                             if(item.getItemId() == R.id.dict_delete){
                                 DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-                                if(dm == null){
-                                    return true;
-                                }
                                 Dictionary selected = dm.getSelectedDictionary();
                                 if(selected == null){
                                     return true;

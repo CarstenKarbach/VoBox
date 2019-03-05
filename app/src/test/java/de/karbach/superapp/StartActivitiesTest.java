@@ -42,8 +42,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.junit.Test;
@@ -312,9 +314,81 @@ public class StartActivitiesTest {
         show.performClick();
     }
 
+    /**
+     * Add a dictionary wioth a test name and select it
+     * @param newName name of the dictionary
+     */
+    private void initAndSelectDictionary(String newName){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        Dictionary dict = new Dictionary(newName);
+        dict.setBaseLanguage("Deutsch");
+        dict.setLanguage("Englisch");
+        dict.addCard(new Card("eins", "one("));
+        dict.addCard(new Card("zwei", "two"));
+        dict.addCard(new Card("drei", "three"));
+        dict.addCard(new Card("dreiklammer", "three(bc"));
+        dm.addDictionaryObject(dict);
+        dm.selectDictionary(newName);
+    }
+
     @Test
     public void startTestActivity(){
-        TestActivity activity = Robolectric.buildActivity(TestActivity.class).setup().get();
+        initAndSelectDictionary("startTestActivity");
+
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        Dictionary selected = dm.getSelectedDictionary();
+
+        Intent intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(TestActivity.PARAMREALTEST, true);
+        ActivityController<TestActivity> actController = Robolectric.buildActivity(TestActivity.class);
+        actController.get().setIntent(intent);
+        actController.create();
+        TestActivity activity = actController.visible().get();
+        EditText lang2Text = activity.findViewById(R.id.testcard_lang2_text);
+        EditText solutionText = activity.findViewById(R.id.testcard_solution_text);
+        Button checkButton = activity.findViewById(R.id.testcard_check_button);
+        checkButton.performClick();
+        //Solution correct
+        lang2Text.setText(solutionText.getText());
+        System.out.println("Solution correct");
+        checkButton.performClick();
+
+        Button nextButton = activity.findViewById(R.id.testcard_next_button);
+        nextButton.performClick();
+        //Solution wrong
+        lang2Text.setText(solutionText.getText()+"Wrong");
+        checkButton.performClick();
+
+        nextButton.performClick();
+        //Solution with bracket
+        solutionText.setText("mysolution(");
+        lang2Text.setText("mysolution");
+        checkButton.performClick();
+
+        Button backButton = activity.findViewById(R.id.testcard_back_button);
+        backButton.performClick();
+
+        ImageButton switchButton = activity.findViewById(R.id.button_switch_lang);
+        switchButton.performClick();
+        Button editButton = activity.findViewById(R.id.testcard_edit);
+        editButton.performClick();
+
+        nextButton.performClick();
+        nextButton.performClick();//End of testing cards reached
+
+        FragmentManager fm = activity.getFragmentManager();
+        TestFragment testf = (TestFragment)fm.findFragmentById(R.id.fragment_container);
+        testf.onActivityResult(CardFragment.REQUESTEDIT, Activity.RESULT_OK, new Intent().putExtra(CardFragment.PARAMLANG1KEY, "eins"));
+        for(int i = 0; i<10; i++) {
+            testf.onActivityResult(CardFragment.REQUESTEDIT, Activity.RESULT_CANCELED, new Intent().putExtra(CardFragment.PARAMLANG1KEY, CardFragment.DELETEDVALUE));
+        }
+
+        dm.selectDictionary(null);
+
+        editButton = activity.findViewById(R.id.testcard_edit);
+        editButton.performClick();
     }
 
     @Test
@@ -550,5 +624,53 @@ public class StartActivitiesTest {
         Bundle bundle = new Bundle();
         bundle.putSerializable(CardListFragment.PARAMCARDS, nullCards);
         activity = Robolectric.buildActivity(CardListActivity.class).setup(bundle).visible().get();
+    }
+
+    @Test
+    public void testStarterFragment(){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+
+        dm.selectDictionary(null);
+        ImageButton actionsButton = starteractivity.findViewById(R.id.actions_button);
+        actionsButton.performClick();
+        PopupMenu popMenu = ShadowPopupMenu.getLatestPopupMenu();
+        int[] ids = new int[]{R.id.dict_edit,R.id.dict_export, R.id.dict_new, R.id.dict_delete};
+        for(int id: ids) {
+            MenuItem menuitem = new RoboMenuItem(id);
+            Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(menuitem);
+        }
+
+        Dictionary dict = new Dictionary("newtesttest");
+        dict.setBaseLanguage("Deutsch");
+        dict.setLanguage("Englisch");
+        dict.addCard(new Card("eins", "one"));
+        dict.addCard(new Card("zwei", "two"));
+        dict.addCard(new Card("drei", "three"));
+        dm.addDictionaryObject(dict);
+        dm.selectDictionary("newtesttest");
+
+        starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        Button newCardButton = starteractivity.findViewById(R.id.newcard_button);
+        newCardButton.performClick();
+        Button listButton = starteractivity.findViewById(R.id.list_button);
+        listButton.performClick();
+        Button boxButton = starteractivity.findViewById(R.id.box_button);
+        boxButton.performClick();
+
+        Robolectric.buildActivity(StarterActivity.class).setup().pause().destroy();
+
+        actionsButton = starteractivity.findViewById(R.id.actions_button);
+        actionsButton.performClick();
+        popMenu = ShadowPopupMenu.getLatestPopupMenu();
+        for(int id: ids) {
+            MenuItem menuitem = new RoboMenuItem(id);
+            Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(menuitem);
+        }
+
+        Spinner select = starteractivity.findViewById(R.id.language_selection);
+        Shadows.shadowOf(select).getItemSelectedListener().onNothingSelected(select);
     }
 }
