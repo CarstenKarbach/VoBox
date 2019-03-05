@@ -232,6 +232,40 @@ public class BoxView extends View {
         stacksrc = new Rect(0,0, cardsbmp.getWidth()-1, cardsbmp.getHeight()-1);
     }
 
+    private Bitmap flaggedNoteBitmap;
+    private Rect flaggedNoteBitmapSrc = new Rect();
+
+    /**
+     * Call this within measure to get the sizes right.
+     */
+    private void generateFlaggedNoteBitmap(){
+        if(note == null){
+            return;
+        }
+        android.graphics.Bitmap.Config bitmapConfig =
+                note.getConfig();
+        if(bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+
+        dest.set(0, 0, height -1 - 2*padding, height -1 - 2*padding);
+
+        flaggedNoteBitmap = Bitmap.createBitmap(dest.width(), dest.height(), bitmapConfig);
+
+        Canvas canvas = new Canvas(flaggedNoteBitmap);
+
+        canvas.drawBitmap(note, src, dest, linePaint);
+
+        int flagleft = flagOffset;
+        int flagright = flagOffset+flagWidth;
+        flagrect.set(flagleft, exampleWordHeight*2, flagright, exampleWordHeight*3);
+        canvas.drawBitmap(flag1, flagsrc, flagrect, linePaint);
+
+        flagrect.set(flagleft, exampleWordHeight*4, flagright, exampleWordHeight*5);
+        canvas.drawBitmap(flag2, flagsrc, flagrect, linePaint);
+        flaggedNoteBitmapSrc.set(dest);
+    }
+
     private Rect rescaleRectBox = new Rect();
     private Rect rescaleRectBoxEnd = new Rect();
     private Rect rescaleRectDrawer = new Rect();
@@ -314,6 +348,8 @@ public class BoxView extends View {
 
         flagOffset = height / 12;
         flagWidth = exampleWordHeight*3/2;
+
+        generateFlaggedNoteBitmap();
     }
 
     @Override
@@ -360,6 +396,8 @@ public class BoxView extends View {
         }
     }
 
+    private int padding = 10;
+
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
@@ -367,8 +405,6 @@ public class BoxView extends View {
         handleFling();
         handleScrollAlpha();
         int newoffset = getOffset();
-
-        int padding = 10;
 
         int minimumI = (1+offset+padding)/height-2;//Derived from (i+2)*height-1-offset-padding >= 0 ; in other words dest.right >= 0
         int maximumI = (width+offset-padding)/height-1;//Derived from (i+1)*height-offset+padding >= width ; in other words dest.left <= width
@@ -459,21 +495,14 @@ public class BoxView extends View {
     private Rect drawerTarget = new Rect();
 
     protected void drawCard(Card card, Rect dest, Canvas canvas, int index){
-        canvas.drawBitmap(note, src, dest, linePaint);
+        canvas.drawBitmap(flaggedNoteBitmap, flaggedNoteBitmapSrc, dest, linePaint);
 
         CardInfo cardInfo = cardsInfo.get(card);
 
-        int flagleft = dest.left+flagOffset;
         int flagright = dest.left+flagOffset+flagWidth;
 
         canvas.drawText(cardInfo.displayText1, flagright, dest.top+exampleWordHeight*3, textpaint);
-        flagrect.set(flagleft, dest.top+exampleWordHeight*2, flagright, dest.top+exampleWordHeight*3);
-        canvas.drawBitmap(flag1, flagsrc, flagrect, textpaint);
-
         canvas.drawText(cardInfo.displayText2, flagright, dest.top+exampleWordHeight*5, textpaint);
-        flagrect.set(flagleft, dest.top+exampleWordHeight*4, flagright, dest.top+exampleWordHeight*5);
-        canvas.drawBitmap(flag2, flagsrc, flagrect, textpaint);
-
         canvas.drawText(String.valueOf(index+1), (dest.left+dest.right)/2, dest.bottom-exampleWordHeight, centertextpaintBlue);
     }
 }
