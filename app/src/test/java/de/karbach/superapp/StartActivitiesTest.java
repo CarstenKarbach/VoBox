@@ -18,12 +18,22 @@
 
 package de.karbach.superapp;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.junit.Test;
@@ -33,8 +43,13 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.fakes.RoboMenu;
+import org.robolectric.fakes.RoboMenuItem;
 import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
+
+import java.util.ArrayList;
 
 import androidx.test.core.app.ApplicationProvider;
 import de.karbach.superapp.data.Card;
@@ -194,5 +209,87 @@ public class StartActivitiesTest {
             actual = shadow.getNextStartedActivity();
             assertEquals(actual.getComponent(), expectedIntentList.getComponent());
         }
+    }
+
+    @Test
+    public void testBuildConfig(){
+        assertTrue( BuildConfig.DEBUG == true || BuildConfig.DEBUG==false);
+    }
+
+    @Test
+    public void testCardlistActivity(){
+        Dictionary mydict = new Dictionary("MyCardlistDict");
+        mydict.setBaseLanguage("Deutsch");
+        mydict.setLanguage("Englisch");
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        dm.addDictionaryObject(mydict);
+
+        dm.selectDictionary("MyCardlistDict");
+        Dictionary dict = dm.getSelectedDictionary();
+        dict.addCard(new Card("eins", "one"));
+        dict.addCard(new Card("zwei", "two"));
+        dict.addCard(new Card("drei", "three"));
+        CardListActivity activity = Robolectric.buildActivity(CardListActivity.class).setup().get();
+
+        //Start with box intent
+        Intent intent = new Intent(starteractivity,CardListActivity.class);
+        intent.putExtra(CardListActivity.PARAMBOX, 1);
+        ActivityController<CardListActivity> actController = Robolectric.buildActivity(CardListActivity.class);
+        actController.get().setIntent(intent);
+        activity = actController.setup().get();
+
+        int[] optionIds = new int[]{R.id.menu_item_search, R.id.menu_item_clearsearch, R.id.menu_item_training, R.id.menu_item_sort};
+
+        for(int resource: optionIds) {
+            MenuItem menuItem = new RoboMenuItem(resource);
+            boolean res = activity.onOptionsItemSelected(menuItem);
+            assertTrue(res);
+        }
+
+        activity.onOptionsItemSelected(new RoboMenuItem(R.id.menu_item_sort));
+        AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+
+        activity.onOptionsItemSelected(new RoboMenuItem(R.id.menu_item_sort));
+        dialog = ShadowAlertDialog.getLatestAlertDialog();
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
+
+        //Search with intent
+        Intent searchintent = new Intent(starteractivity,CardListActivity.class);
+        searchintent.setAction(Intent.ACTION_SEARCH);
+        actController.newIntent(searchintent);
+
+        searchintent = new Intent(starteractivity,CardListActivity.class);
+
+        searchintent.setAction(Intent.ACTION_SEARCH);
+        actController.newIntent(searchintent);
+
+        //Click on a card in list, onResult
+        FragmentManager fm = activity.getFragmentManager();
+        CardListFragment cardlistfragment = (CardListFragment) fm.findFragmentById(R.id.fragment_container);
+        cardlistfragment.onListItemClick(null, null, 0,0);
+        Shadows.shadowOf(activity).receiveResult(
+                new Intent(activity, CardActivity.class),
+                Activity.RESULT_OK,
+                new Intent());
+
+        cardlistfragment.sortByLanguage("Deutsch");
+        cardlistfragment.sortByLanguage("Englisch");
+
+        MenuItem menuItem = new RoboMenuItem(R.id.menu_card_delete);
+        cardlistfragment.onContextItemSelected(menuItem);
+
+        cardlistfragment.search("a");
+        cardlistfragment.search("b");
+        cardlistfragment.search("drei");
+
+        CardListFragment.CardAdapter ca = (CardListFragment.CardAdapter) cardlistfragment.getListAdapter();
+        assertEquals( "Deutsch", ca.getLang1());
+        assertEquals( "Englisch", ca.getLang2());
+
+        ListView lv = cardlistfragment.getListView();
+        View itemview = lv.getChildAt(0);
+        itemview.performLongClick();
     }
 }

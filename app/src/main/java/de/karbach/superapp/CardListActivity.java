@@ -149,14 +149,6 @@ public class CardListActivity extends SingleFragmentActivity {
         return false;
     }
 
-    private Bundle getArgumentsBundle(){
-        ArrayList<Card> cards = getCardsToShow();
-
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(CardListFragment.PARAMCARDS, cards);
-        return arguments;
-    }
-
     @Override
     protected Fragment createFragment() {
         Fragment result = new CardListFragment();
@@ -175,7 +167,6 @@ public class CardListActivity extends SingleFragmentActivity {
      * Get the CardListFragment, which is the main content of this activity.
      * The fragment is retained, so that it is sometimes useful to retrieve the
      * fragment. Not all changes can be done to the fragment during creation.
-     *
      * @return the active CardListFragment
      */
     private CardListFragment getMyFragment(){

@@ -68,7 +68,7 @@ public class CardListFragment extends ListFragment{
      */
     public static final int CARDCHANGERESULT = 1;
 
-    private class CardAdapter extends ArrayAdapter<Card> {
+    public class CardAdapter extends ArrayAdapter<Card> {
 
         public String getLang1() {
             return lang1;
@@ -208,7 +208,7 @@ public class CardListFragment extends ListFragment{
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        int position = info.position;
+        int position = info == null ? 0 : info.position;
 
         if(item.getItemId() == R.id.menu_card_delete){
             Card card = cardsAfterSearch.get(position);
