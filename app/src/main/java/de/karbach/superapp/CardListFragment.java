@@ -189,9 +189,6 @@ public class CardListFragment extends ListFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = super.onCreateView(inflater, container, savedInstanceState);
-        if(result == null){
-            return null;
-        }
         ListView listview = (ListView) result.findViewById(android.R.id.list);
         registerForContextMenu(listview);
 
@@ -277,6 +274,9 @@ public class CardListFragment extends ListFragment{
         else{
             String simpleSearch = Card.toSimpleString(search);
             for(Card card: cards){
+                if(card == null){
+                    continue;
+                }
                 if(card.matchesSearch(simpleSearch)){
                     cardsAfterSearch.add(card);
                 }
@@ -304,14 +304,11 @@ public class CardListFragment extends ListFragment{
                 if(rhs == null){
                     return 1;
                 }
-                if(lhs.getLang1() == null){
+                if(lhs.getLang1() == null || "".equals(lhs.getLang1())){
                     return -1;
                 }
                 String lang1 = Card.toSimpleString(lhs.getLang1());
                 String lang2 = Card.toSimpleString(rhs.getLang1());
-                if(lang1 == null){
-                    return -1;
-                }
                 return lang1.compareTo(lang2);
             }
         };
@@ -325,12 +322,12 @@ public class CardListFragment extends ListFragment{
                 if(rhs == null){
                     return 1;
                 }
-                if(lhs.getLang1() == null){
+                if(lhs.getLang1() == null || "".equals(lhs.getLang1())){
                     return -1;
                 }
                 String lang1 = Card.toSimpleString(lhs.getLang2());
                 String lang2 = Card.toSimpleString(rhs.getLang2());
-                if(lang1 == null){
+                if(lang1 == null || "".equals(lang1)){
                     return -1;
                 }
                 return lang1.compareTo(lang2);

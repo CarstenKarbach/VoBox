@@ -26,8 +26,11 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GestureDetectorCompat;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
@@ -55,9 +58,13 @@ import org.robolectric.shadow.api.Shadow;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowContentResolver;
+import org.robolectric.shadows.ShadowEnvironment;
 import org.robolectric.shadows.ShadowPopupMenu;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.test.core.app.ApplicationProvider;
 import de.karbach.superapp.data.Card;
@@ -148,6 +155,73 @@ public class StartActivitiesTest {
         nameview.setText("Gibtsjanicht");
         saveButton.performClick();
         assertNotNull(dm.getDictionary("Gibtsjanicht"));
+    }
+
+    @Test
+    public void testStartStarterActivityWithIntents(){
+        ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
+
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        Dictionary dict = dm.getDictionary("Englisch");
+
+        assertNotNull(dict);
+        File savedFile = dict.exportToFile("mystartintent.txt", starteractivity, false);
+        assertTrue(savedFile.exists());
+
+        Intent intent = new Intent(starteractivity,StarterActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(savedFile);;
+        intent.setData(uri);
+        ActivityController<StarterActivity> actController = Robolectric.buildActivity(StarterActivity.class);
+        actController.get().setIntent(intent);
+        StarterActivity intendedActivity = actController.create().get();
+
+        //Click on buttons of alert dialog
+        AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
+
+        FragmentManager fm = intendedActivity.getFragmentManager();
+        Fragment dialogFragment = fm.findFragmentByTag("dialog");
+
+        assertNotNull(dialogFragment);
+        assertTrue(dialogFragment instanceof DictionarySelectionFragment);
+
+        DictionarySelectionFragment selectDictFragment = (DictionarySelectionFragment) dialogFragment;
+        selectDictFragment.getView().findViewById(R.id.dictionary_selected_button).performClick();
+
+        dialogFragment = fm.findFragmentByTag("dialog");
+        assertNull(dialogFragment);
+
+        //Test dictionary which cannot be read
+        intent = new Intent(starteractivity,StarterActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        savedFile.delete();
+        uri = Uri.fromFile(savedFile);
+        intent.setData(uri);
+        actController = Robolectric.buildActivity(StarterActivity.class);
+        actController.get().setIntent(intent);
+        actController.create().pause();
+    }
+
+    @Test
+    public void testOptionsMenuStarter(){
+        ActivityController<DictionaryActivity> controller = Robolectric.buildActivity(DictionaryActivity.class).setup();
+        DictionaryActivity activity = controller.get();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(activity);
+        dm.selectDictionary("Englisch");
+
+        int[] ids = new int[]{R.id.menu_item_box, R.id.menu_item_list, R.id.menu_item_newword, android.R.id.home, R.id.delete_button};
+
+        for(int id: ids) {
+            MenuItem boxlist = new RoboMenuItem(id);
+            activity.onOptionsItemSelected(boxlist);
+        }
+
+        controller.visible().pause();
     }
 
     @Test
@@ -357,6 +431,11 @@ public class StartActivitiesTest {
         dict.addCard(new Card("eins", "one"));
         dict.addCard(new Card("zwei", "two"));
         dict.addCard(new Card("drei", "three"));
+        dict.addCard(new Card("aaa", "aaa"));
+        dict.addCard(new Card("ccc", "ccc"));
+        dict.addCard(new Card("bbb", "bbb"));
+        dict.addCard(new Card("", ""));
+
         CardListActivity activity = Robolectric.buildActivity(CardListActivity.class).setup().get();
 
         //Start with box intent
@@ -418,5 +497,38 @@ public class StartActivitiesTest {
         ListView lv = cardlistfragment.getListView();
         View itemview = lv.getChildAt(0);
         itemview.performLongClick();
+
+        ArrayList<Card> nullCards = new ArrayList<Card>();
+        nullCards.add(new Card("", ""));
+        nullCards.add(new Card("aaa", "aaa"));
+        nullCards.add(new Card("ccc", "ccc"));
+        nullCards.add(null);
+        nullCards.add(new Card("bbb", "bbb"));
+        nullCards.add(new Card("", ""));
+        nullCards.add(new Card("arg", ""));
+        nullCards.add(new Card("aarg", ""));
+        cardlistfragment.updateCards(nullCards);
+        cardlistfragment.sortByLanguage("Deutsch");
+        cardlistfragment.updateCards(nullCards);
+        cardlistfragment.sortByLanguage("Englisch");
+        cardlistfragment.updateCards(nullCards);
+
+        cardlistfragment.search("XYZabc");
+        cardlistfragment.startTrainingWithShownCards();
+
+        //Test with dictionary where base language is not Deutsch
+        Dictionary mytwisteddict = new Dictionary("TwistedDict");
+        mytwisteddict.setLanguage("Deutsch");
+        mytwisteddict.setBaseLanguage("Englisch");
+        mytwisteddict.addCard(new Card("english", "englisch"));
+        mytwisteddict.addCard(new Card("nice", "nett"));
+        dm.addDictionaryObject(mytwisteddict);
+        dm.selectDictionary("TwistedDict");
+        activity = Robolectric.buildActivity(CardListActivity.class).setup().visible().get();
+
+        //Start with bundled cards
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CardListFragment.PARAMCARDS, nullCards);
+        activity = Robolectric.buildActivity(CardListActivity.class).setup(bundle).visible().get();
     }
 }
