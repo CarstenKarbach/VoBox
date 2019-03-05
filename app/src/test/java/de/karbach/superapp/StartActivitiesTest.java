@@ -37,6 +37,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -80,8 +81,73 @@ public class StartActivitiesTest {
 
     @Test
     public void startDictionaryActivity(){
+        Dictionary mydict = new Dictionary("MySuperDict");
+        mydict.setBaseLanguage("Deutsch");
+        mydict.setLanguage("Englisch");
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        dm.addDictionaryObject(mydict);
+        dm.selectDictionary("MySuperDict");
+
         DictionaryActivity activity = Robolectric.buildActivity(DictionaryActivity.class).setup().get();
         assertTrue(activity.showUpButton());
+
+        Intent intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.EDIT.ordinal());
+        ActivityController<DictionaryActivity> actController = Robolectric.buildActivity(DictionaryActivity.class);
+        actController.get().setIntent(intent);
+        actController.create();
+        activity = actController.get();
+        Button saveButton = activity.findViewById(R.id.save_button);
+        EditText nameview = activity.findViewById(R.id.dictionary_name);
+        nameview.setText("AnotherSuperDict");
+        saveButton.performClick();
+        assertNotNull(dm.getDictionary("AnotherSuperDict"));
+        assertNull(dm.getDictionary("MySuperDict"));
+
+        nameview.setText("Juppdidu");
+        saveButton.performClick();
+        assertNotNull(dm.getDictionary("Juppdidu"));
+
+        nameview.setText("");
+        assertNull(dm.getDictionary(""));
+        saveButton.performClick();
+        assertNull(dm.getDictionary(""));
+
+        nameview.setText("Juppdidu");
+
+        Button deleteButton = activity.findViewById(R.id.delete_button);
+        deleteButton.performClick();
+        assertNull(dm.getDictionary("Juppdidu"));
+
+        //Start with dictionary with unknown language
+        mydict.setBaseLanguage("KenntNiemand");
+        mydict.setLanguage("Gibtsauchnicht");
+        mydict.setName("FinalTestDict");
+        dm.addDictionaryObject(mydict);
+        dm.selectDictionary("FinalTestDict");
+        intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.EDIT.ordinal());
+        actController = Robolectric.buildActivity(DictionaryActivity.class);
+        actController.get().setIntent(intent);
+        actController.create().get();
+
+        //Start with intent for new dictionary, try to save on already taken name
+        intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.NEW.ordinal());
+        actController = Robolectric.buildActivity(DictionaryActivity.class);
+        actController.get().setIntent(intent);
+        activity = actController.create().get();
+        saveButton = activity.findViewById(R.id.save_button);
+        nameview = activity.findViewById(R.id.dictionary_name);
+        Dictionary oldenglish = dm.getDictionary("Englisch");
+        assertNotNull(oldenglish);
+        nameview.setText("Englisch");
+        saveButton.performClick();
+        assertEquals(oldenglish, dm.getDictionary("Englisch"));
+        nameview.setText("Gibtsjanicht");
+        saveButton.performClick();
+        assertNotNull(dm.getDictionary("Gibtsjanicht"));
     }
 
     @Test

@@ -273,6 +273,7 @@ public class DictionaryFragment extends Fragment{
                         }
                         else{
                             Toast.makeText(getActivity(), "Wörterbuch konnte nicht umbenannt werden.", Toast.LENGTH_SHORT).show();
+                            return;
                         }
                     }
                 }
