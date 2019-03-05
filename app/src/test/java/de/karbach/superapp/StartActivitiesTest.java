@@ -381,6 +381,10 @@ public class StartActivitiesTest {
         FragmentManager fm = activity.getFragmentManager();
         TestFragment testf = (TestFragment)fm.findFragmentById(R.id.fragment_container);
         testf.onActivityResult(CardFragment.REQUESTEDIT, Activity.RESULT_OK, new Intent().putExtra(CardFragment.PARAMLANG1KEY, "eins"));
+
+        checkButton.performClick();
+        testf.onResume();
+
         for(int i = 0; i<10; i++) {
             testf.onActivityResult(CardFragment.REQUESTEDIT, Activity.RESULT_CANCELED, new Intent().putExtra(CardFragment.PARAMLANG1KEY, CardFragment.DELETEDVALUE));
         }
@@ -405,8 +409,6 @@ public class StartActivitiesTest {
 
         checkButton = activity.findViewById(R.id.testcard_check_button);
         checkButton.performClick();
-
-        actController.resume();
     }
 
     @Test
