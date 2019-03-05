@@ -37,7 +37,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
@@ -92,9 +94,6 @@ public class BoxFragment extends Fragment{
         }
 
         BoxView bv = getView().findViewById(boxids[box-1]);
-        if(bv == null){
-            return;
-        }
 
         final int currentBox = box;
 
@@ -141,49 +140,52 @@ public class BoxFragment extends Fragment{
         }
     }
 
+    public GestureDetector.OnGestureListener getGestureListener(int box) {
+        return mGestureListenerList.get(box-1);
+    }
+
+    private Map<Integer, GestureDetector.OnGestureListener> mGestureListenerList = new HashMap<Integer, GestureDetector.OnGestureListener>();
+
     public void initGestureDetection(final BoxView boxview, final int currentbox){
-        final GestureDetectorCompat mDetector = new GestureDetectorCompat(getActivity(),
-                new GestureDetector.OnGestureListener(){
-                    @Override
-                    public boolean onDown(MotionEvent e) {
-                        boxview.fling(0);
-                        return true;
-                    }
+        final GestureDetector.OnGestureListener listener = new GestureDetector.OnGestureListener(){
+            @Override
+            public boolean onDown(MotionEvent e) {
+                boxview.fling(0);
+                return true;
+            }
 
-                    @Override
-                    public void onShowPress(MotionEvent e) {
-                    }
-                    @Override
-                    public boolean onSingleTapUp(MotionEvent e) {
-                        showPopup(currentbox);
-                        return true;
-                    }
-                    @Override
-                    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                        boxview.setOffset( (int)(boxview.getOffset() + distanceX), false );
-                        boxview.fling(0);
-                        boxview.startScrollIndicator();
-                        return true;
-                    }
+            @Override
+            public void onShowPress(MotionEvent e) {
+            }
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                showPopup(currentbox);
+                return true;
+            }
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                boxview.setOffset( (int)(boxview.getOffset() + distanceX), false );
+                boxview.fling(0);
+                boxview.startScrollIndicator();
+                return true;
+            }
 
-                    @Override
-                    public void onLongPress(MotionEvent e) {
+            @Override
+            public void onLongPress(MotionEvent e) {
 
-                    }
+            }
 
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                        boxview.fling(velocityX);
-                        return true;
-                    }
-                }
-        );
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                boxview.fling(velocityX);
+                return true;
+            }
+        };
+        final GestureDetectorCompat mDetector = new GestureDetectorCompat(getActivity(),listener);
+        mGestureListenerList.put(currentbox-1, listener);
         boxview.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                if (mDetector.onTouchEvent(event)) {
-                    return true;
-                }
-                return false;
+                return mDetector.onTouchEvent(event);
             }
         });
     }

@@ -26,7 +26,9 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -34,6 +36,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.junit.Test;
@@ -48,6 +51,7 @@ import org.robolectric.fakes.RoboMenuItem;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowPopupMenu;
 
 import java.util.ArrayList;
 
@@ -166,7 +170,7 @@ public class StartActivitiesTest {
         dm.selectDictionary("Englisch");
         //Put some cards in all the boxes
         Dictionary dict = dm.getSelectedDictionary();
-        for(int i=0; i<5; i++){
+        for(int i=0; i<4; i++){
             for(int j=0; j<10; j++){
                 Card card = new Card(String.valueOf(i)+"//"+String.valueOf(j), String.valueOf(i)+"//"+String.valueOf(j+j));
                 card.setBox(i+1);
@@ -187,12 +191,26 @@ public class StartActivitiesTest {
             bv.fling(10000);
             bv.fling(-10000);
 
+            MotionEvent touchEvent = MotionEvent.obtain(200, 300, MotionEvent.ACTION_MOVE, 15.0f, 10.0f, 0);
+            Shadows.shadowOf(bv).getOnTouchListener().onTouch(bv, touchEvent);
+
             FragmentManager fm = ba.getFragmentManager();
             Fragment f = fm.findFragmentById(R.id.fragment_container);
             assertTrue(f instanceof BoxFragment);
 
             BoxFragment bf = (BoxFragment) f;
             bf.showPopup(box);
+            bf.updateBoxViews(null);
+            bf.showPopup(1000);
+
+            PopupMenu popMenu = ShadowPopupMenu.getLatestPopupMenu();
+            MenuItem boxlist = new RoboMenuItem(R.id.box_list);
+            MenuItem boxtest = new RoboMenuItem(R.id.box_test);
+            MenuItem boxtraining = new RoboMenuItem(R.id.box_training);
+            Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxlist);
+            Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxtest);
+            Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxtraining);
+
 
             bf.startBoxTraining(box, false);
 
@@ -208,6 +226,14 @@ public class StartActivitiesTest {
             bf.showList(box);
             actual = shadow.getNextStartedActivity();
             assertEquals(actual.getComponent(), expectedIntentList.getComponent());
+
+            GestureDetector.OnGestureListener gestureListener = bf.getGestureListener(box);
+            gestureListener.onDown(null);
+            gestureListener.onShowPress(null);
+            gestureListener.onSingleTapUp(null);
+            gestureListener.onScroll(null, null, 10,10);
+            gestureListener.onLongPress(null);
+            gestureListener.onFling(null, null, 20, 20);
         }
     }
 
