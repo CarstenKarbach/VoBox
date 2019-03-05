@@ -389,6 +389,24 @@ public class StartActivitiesTest {
 
         editButton = activity.findViewById(R.id.testcard_edit);
         editButton.performClick();
+
+        initAndSelectDictionary("moretestsplease");
+        actController = Robolectric.buildActivity(TestActivity.class).setup();
+        activity = actController.get();
+        nextButton = activity.findViewById(R.id.testcard_next_button);
+        backButton = activity.findViewById(R.id.testcard_back_button);
+
+        for(int i=0; i<10; i++){
+            backButton.performClick();
+        }
+        for(int i=0; i<10; i++){
+            nextButton.performClick();
+        }
+
+        checkButton = activity.findViewById(R.id.testcard_check_button);
+        checkButton.performClick();
+
+        actController.resume();
     }
 
     @Test
