@@ -266,6 +266,33 @@ public class BoxView extends View {
         flaggedNoteBitmapSrc.set(dest);
     }
 
+    private Bitmap smallDrawer;
+    private Rect smallDrawerScr = new Rect();
+
+    /**
+     * Pre generate smaller drawer image
+     */
+    private void generateSmallDrawer(){
+        if(drawer == null){
+            return;
+        }
+
+        android.graphics.Bitmap.Config bitmapConfig =
+                drawer.getConfig();
+        if(bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+
+        drawerTarget.set(0, 0, height, rescaleRectDrawer.height()-1 );
+
+        smallDrawer = Bitmap.createBitmap(drawerTarget.width(), drawerTarget.height(), bitmapConfig);
+        Canvas canvas = new Canvas(smallDrawer);
+
+        canvas.drawBitmap(drawer, drawersrc, drawerTarget, linePaint);
+
+        smallDrawerScr.set(drawerTarget);
+    }
+
     private Rect rescaleRectBox = new Rect();
     private Rect rescaleRectBoxEnd = new Rect();
     private Rect rescaleRectDrawer = new Rect();
@@ -350,6 +377,7 @@ public class BoxView extends View {
         flagWidth = exampleWordHeight*3/2;
 
         generateFlaggedNoteBitmap();
+        generateSmallDrawer();
     }
 
     @Override
@@ -436,7 +464,7 @@ public class BoxView extends View {
             drawerTarget.set(dest.left-padding, dest.bottom+1-rescaleRectDrawer.height()+padding, dest.right+padding+1, dest.bottom+padding );
             int alpha = (cardssize == 0 || i<0) ? 255 : (255-( (i*120)/ cardssize));
             transparentPaint.setAlpha(alpha);
-            canvas.drawBitmap(drawer, drawersrc, drawerTarget, transparentPaint);
+            canvas.drawBitmap(smallDrawer, smallDrawerScr, drawerTarget, transparentPaint);
 
             Card card = null;
             if(i>=0){
