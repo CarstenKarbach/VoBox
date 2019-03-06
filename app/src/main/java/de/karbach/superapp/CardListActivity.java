@@ -117,9 +117,6 @@ public class CardListActivity extends SingleFragmentActivity {
                 return true;
             case R.id.menu_item_sort:
                 DictionaryManagement dm = DictionaryManagement.getInstance(this);
-                if(dm == null){
-                    return true;
-                }
                 final Dictionary selected = dm.getSelectedDictionary();
                 if(selected == null || selected.getBaseLanguage() == null){
                     return true;

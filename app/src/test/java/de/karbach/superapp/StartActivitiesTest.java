@@ -318,7 +318,7 @@ public class StartActivitiesTest {
      * Add a dictionary wioth a test name and select it
      * @param newName name of the dictionary
      */
-    private void initAndSelectDictionary(String newName){
+    private void initAndSelectDictionary(String newName, int box){
         StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
         Dictionary dict = new Dictionary(newName);
@@ -328,13 +328,46 @@ public class StartActivitiesTest {
         dict.addCard(new Card("zwei", "two"));
         dict.addCard(new Card("drei", "three"));
         dict.addCard(new Card("dreiklammer", "three(bc"));
+        for(Card card: dict.getCards()){
+            card.setBox(box);
+        }
         dm.addDictionaryObject(dict);
         dm.selectDictionary(newName);
     }
 
     @Test
+    public void startTestActivityCardDown() {
+        initAndSelectDictionary("startTestActivityCardDown", 2);
+
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        Intent intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(TestActivity.PARAMREALTEST, true);
+        intent.putExtra(TestActivity.PARAMBOX, 2);
+        ActivityController<TestActivity> actController = Robolectric.buildActivity(TestActivity.class);
+        actController.get().setIntent(intent);
+        actController.create();
+        TestActivity activity = actController.visible().get();
+        Button checkButton = activity.findViewById(R.id.testcard_check_button);
+        checkButton.performClick();
+
+        //Test that no error occurs when no cards are given
+        intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(TestActivity.PARAMREALTEST, true);
+        intent.putExtra(TestActivity.PARAMBOX, 3);
+        actController = Robolectric.buildActivity(TestActivity.class);
+        actController.get().setIntent(intent);
+        actController.create();
+        activity = actController.visible().get();
+        Button editButton = activity.findViewById(R.id.testcard_edit);
+        editButton.performClick();
+
+        Button backButton = activity.findViewById(R.id.testcard_back_button);
+        backButton.performClick();
+    }
+
+    @Test
     public void startTestActivity(){
-        initAndSelectDictionary("startTestActivity");
+        initAndSelectDictionary("startTestActivity",1 );
 
         StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
@@ -394,7 +427,7 @@ public class StartActivitiesTest {
         editButton = activity.findViewById(R.id.testcard_edit);
         editButton.performClick();
 
-        initAndSelectDictionary("moretestsplease");
+        initAndSelectDictionary("moretestsplease", 1);
         actController = Robolectric.buildActivity(TestActivity.class).setup();
         activity = actController.get();
         nextButton = activity.findViewById(R.id.testcard_next_button);
@@ -532,6 +565,34 @@ public class StartActivitiesTest {
     }
 
     @Test
+    public void testCardlistActivityWithSerializedCards(){
+        Dictionary dict = new Dictionary("Englisch");
+        dict.addCard(new Card("eins", "one"));
+        dict.addCard(new Card("zwei", "two"));
+        dict.addCard(new Card("drei", "three"));
+
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        Intent intent = new Intent(starteractivity,CardListActivity.class);
+        intent.putExtra(CardListFragment.PARAMCARDS, dict.getCards());
+        ActivityController<CardListActivity> actController = Robolectric.buildActivity(CardListActivity.class);
+        actController.get().setIntent(intent);
+        CardListActivity activity = actController.setup().get();
+    }
+
+    @Test
+    public void testCardlistActivitySearchBeforeCreate(){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        ActivityController<CardListActivity> actController = Robolectric.buildActivity(CardListActivity.class);
+
+        Intent searchintent = new Intent(starteractivity,CardListActivity.class);
+        searchintent.setAction(Intent.ACTION_SEARCH);
+        actController.newIntent(searchintent);
+        // Foreces getMyFragment to return null, because fragment was not yet created
+    }
+
+    @Test
     public void testCardlistActivity(){
         Dictionary mydict = new Dictionary("MyCardlistDict");
         mydict.setBaseLanguage("Deutsch");
@@ -574,6 +635,11 @@ public class StartActivitiesTest {
         activity.onOptionsItemSelected(new RoboMenuItem(R.id.menu_item_sort));
         dialog = ShadowAlertDialog.getLatestAlertDialog();
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
+
+        //Sort although no dictionary is selected
+        dm.selectDictionary(null);
+        activity.onOptionsItemSelected(new RoboMenuItem(R.id.menu_item_sort));
+        dm.selectDictionary("MyCardlistDict");
 
         //Search with intent
         Intent searchintent = new Intent(starteractivity,CardListActivity.class);

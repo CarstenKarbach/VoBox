@@ -122,7 +122,7 @@ public class TestFragment extends Fragment {
         TextView status = (TextView) rootView.findViewById(R.id.testcard_statustext);
         String statusText = (position+1)+"/"+testcards.size();
         if(realtest){
-            Boolean checked = testCompleted.get(position);
+            Boolean checked = position < testCompleted.size() ? testCompleted.get(position) : false;
             if(checked != null && checked == true){
                 statusText += " geprüft";
             }
