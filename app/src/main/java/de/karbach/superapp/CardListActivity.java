@@ -116,25 +116,28 @@ public class CardListActivity extends SingleFragmentActivity {
                 }
                 return true;
             case R.id.menu_item_sort:
-                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                alertDialog.setTitle("Sortieren");
-                alertDialog.setMessage("Wonach soll sortiert werden?");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Deutsch", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        CardListFragment cardlist = getMyFragment();
-                        if(cardlist != null){
-                            cardlist.sortByLanguage("Deutsch");
-                        }
-                    }
-                });
                 DictionaryManagement dm = DictionaryManagement.getInstance(this);
                 if(dm == null){
                     return true;
                 }
                 final Dictionary selected = dm.getSelectedDictionary();
-                if(selected == null || selected.getLanguage() == null){
-                   return true;
+                if(selected == null || selected.getBaseLanguage() == null){
+                    return true;
                 }
+                if(selected.getLanguage() == null){
+                    return true;
+                }
+                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Sortieren");
+                alertDialog.setMessage("Wonach soll sortiert werden?");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, selected.getBaseLanguage(), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        CardListFragment cardlist = getMyFragment();
+                        if(cardlist != null){
+                            cardlist.sortByLanguage(selected.getBaseLanguage());
+                        }
+                    }
+                });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, selected.getLanguage(), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         CardListFragment cardlist = getMyFragment();

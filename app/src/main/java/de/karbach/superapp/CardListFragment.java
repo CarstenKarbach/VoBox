@@ -85,9 +85,12 @@ public class CardListFragment extends ListFragment{
         public void setLang2(String lang2) {
             this.lang2 = lang2;
         }
-
         public void setBaseLanguage(String baseLanguage) {
             this.baseLanguage = baseLanguage;
+        }
+
+        public String getBaseLanguage() {
+            return baseLanguage;
         }
 
         private String baseLanguage = "Deutsch";
@@ -334,7 +337,9 @@ public class CardListFragment extends ListFragment{
             }
         };
 
-        if(language.equals("Deutsch")){
+        CardAdapter adapter = (CardAdapter)getListAdapter();
+
+        if(language.equals(adapter.getBaseLanguage())){
             Collections.sort(cards, lang1Comparator);
             Collections.sort(cardsAfterSearch, lang1Comparator);
         }
@@ -343,7 +348,6 @@ public class CardListFragment extends ListFragment{
             Collections.sort(cardsAfterSearch, lang2Comparator);
         }
 
-        CardAdapter adapter = (CardAdapter)getListAdapter();
         adapter.notifyDataSetChanged();
     }
 
