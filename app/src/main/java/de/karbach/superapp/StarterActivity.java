@@ -121,9 +121,9 @@ public class StarterActivity extends SingleFragmentActivity {
                 if(loaded != null){
                     AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                     final Context context = this;
-                    alertDialog.setTitle("Wörterbuch importieren");
-                    alertDialog.setMessage("Wie möchten Sie das Wörterbuch importieren?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "als neues Wörterbuch", new DialogInterface.OnClickListener() {
+                    alertDialog.setTitle(getString(R.string.import_dict));
+                    alertDialog.setMessage(getString(R.string.question_how_import));
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.label_as_new), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             DictionaryManagement dm = DictionaryManagement.getInstance(context);
                             String loadedname = loaded.getName();
@@ -136,7 +136,7 @@ public class StarterActivity extends SingleFragmentActivity {
                             loaded.setName(newname);
                             boolean success = dm.addDictionaryObject(loaded);
                             if(! success){
-                                Toast.makeText(context, "Wörterbuch konnte nicht erstellt werden.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, getString(R.string.toast_dict_not_created), Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             else {
@@ -149,7 +149,7 @@ public class StarterActivity extends SingleFragmentActivity {
                         }
                     });
 
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "in Wörterbuch integrieren", new DialogInterface.OnClickListener() {
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.label_integrate_dict), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             //Show dicionary selection dialog
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -166,7 +166,7 @@ public class StarterActivity extends SingleFragmentActivity {
                                     loaded.setName(selected);
                                     dm.integrateDictionary(loaded);
                                     dm.selectDictionary(selected);
-                                    Toast.makeText(StarterActivity.this, "Integration in Wörterbuch "+selected+" abgeschlossen", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(StarterActivity.this, getString(R.string.toast_integrated, selected), Toast.LENGTH_SHORT).show();
 
                                     FragmentManager fm = getFragmentManager();
                                     Fragment f = fm.findFragmentById(R.id.fragment_container);
@@ -180,7 +180,7 @@ public class StarterActivity extends SingleFragmentActivity {
                     alertDialog.show();
                 }
                 else{
-                    Toast.makeText(this, "Wörterbuch konnte nicht gelesen werden.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_error_import), Toast.LENGTH_SHORT).show();
                 }
             }
         }

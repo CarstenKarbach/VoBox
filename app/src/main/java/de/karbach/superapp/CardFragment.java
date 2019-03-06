@@ -173,11 +173,11 @@ public class CardFragment extends Fragment {
                     //Tell user about action
                     if(lang1Key == null){
                         //New card added
-                        Toast.makeText(getActivity(), "Neue Karteikarte eingefügt", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.toast_newcard), Toast.LENGTH_LONG).show();
                     }
                     else{
                         //Modified card
-                        Toast.makeText(getActivity(), "Änderungen gespeichert.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.toast_savedchanges), Toast.LENGTH_LONG).show();
                         Intent result = new Intent();
                         result.putExtra(PARAMLANG1KEY, lang1Key);//Return the new identifier of the card
                         getActivity().setResult(Activity.RESULT_OK, result);

@@ -173,7 +173,7 @@ public class StarterFragment extends Fragment {
                                 String todelete = selected.getName();
                                 dm.deleteDictionary(selected.getName());
 
-                                Toast.makeText(getActivity(), "Wörterbuch '"+todelete+"' gelöscht", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getString(R.string.toast_deleted_dict, todelete), Toast.LENGTH_SHORT).show();
 
                                 dictSpinnerPresenter.updateSelectedDictionary();
                             }

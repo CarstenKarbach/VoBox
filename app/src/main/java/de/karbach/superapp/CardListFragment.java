@@ -93,10 +93,10 @@ public class CardListFragment extends ListFragment{
             return baseLanguage;
         }
 
-        private String baseLanguage = "Deutsch";
+        private String baseLanguage = getString(R.string.lang_german);
 
-        private String lang1 = "Deutsch";
-        private String lang2 = "Schwedisch";
+        private String lang1 = getString(R.string.lang_german);
+        private String lang2 = getString(R.string.lang_swedish);
 
         public CardAdapter(List<Card> cards) {
             super(getActivity(), 0,  cards);

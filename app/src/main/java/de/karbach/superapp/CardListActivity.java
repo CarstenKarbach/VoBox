@@ -125,8 +125,8 @@ public class CardListActivity extends SingleFragmentActivity {
                     return true;
                 }
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                alertDialog.setTitle("Sortieren");
-                alertDialog.setMessage("Wonach soll sortiert werden?");
+                alertDialog.setTitle(getString(R.string.sort));
+                alertDialog.setMessage(getString(R.string.question_sort));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, selected.getBaseLanguage(), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         CardListFragment cardlist = getMyFragment();

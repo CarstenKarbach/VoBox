@@ -64,7 +64,7 @@ public class BoxFragment extends Fragment{
     public void startBoxTraining(int box, boolean realTest){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
-            Toast.makeText(getActivity(), "Keine Karten in der Box", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_nocards), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -77,7 +77,7 @@ public class BoxFragment extends Fragment{
     public void showList(int box){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
-            Toast.makeText(getActivity(), "Keine Karten in der Box", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_nocards), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -89,7 +89,7 @@ public class BoxFragment extends Fragment{
     public void showPopup(int box){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
-            Toast.makeText(getActivity(), "Keine Karten in der Box", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_nocards), Toast.LENGTH_SHORT).show();
             return;
         }
 

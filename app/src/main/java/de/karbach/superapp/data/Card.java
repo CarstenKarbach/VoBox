@@ -173,7 +173,7 @@ public class Card implements Serializable {
             lang2 = array[1];
             lang2 = lang2.trim();
         }
-        String type = "Substantiv";
+        String type = "";
         if (array.length > 2) {
             type = array[2];
         }

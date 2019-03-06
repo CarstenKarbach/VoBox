@@ -83,16 +83,16 @@ public class TestFragment extends Fragment {
     /**
      * Base language of underlying dictionary
      */
-    private String baseLanguage = "Deutsch";
+    private String baseLanguage;
 
     /**
      * The language, of which the clear text is shown, and which needs to be translated into lang2
      */
-    private String lang1 = "Deutsch";
+    private String lang1;
     /**
      * The language with the unknown word
      */
-    private String lang2 = "Schwedisch";
+    private String lang2;
     /**
      * Stores, whether this is a real test
      */
@@ -124,7 +124,7 @@ public class TestFragment extends Fragment {
         if(realtest){
             Boolean checked = position < testCompleted.size() ? testCompleted.get(position) : false;
             if(checked != null && checked == true){
-                statusText += " geprüft";
+                statusText += " "+getString(R.string.checked);
             }
         }
         status.setText(statusText);
@@ -185,7 +185,7 @@ public class TestFragment extends Fragment {
 
         View solutionRow = rootView.findViewById(R.id.testcard_solution_row);
         if(solutionRow.getVisibility() == View.VISIBLE){
-            Toast.makeText(getActivity(), "Schon geprüft", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_already_checked), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -220,7 +220,7 @@ public class TestFragment extends Fragment {
                     boolean levelUp = card.boxUp();
                     testCompleted.set(position, true);
                     if(levelUp) {
-                        Toast.makeText(getActivity(), "Karte hochgestuft", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.toast_card_up), Toast.LENGTH_SHORT).show();
                     }
                     setStatusText(card, rootView);
                 }
@@ -234,7 +234,7 @@ public class TestFragment extends Fragment {
                     boolean levelDown = card.boxDown();
                     testCompleted.set(position, true);
                     if(levelDown) {
-                        Toast.makeText(getActivity(), "Karte abgestuft", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.toast_card_down), Toast.LENGTH_SHORT).show();
                     }
                     setStatusText(card, rootView);
                 }
@@ -300,6 +300,10 @@ public class TestFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        baseLanguage = getString(R.string.lang_german);
+        lang1 = getString(R.string.lang_german);
+        lang2 = getString(R.string.lang_swedish);
 
         setRetainInstance(true);
 
@@ -392,7 +396,7 @@ public class TestFragment extends Fragment {
             public void onClick(View v) {
                 Card currentCard = getCurrentCard();
                 if(currentCard == null){
-                    Toast.makeText(getActivity(), "Keine Karte zum Bearbeiten verfügbar.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_no_card_to_edit), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

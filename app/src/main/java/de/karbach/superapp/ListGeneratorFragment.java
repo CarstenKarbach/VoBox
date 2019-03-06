@@ -107,7 +107,7 @@ public class ListGeneratorFragment extends Fragment {
 
                 ArrayList<Card> selectedCards = getFilteredDictionary(matches);
                 if(selectedCards == null || selectedCards.size() == 0){
-                    Toast.makeText(getActivity(), "Keine Karten gefunden", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_nocards_found), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent listIntent = new Intent(getActivity(), CardListActivity.class);

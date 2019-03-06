@@ -86,12 +86,12 @@ public class DictionaryFragment extends Fragment{
 
     protected void updateSaveLabel(Button button, View rootView){
         if(mode == Mode.EDIT){
-            button.setText("speichern");
+            button.setText(getString(R.string.label_save));
             boolean enabled = !isRenaming(rootView) || !nameAlreadyTaken(rootView);
             button.setEnabled( enabled );
         }
         else{
-            button.setText("hinzufügen");
+            button.setText(getString(R.string.label_add));
             button.setEnabled(true);
             if(rootView != null){
                 if(nameAlreadyTaken(rootView)){
@@ -145,10 +145,10 @@ public class DictionaryFragment extends Fragment{
 
         TextView actionLabel = view.findViewById(R.id.actionlabel);
         if(mode == Mode.EDIT){
-            actionLabel.setText("Wörterbuch editieren");
+            actionLabel.setText(getString(R.string.label_edit_dict));
         }
         else{
-            actionLabel.setText("Neues Wörterbuch");
+            actionLabel.setText(getString(R.string.label_new_dict));
         }
 
         final Button deleteButton = view.findViewById(R.id.delete_button);
@@ -260,7 +260,7 @@ public class DictionaryFragment extends Fragment{
                 boolean existing = dm.dictionaryExists(newDict);
 
                 if(mode == Mode.NEW && existing){
-                    Toast.makeText(getActivity(), "Name schon vergeben.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_name_used), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -269,10 +269,10 @@ public class DictionaryFragment extends Fragment{
                     if(! newDict.equals(selected.getName())){
                         boolean renamed = dm.renameDictionary(selected.getName(), newDict);
                         if(renamed){
-                            Toast.makeText(getActivity(), "Wörterbuch umbenannt in "+newDict, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.toast_dict_renamed, newDict), Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Toast.makeText(getActivity(), "Wörterbuch konnte nicht umbenannt werden.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.toast_dict_not_renamed), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -291,9 +291,9 @@ public class DictionaryFragment extends Fragment{
                 dict.setBaseLanguage(baselanguage);
                 dict.save(getActivity());
 
-                String toast = "Neues Wörterbuch '"+newDict+"' gespeichert";
+                String toast = getString(R.string.toast_new_dict_saved, newDict);
                 if(mode==Mode.EDIT){
-                    toast = "Änderungen am Wörterbuch '"+newDict+"' gespeichert";
+                    toast = getString(R.string.toast_edit_dict_saved, newDict);
                 }
 
                 Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
@@ -313,7 +313,7 @@ public class DictionaryFragment extends Fragment{
                 String deleteDict = nameview.getText().toString();
                 dm.deleteDictionary(deleteDict);
 
-                Toast.makeText(getActivity(), "Wörterbuch '"+deleteDict+"' gelöscht", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.toast_deleted_dict, deleteDict), Toast.LENGTH_SHORT).show();
                 reloadDictionaryData(null, true);
             }
         });

@@ -52,7 +52,7 @@ public class BoxView extends View {
 
     private Paint linePaint, transparentPaint, textpaint, centertextpaint, centertextpaintBlue, fillPaint, levelPaint;
 
-    private String exampleWord = "EXAMPLEWORDT";
+    private String exampleWord = null;
 
     private Bitmap note, box, boxend, drawer, cardsbmp, flag1, flag2;
     private Rect src,boxsrc,boxendsrc, drawersrc,stacksrc, flagsrc;
@@ -185,6 +185,8 @@ public class BoxView extends View {
 
     public BoxView(Context context, AttributeSet attrs){
         super(context, attrs);
+
+        exampleWord = context.getString(R.string.example_word);
 
         pictureHelper = new PictureHelper(context);
 
