@@ -11,6 +11,7 @@
     <string name="question_sort">Wonach soll sortiert werden?</string>
     <string name="lang_german">Deutsch</string>
     <string name="lang_swedish">Schwedisch</string>
+    <string name="lang_english">Englisch</string>
     <string name="label_save">speichern</string>
     <string name="label_add">hinzufügen</string>
     <string name="label_edit_dict">Wörterbuch editieren</string>

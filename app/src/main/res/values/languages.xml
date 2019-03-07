@@ -6,19 +6,61 @@
         <item>Schwedisch</item>
     </string-array>
     <string-array name="all_languages_array">
+        <item>Bulgarisch</item>
+        <item>Dänisch</item>
         <item>Deutsch</item>
         <item>Englisch</item>
-        <item>Spanisch</item>
-        <item>Schwedisch</item>
-        <item>Portugiesisch</item>
+        <item>Estnisch</item>
+        <item>Finnisch</item>
+        <item>Französisch</item>
+        <item>Griechisch</item>
+        <item>Hindi</item>
+        <item>Irisch</item>
         <item>Italienisch</item>
+        <item>Kroatisch</item>
+        <item>Litauisch</item>
+        <item>Maltesisch</item>
+        <item>Mandarin</item>
+        <item>Niederländisch</item>
+        <item>Polnisch</item>
+        <item>Portugiesisch</item>
+        <item>Rumänisch</item>
+        <item>Russisch</item>
+        <item>Schwedisch</item>
+        <item>Slowakisch</item>
+        <item>Slowenisch</item>
+        <item>Spanisch</item>
+        <item>Tschechisch</item>
+        <item>Ungarisch</item>
+        <item>Andere</item>
     </string-array>
     <array name="flags">
+        <item>@drawable/flag_bulgarien</item>
+        <item>@drawable/flag_daenemark</item>
         <item>@drawable/flag_german</item>
         <item>@drawable/flag_english</item>
-        <item>@drawable/flag_spanish</item>
-        <item>@drawable/flag_swedish</item>
-        <item>@drawable/flag_port</item>
+        <item>@drawable/flag_estland</item>
+        <item>@drawable/flag_finland</item>
+        <item>@drawable/flag_french</item>
+        <item>@drawable/flag_greece</item>
+        <item>@drawable/flag_indien</item>
+        <item>@drawable/flag_irland</item>
         <item>@drawable/flag_italy</item>
+        <item>@drawable/flag_kroatien</item>
+        <item>@drawable/flag_litauen</item>
+        <item>@drawable/flag_malta</item>
+        <item>@drawable/flag_china</item>
+        <item>@drawable/flag_niederlande</item>
+        <item>@drawable/flag_polen</item>
+        <item>@drawable/flag_port</item>
+        <item>@drawable/flag_rumaenien</item>
+        <item>@drawable/flag_russland</item>
+        <item>@drawable/flag_swedish</item>
+        <item>@drawable/flag_slowakei</item>
+        <item>@drawable/flag_slowenien</item>
+        <item>@drawable/flag_spanish</item>
+        <item>@drawable/flag_tschechien</item>
+        <item>@drawable/flag_ungarn</item>
+        <item>@drawable/flag_random</item>
     </array>
 </resources>

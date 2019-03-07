@@ -211,8 +211,20 @@ public class DictionaryFragment extends Fragment{
             FlagAdapter fa = new FlagAdapter(flags);
             languageSpinner.setAdapter(fa);
 
+            if(id == R.id.flag_selection1){
+                int germanIndex = languages.indexOf(getString(R.string.lang_german));
+                if(germanIndex < 0){
+                    germanIndex = 0;
+                }
+                languageSpinner.setSelection(germanIndex);
+            }
+
             if(id == R.id.flag_selection2){
-                languageSpinner.setSelection(1);
+                int englishIndex = languages.indexOf(getString(R.string.lang_english));
+                if(englishIndex < 0){
+                    englishIndex = 1;
+                }
+                languageSpinner.setSelection(englishIndex);
             }
         }
     }
