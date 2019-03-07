@@ -174,7 +174,7 @@ public class StartActivitiesTest {
 
         Intent intent = new Intent(starteractivity,StarterActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(savedFile);;
+        Uri uri = Uri.fromFile(savedFile);
         intent.setData(uri);
         ActivityController<StarterActivity> actController = Robolectric.buildActivity(StarterActivity.class);
         actController.get().setIntent(intent);
@@ -722,7 +722,7 @@ public class StartActivitiesTest {
         ImageButton actionsButton = starteractivity.findViewById(R.id.actions_button);
         actionsButton.performClick();
         PopupMenu popMenu = ShadowPopupMenu.getLatestPopupMenu();
-        int[] ids = new int[]{R.id.dict_edit,R.id.dict_export, R.id.dict_new, R.id.dict_delete};
+        int[] ids = new int[]{R.id.dict_edit,R.id.dict_export,R.id.dict_import, R.id.dict_new, R.id.dict_delete};
         for(int id: ids) {
             MenuItem menuitem = new RoboMenuItem(id);
             Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(menuitem);
@@ -758,5 +758,19 @@ public class StartActivitiesTest {
 
         Spinner select = starteractivity.findViewById(R.id.language_selection);
         Shadows.shadowOf(select).getItemSelectedListener().onNothingSelected(select);
+
+        //Test on activity result of starterfragment
+        FragmentManager fm = starteractivity.getFragmentManager();
+        StarterFragment starterfragment = (StarterFragment) fm.findFragmentById(R.id.fragment_container);
+        starterfragment.updateSelection();
+        MenuItem menuitem = new RoboMenuItem(R.id.dict_import);
+        Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(menuitem);
+
+        File savedFile = dict.exportToFile("mystartintent.txt", starteractivity, false);
+        assertTrue(savedFile.exists());
+        Uri uri = Uri.fromFile(savedFile);;
+        Intent data = new Intent();
+        data.setData(uri);
+        starterfragment.onActivityResult(StarterFragment.OPENFILECODE, Activity.RESULT_OK, data);
     }
 }

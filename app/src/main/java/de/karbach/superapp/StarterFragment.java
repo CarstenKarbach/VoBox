@@ -18,11 +18,14 @@
 
 package de.karbach.superapp;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -52,6 +55,8 @@ import de.karbach.superapp.data.DictionaryManagement;
  * the active dictionary can be selected.
  */
 public class StarterFragment extends Fragment {
+
+    public static  final int OPENFILECODE = 111;
 
     private DictSpinnerPresenter dictSpinnerPresenter;
 
@@ -159,6 +164,11 @@ public class StarterFragment extends Fragment {
                                 }
                                 selected.sendExportedDictionary(getActivity());
                             }
+                            if(item.getItemId() == R.id.dict_import){
+                                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.setType("text/plain");
+                                startActivityForResult(intent, OPENFILECODE);
+                            }
                             if(item.getItemId() == R.id.dict_new){
                                 Intent intent = new Intent(getActivity(), DictionaryActivity.class);
                                 intent.putExtra(DictionaryFragment.PARAMMODE, DictionaryFragment.Mode.NEW.ordinal());
@@ -188,6 +198,25 @@ public class StarterFragment extends Fragment {
         }
 
         return result;
+    }
+
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == OPENFILECODE && resultCode == Activity.RESULT_OK && data.getData() != null){
+            Intent intent = new Intent(getActivity(), StarterActivity.class);
+            intent.setAction(android.content.Intent.ACTION_VIEW);
+            intent.setType("text/plain");
+            intent.setData(data.getData());
+            getActivity().finish();
+            getActivity().startActivity(intent);
+        }
     }
 
     @Override

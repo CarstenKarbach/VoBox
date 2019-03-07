@@ -29,6 +29,10 @@
         android:title="exportieren"/>
 
     <item
+        android:id="@+id/dict_import"
+        android:title="importieren"/>
+
+    <item
         android:id="@+id/dict_delete"
         android:title="löschen"/>
 
