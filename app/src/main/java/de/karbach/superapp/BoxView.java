@@ -139,6 +139,7 @@ public class BoxView extends View {
             }
         }
 
+        measure();
         postInvalidate();
     }
 
@@ -157,6 +158,7 @@ public class BoxView extends View {
 
     public void setLevel(int level){
         this.level = level;
+        measure();
         postInvalidate();
     }
 
@@ -352,6 +354,10 @@ public class BoxView extends View {
     protected void measure(){
         width = getWidth();
         height = getHeight();
+
+        if(width==0 || height == 0){
+            return;
+        }
 
         exampleWordLength = exampleWord.length();
 
