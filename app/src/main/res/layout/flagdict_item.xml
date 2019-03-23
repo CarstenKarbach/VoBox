@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:textSize="24dp"
         android:layout_height="wrap_content"
-        android:text="Wörterbuch"
+        android:text="@string/label_dict"
         android:id="@+id/dict_name"
         android:paddingLeft="8dp"
         android:paddingBottom="2dp"

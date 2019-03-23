@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:compat="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_item_list"
           android:icon="@drawable/fa_list_alt_white"
-          android:title="Liste"
+          android:title="@string/menu_list"
           compat:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_item_box"
           android:icon="@drawable/fa_cubes_white"
-          android:title="Box"
+          android:title="@string/label_box"
           compat:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_item_newword"
           android:icon="@drawable/fa_pencil_square_white"
-          android:title="Neu"
+          android:title="@string/menu_new_capital"
           compat:showAsAction="ifRoom|withText"/>
 </menu>

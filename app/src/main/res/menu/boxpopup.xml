@@ -22,13 +22,13 @@
 
     <item
         android:id="@+id/box_list"
-        android:title="Liste"/>
+        android:title="@string/menu_list"/>
 
     <item
         android:id="@+id/box_training"
-        android:title="Übung"/>
+        android:title="@string/menu_training"/>
 
     <item
         android:id="@+id/box_test"
-        android:title="Test"/>
+        android:title="@string/menu_test"/>
 </menu>

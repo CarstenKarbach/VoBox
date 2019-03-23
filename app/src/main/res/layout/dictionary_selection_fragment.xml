@@ -6,7 +6,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wörterbuch auswählen"
+        android:text="@string/label_select_dict"
         android:layout_gravity="center_horizontal|center_vertical"
         android:paddingTop="10dp"
         android:textStyle="bold"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:text="ok"
+        android:text="@string/label_ok"
         style="@style/BlueButton"
         android:id="@+id/dictionary_selected_button"
         />

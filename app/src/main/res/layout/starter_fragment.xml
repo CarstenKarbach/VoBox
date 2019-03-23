@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            ></Spinner>
+            />
         <ImageButton
             android:layout_width="30dp"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
         <Button
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-            android:text="neue Vokabel"
+            android:text="@string/label_new"
             android:layout_gravity="center_vertical"
             android:background="#ffc"
             style="?android:attr/borderlessButtonStyle"
@@ -79,7 +79,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Liste Wörterbuch"
+            android:text="@string/label_list"
             android:layout_gravity="center_vertical"
             android:background="#cfc"
             style="?android:attr/borderlessButtonStyle"
@@ -105,7 +105,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Box"
+            android:text="@string/label_box"
             android:layout_gravity="center_vertical"
             android:background="#ccf"
             style="?android:attr/borderlessButtonStyle"

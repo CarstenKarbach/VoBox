@@ -2,30 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:compat="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_item_search"
           android:icon="@android:drawable/ic_menu_search"
-          android:title="Suchen"
+          android:title="@string/menu_search"
           compat:showAsAction="ifRoom"/>
     <item android:id="@+id/menu_item_clearsearch"
           android:icon="@android:drawable/ic_menu_close_clear_cancel"
-          android:title="Suche löschen"
+          android:title="@string/menu_delete_search"
           compat:showAsAction="ifRoom"/>
     <item android:id="@+id/menu_item_sort"
           android:icon="@android:drawable/ic_menu_sort_alphabetically"
-          android:title="Sortieren"
+          android:title="@string/sort"
           compat:showAsAction="ifRoom"/>
     <item android:id="@+id/menu_item_box"
           android:icon="@drawable/fa_cubes_white"
-          android:title="Box"
+          android:title="@string/label_box"
           compat:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_item_newword"
           android:icon="@drawable/fa_pencil_square_white"
-          android:title="Neu"
+          android:title="@string/menu_new_capital"
           compat:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_item_list"
           android:icon="@drawable/fa_list_alt_white"
-          android:title="Liste"
+          android:title="@string/menu_list"
           compat:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_item_training"
           android:icon="@android:drawable/ic_menu_edit"
-          android:title="Übung"
+          android:title="@string/menu_training"
           compat:showAsAction="ifRoom|withText"/>
 </menu>

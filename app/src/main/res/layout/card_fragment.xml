@@ -36,7 +36,7 @@
                 android:layout_weight="80"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Wort"
+                android:hint="@string/search_hint"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
                 />
@@ -61,7 +61,7 @@
                 android:layout_weight="80"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Übersetzung"
+                android:hint="@string/label_translation"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
                 />
@@ -81,14 +81,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/save_button"
-            android:text="speichern"
+            android:text="@string/label_save"
             style="@style/BlueButton"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/delete_button"
-            android:text="löschen"
+            android:text="@string/label_delete"
             android:visibility="gone"
             style="@style/BlueButton"
             />

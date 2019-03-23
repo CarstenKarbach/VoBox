@@ -197,7 +197,7 @@ public class DictionaryFragment extends Fragment{
                 flag.setImageResource(r1);
             }
 
-            langtext.setText(language);
+            langtext.setText(ph.getDisplaynameForLanguage(language));
 
             return convertView;
         }

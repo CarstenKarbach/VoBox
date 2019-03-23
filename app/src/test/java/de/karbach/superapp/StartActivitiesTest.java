@@ -446,10 +446,11 @@ public class StartActivitiesTest {
 
     @Test
     public void testPictureHelperNull(){
-        TestActivity activity = Robolectric.buildActivity(TestActivity.class).setup().get();
-        PictureHelper ph = new PictureHelper(activity);
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        PictureHelper ph = new PictureHelper(starteractivity);
         int res = ph.getDrawableResourceForLanguage(null);
         assertEquals(R.drawable.flag_german, res);
+        assertEquals(starteractivity.getResources().getString(R.string.lang_german), ph.getDisplaynameForLanguage(null));
     }
 
     @Test

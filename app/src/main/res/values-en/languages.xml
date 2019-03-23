@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="all_languages_display_array">
+        <item>Bulgarian</item>
+        <item>Danish</item>
+        <item>German</item>
+        <item>English</item>
+        <item>Estonian</item>
+        <item>Finnish</item>
+        <item>French</item>
+        <item>Greek</item>
+        <item>Hindi</item>
+        <item>Irish</item>
+        <item>Italian</item>
+        <item>Croatian</item>
+        <item>Lithuanian</item>
+        <item>Maltese</item>
+        <item>Mandarin</item>
+        <item>Dutch</item>
+        <item>Polish</item>
+        <item>Portuguese</item>
+        <item>Romanian</item>
+        <item>Russian</item>
+        <item>Swedish</item>
+        <item>Slovak</item>
+        <item>Slovene</item>
+        <item>Spanish</item>
+        <item>Czech</item>
+        <item>Hungarian</item>
+        <item>Other</item>
+    </string-array>
+</resources>

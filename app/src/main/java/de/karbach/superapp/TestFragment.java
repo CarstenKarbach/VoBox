@@ -180,6 +180,14 @@ public class TestFragment extends Fragment {
         solutionRow.setVisibility(View.VISIBLE);
     }
 
+    private Toast lastToast;
+
+    protected void stopLastToast(){
+        if(lastToast != null){
+            lastToast.cancel();
+        }
+    }
+
     protected void checkSolution(){
         View rootView = getView();
 
@@ -220,7 +228,8 @@ public class TestFragment extends Fragment {
                     boolean levelUp = card.boxUp();
                     testCompleted.set(position, true);
                     if(levelUp) {
-                        Toast.makeText(getActivity(), getString(R.string.toast_card_up), Toast.LENGTH_SHORT).show();
+                        lastToast = Toast.makeText(getActivity(), getString(R.string.toast_card_up), Toast.LENGTH_SHORT);
+                        lastToast.show();
                     }
                     setStatusText(card, rootView);
                 }
@@ -234,7 +243,8 @@ public class TestFragment extends Fragment {
                     boolean levelDown = card.boxDown();
                     testCompleted.set(position, true);
                     if(levelDown) {
-                        Toast.makeText(getActivity(), getString(R.string.toast_card_down), Toast.LENGTH_SHORT).show();
+                        lastToast = Toast.makeText(getActivity(), getString(R.string.toast_card_down), Toast.LENGTH_SHORT);
+                        lastToast.show();
                     }
                     setStatusText(card, rootView);
                 }
@@ -258,6 +268,8 @@ public class TestFragment extends Fragment {
      * Init the fragment with the new card after moving with next or back
      */
     protected void initAfterMovement(){
+        stopLastToast();
+
         Card card = getCurrentCard();
         loadCard(card, getView());
         answerShown = false;

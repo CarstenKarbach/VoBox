@@ -30,7 +30,7 @@
         </activity>
         <activity android:name=".CardActivity"
                   android:windowSoftInputMode="stateHidden"
-                  android:label="Vokabel"
+                  android:label="@string/act_word"
                   android:parentActivityName=".StarterActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -38,7 +38,7 @@
 
         </activity>
         <activity android:name=".DictionaryActivity"
-            android:label="Wörterbuch"
+            android:label="@string/act_dict"
             android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".StarterActivity" >
             <meta-data
@@ -46,7 +46,7 @@
                 android:value="de.karbach.superapp.StarterActivity" />
         </activity>
         <activity android:name=".CardListActivity"
-                  android:label="Liste Wörterbuch"
+                  android:label="@string/act_listdict"
                 android:launchMode="singleTop"
                   android:parentActivityName=".StarterActivity" >
             <meta-data
@@ -60,7 +60,7 @@
         </activity>
         <activity android:name=".TestActivity"
                   android:windowSoftInputMode="stateAlwaysVisible"
-                  android:label="Test"
+                  android:label="@string/act_test"
                   android:parentActivityName=".BoxActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -68,14 +68,14 @@
 
         </activity>
         <activity android:name=".BoxActivity"
-                  android:label="Box"
+                  android:label="@string/act_box"
                   android:parentActivityName=".StarterActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.karbach.superapp.StarterActivity" />
         </activity>
         <activity android:name=".ListGeneratorActivity"
-                  android:label="Flexible Listen"
+                  android:label="@string/act_lists"
                   android:parentActivityName=".StarterActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

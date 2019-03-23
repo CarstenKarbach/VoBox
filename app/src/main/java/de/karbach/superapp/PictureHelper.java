@@ -37,14 +37,19 @@ public class PictureHelper {
 
     private List<String> allLanguages;
     private List<Integer> allFlags;
+    private List<String> allDisplayLanguages;
+
+    private String defaultDisplayLanguage;
 
     public PictureHelper(Context context){
         allLanguages = Arrays.asList( context.getResources().getStringArray(R.array.all_languages_array) );
+        allDisplayLanguages = Arrays.asList( context.getResources().getStringArray(R.array.all_languages_display_array) );
         TypedArray flagarray = context.getResources().obtainTypedArray(R.array.flags);
         allFlags = new ArrayList<Integer>();
         for(int i = 0; i< flagarray.length(); i++){
             allFlags.add(flagarray.getResourceId(i, R.drawable.flag_german));
         }
+        defaultDisplayLanguage = context.getResources().getString(R.string.lang_german);
     }
 
     public int getDrawableResourceForLanguage(String language){
@@ -53,6 +58,14 @@ public class PictureHelper {
             return R.drawable.flag_german;
         }
         return allFlags.get(index);
+    }
+
+    public String getDisplaynameForLanguage(String language){
+        int index = allLanguages.indexOf(language);
+        if(index == -1) {
+            return defaultDisplayLanguage;
+        }
+        return allDisplayLanguages.get(index);
     }
 
 }

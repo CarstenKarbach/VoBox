@@ -20,7 +20,7 @@
         android:layout_width="0dp"
         android:layout_weight="40"
         android:layout_height="wrap_content"
-        android:text="Sprache 1"
+        android:text="@string/lang_1"
         android:textSize="20dp"
         android:id="@+id/carditem_lang1"
         />
@@ -38,7 +38,7 @@
         android:layout_width="0dp"
         android:layout_weight="40"
         android:layout_height="wrap_content"
-        android:text="Sprache 2"
+        android:text="@string/lang_2"
         android:textSize="20dp"
         android:id="@+id/carditem_lang2"
         />
