@@ -366,6 +366,21 @@ public class StartActivitiesTest {
     }
 
     @Test
+    public void testRealTestForTestFragment(){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        Intent intent = new Intent(starteractivity,CardActivity.class);
+        intent.putExtra(TestActivity.PARAMREALTEST, false);
+        ActivityController<TestActivity> actController = Robolectric.buildActivity(TestActivity.class);
+        actController.get().setIntent(intent);
+        actController.create();
+        TestActivity activity = actController.visible().get();
+
+        Button editButton = activity.findViewById(R.id.testcard_edit);
+        editButton.performClick();
+    }
+
+    @Test
     public void startTestActivity(){
         initAndSelectDictionary("startTestActivity",1 );
 
@@ -403,8 +418,6 @@ public class StartActivitiesTest {
         Button backButton = activity.findViewById(R.id.testcard_back_button);
         backButton.performClick();
 
-        ImageButton switchButton = activity.findViewById(R.id.button_switch_lang);
-        switchButton.performClick();
         Button editButton = activity.findViewById(R.id.testcard_edit);
         editButton.performClick();
 
@@ -423,6 +436,8 @@ public class StartActivitiesTest {
         }
 
         dm.selectDictionary(null);
+
+        testf.switchLanguages();
 
         editButton = activity.findViewById(R.id.testcard_edit);
         editButton.performClick();
@@ -528,21 +543,34 @@ public class StartActivitiesTest {
 
             PopupMenu popMenu = ShadowPopupMenu.getLatestPopupMenu();
             MenuItem boxlist = new RoboMenuItem(R.id.box_list);
-            MenuItem boxtest = new RoboMenuItem(R.id.box_test);
-            MenuItem boxtraining = new RoboMenuItem(R.id.box_training);
+            MenuItem boxtest = new RoboMenuItem(R.id.box_test1);
+            MenuItem boxtraining = new RoboMenuItem(R.id.box_training1);
             Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxlist);
             Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxtest);
             Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxtraining);
 
+            boxtest = new RoboMenuItem(R.id.box_test2);
+            boxtraining = new RoboMenuItem(R.id.box_training2);
+            Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxtest);
+            Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(boxtraining);
 
-            bf.startBoxTraining(box, false);
+
+            bf.startBoxTraining(box, false, true);
 
             Intent expectedIntentTest = new Intent(ba, TestActivity.class);
             Intent expectedIntentList = new Intent(ba, CardListActivity.class);
             Intent actual = shadow.getNextStartedActivity();
             assertEquals(actual.getComponent(), expectedIntentTest.getComponent());
 
-            bf.startBoxTraining(box, true);
+            bf.startBoxTraining(box, false, false);
+            actual = shadow.getNextStartedActivity();
+            assertEquals(actual.getComponent(), expectedIntentTest.getComponent());
+
+            bf.startBoxTraining(box, true, true);
+            actual = shadow.getNextStartedActivity();
+            assertEquals(actual.getComponent(), expectedIntentTest.getComponent());
+
+            bf.startBoxTraining(box, true, false);
             actual = shadow.getNextStartedActivity();
             assertEquals(actual.getComponent(), expectedIntentTest.getComponent());
 

@@ -27,6 +27,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -61,7 +62,7 @@ public class BoxFragment extends Fragment{
         return boxCards.size();
     }
 
-    public void startBoxTraining(int box, boolean realTest){
+    public void startBoxTraining(int box, boolean realTest, boolean askForLanguage2){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
             Toast.makeText(getActivity(), getString(R.string.toast_nocards), Toast.LENGTH_SHORT).show();
@@ -71,6 +72,7 @@ public class BoxFragment extends Fragment{
         Intent intent  = new Intent(getActivity(), TestActivity.class);
         intent.putExtra(TestActivity.PARAMBOX, box);
         intent.putExtra(TestActivity.PARAMREALTEST, realTest);
+        intent.putExtra(TestActivity.PARAMASKFORLANG2, askForLanguage2);
         startActivity(intent);
     }
 
@@ -100,6 +102,26 @@ public class BoxFragment extends Fragment{
         PopupMenu popup = new PopupMenu(getActivity(), bv);
         //Inflating the Popup using xml file
         popup.getMenuInflater().inflate(R.menu.boxpopup, popup.getMenu());
+        Menu menu = popup.getMenu();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+        Dictionary dict = dm.getSelectedDictionary();
+
+        for(int i=0; i<menu.size(); i++){
+            MenuItem menuItem = menu.getItem(i);
+            if(menuItem.getItemId() == R.id.box_test1){
+                menuItem.setTitle(menuItem.getTitle()+": "+dict.getBaseLanguage()+" -> ?");
+            }
+            if(menuItem.getItemId() == R.id.box_test2){
+                menuItem.setTitle(menuItem.getTitle()+": "+dict.getLanguage()+" -> ?");
+            }
+            if(menuItem.getItemId() == R.id.box_training1){
+                menuItem.setTitle(menuItem.getTitle()+": "+dict.getBaseLanguage()+" -> ?");
+            }
+            if(menuItem.getItemId() == R.id.box_training2){
+                menuItem.setTitle(menuItem.getTitle()+": "+dict.getLanguage()+" -> ?");
+            }
+        }
 
         //registering popup with OnMenuItemClickListener
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -107,11 +129,17 @@ public class BoxFragment extends Fragment{
                 if(item.getItemId() == R.id.box_list){
                     showList(currentBox);
                 }
-                if(item.getItemId() == R.id.box_test){
-                    startBoxTraining(currentBox, true);
+                if(item.getItemId() == R.id.box_test1){
+                    startBoxTraining(currentBox, true, true);
                 }
-                if(item.getItemId() == R.id.box_training){
-                    startBoxTraining(currentBox, false);
+                if(item.getItemId() == R.id.box_test2){
+                    startBoxTraining(currentBox, true, false);
+                }
+                if(item.getItemId() == R.id.box_training1){
+                    startBoxTraining(currentBox, false, true);
+                }
+                if(item.getItemId() == R.id.box_training2){
+                    startBoxTraining(currentBox, false, false);
                 }
 
                 return true;

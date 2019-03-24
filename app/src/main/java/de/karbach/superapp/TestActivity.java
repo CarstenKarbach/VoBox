@@ -46,6 +46,11 @@ public class TestActivity extends SingleFragmentSaveOnPauseActivity {
     public static final String PARAMREALTEST = "de.karbach.superapp.TestActivity.REALTEST";
 
     /**
+     * Parameter for asking for the second langauge
+     */
+    public static final String PARAMASKFORLANG2 = "de.karbach.superapp.TestActivity.ASKFORLANG2";
+
+    /**
      * Set a list of cards with this parameter to generate a test/training with a given list of cards
      */
     public static final String PARAMDIRECTCARDS = "de.karbach.superapp.TestActivity.DIRECTCARDS";
@@ -54,6 +59,8 @@ public class TestActivity extends SingleFragmentSaveOnPauseActivity {
     protected Fragment createFragment() {
 
         ArrayList<Card> testCards = (ArrayList<Card>) getIntent().getSerializableExtra(PARAMDIRECTCARDS);
+
+        Boolean askForLang2 = getIntent().getBooleanExtra(PARAMASKFORLANG2, true);
 
         Boolean realTest = getIntent().getBooleanExtra(PARAMREALTEST, false);
 
@@ -69,6 +76,7 @@ public class TestActivity extends SingleFragmentSaveOnPauseActivity {
         Bundle arguments  = new Bundle();
         arguments.putSerializable(TestFragment.PARAMTESTCARDS, testCards);
         arguments.putBoolean(TestFragment.PARAMISREALTEST, realTest);
+        arguments.putBoolean(TestFragment.PARAMASKFORLANG2, askForLang2);
 
         TestFragment result = new TestFragment();
         result.setArguments(arguments);

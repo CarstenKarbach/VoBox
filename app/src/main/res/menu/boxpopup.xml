@@ -25,10 +25,17 @@
         android:title="@string/menu_list"/>
 
     <item
-        android:id="@+id/box_training"
+        android:id="@+id/box_training1"
+        android:title="@string/menu_training"/>
+    <item
+        android:id="@+id/box_training2"
         android:title="@string/menu_training"/>
 
     <item
-        android:id="@+id/box_test"
+        android:id="@+id/box_test1"
+        android:title="@string/menu_test"/>
+
+    <item
+        android:id="@+id/box_test2"
         android:title="@string/menu_test"/>
 </menu>

@@ -68,6 +68,11 @@ public class TestFragment extends Fragment {
     public final static String PARAMISREALTEST = "de.karbach.superapp.TestFragment.ISTEST";
 
     /**
+     * Parameter for asking for the second langauge
+     */
+    public static final String PARAMASKFORLANG2 = "de.karbach.superapp.TestFragment.ASKFORLANG2";
+
+    /**
      * The cards, which are tested
      */
     private List<Card> testcards = new ArrayList<Card>();
@@ -111,7 +116,9 @@ public class TestFragment extends Fragment {
         lang1 = lang2;
         lang2 = lang1tmp;
 
-        loadCard(getCurrentCard(), getView());
+        if(getView() != null) {
+            loadCard(getCurrentCard(), getView());
+        }
     }
 
     protected void setStatusText(Card card, View rootView){
@@ -352,6 +359,13 @@ public class TestFragment extends Fragment {
                 baseLanguage = lang1;
             }
         }
+
+        if(bundle != null){
+            boolean askfor2 = bundle.getBoolean(PARAMASKFORLANG2);
+            if(!askfor2){
+                switchLanguages();
+            }
+        }
     }
 
     @Nullable
@@ -394,29 +408,26 @@ public class TestFragment extends Fragment {
             }
         });
 
-        ImageButton switchButton = (ImageButton) result.findViewById(R.id.button_switch_lang);
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchLanguages();
-            }
-        });
-
         Button editButton = (Button) result.findViewById(R.id.testcard_edit);
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Card currentCard = getCurrentCard();
-                if(currentCard == null){
-                    Toast.makeText(getActivity(), getString(R.string.toast_no_card_to_edit), Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        if(realtest){
+            editButton.setVisibility(View.INVISIBLE);
+        }
+        else {
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Card currentCard = getCurrentCard();
+                    if (currentCard == null) {
+                        Toast.makeText(getActivity(), getString(R.string.toast_no_card_to_edit), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                Intent editIntent = new Intent(getActivity(), CardActivity.class);
-                editIntent.putExtra(CardFragment.PARAMLANG1KEY, currentCard.getLang1());
-                startActivityForResult(editIntent, CardFragment.REQUESTEDIT);
-            }
-        });
+                    Intent editIntent = new Intent(getActivity(), CardActivity.class);
+                    editIntent.putExtra(CardFragment.PARAMLANG1KEY, currentCard.getLang1());
+                    startActivityForResult(editIntent, CardFragment.REQUESTEDIT);
+                }
+            });
+        }
 
         return result;
     }
