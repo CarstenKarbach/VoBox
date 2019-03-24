@@ -18,10 +18,8 @@
 
 package de.karbach.superapp.data;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,9 +96,23 @@ public class DictionaryManagement {
         dicts = new ArrayList<Dictionary>();
 
         //Load or create default dictionaries
+        List<String> defaultLanguages = Arrays.asList( context.getResources().getStringArray(R.array.default_languages_array) );
+        List<String> dictImports = Arrays.asList( context.getResources().getStringArray(R.array.default_languages_dictionary_samples) );
         Set<String> languages = readDictionaryList();
         for(String lang: languages){
             addDictionary(lang);
+            Dictionary newDict = getDictionary(lang);
+            if(defaultLanguages.contains(lang) && newDict != null && !newDict.dictionaryFileExists(context)){
+                int defaultIndex = defaultLanguages.indexOf(lang);
+                if(defaultIndex >= 0 && defaultIndex < dictImports.size()){
+                    String importSampleString = dictImports.get(defaultIndex);
+                    Dictionary sampleFromString = Dictionary.loadImported(importSampleString, true);
+                    sampleFromString.setName(newDict.getName());
+                    sampleFromString.setLanguage(newDict.getLanguage());
+                    sampleFromString.setBaseLanguage(newDict.getBaseLanguage());
+                    integrateDictionary(sampleFromString);
+                }
+            }
         }
 
         String selected = getStoredSelectedDictionaryName();
