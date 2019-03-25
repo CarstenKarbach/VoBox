@@ -69,6 +69,57 @@
             android:id="@+id/boxview5"
             android:layout_marginRight="8dp"
             />
+        <de.karbach.superapp.BoxView
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:id="@+id/boxview6"
+            android:layout_marginRight="8dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_marginTop="8dp"
+        >
+        <de.karbach.superapp.BoxView
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:id="@+id/boxview7"
+            android:layout_marginRight="8dp"
+            />
+        <de.karbach.superapp.BoxView
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:id="@+id/boxview8"
+            android:layout_marginRight="8dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_marginTop="8dp"
+        >
+        <de.karbach.superapp.BoxView
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:id="@+id/boxview9"
+            android:layout_marginRight="8dp"
+            />
+        <de.karbach.superapp.BoxView
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:id="@+id/boxview10"
+            android:layout_marginRight="8dp"
+            />
     </LinearLayout>
 </LinearLayout>
 

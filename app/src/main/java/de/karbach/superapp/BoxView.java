@@ -54,7 +54,7 @@ public class BoxView extends View {
 
     private String exampleWord = null;
 
-    private Bitmap note, box, boxend, drawer, cardsbmp, flag1, flag2;
+    private static Bitmap note, box, boxend, drawer, cardsbmp, flag1, flag2;
     private Rect src,boxsrc,boxendsrc, drawersrc,stacksrc, flagsrc;
 
     private int offset = 0;
@@ -147,13 +147,17 @@ public class BoxView extends View {
 
     public void setLanguage1(String lang1){
         Resources res = getResources();
-        flag1 = BitmapFactory.decodeResource(res, pictureHelper.getDrawableResourceForLanguage(lang1));
+        if(flag1 == null) {
+            flag1 = BitmapFactory.decodeResource(res, pictureHelper.getDrawableResourceForLanguage(lang1));
+        }
         flagsrc = new Rect(0,0, flag1.getWidth()-1, flag1.getHeight()-1);
     }
 
     public void setLanguage2(String lang2){
         Resources res = getResources();
-        flag2 = BitmapFactory.decodeResource(res, pictureHelper.getDrawableResourceForLanguage(lang2));
+        if(flag2 == null) {
+            flag2 = BitmapFactory.decodeResource(res, pictureHelper.getDrawableResourceForLanguage(lang2));
+        }
     }
 
     public void setLevel(int level){
@@ -223,11 +227,21 @@ public class BoxView extends View {
         fillPaint.setStyle(Paint.Style.FILL);
 
         Resources res = getResources();
-        note = BitmapFactory.decodeResource(res, R.drawable.fa_sticky_note);
-        box = BitmapFactory.decodeResource(res, R.drawable.box_no_end);
-        boxend = BitmapFactory.decodeResource(res, R.drawable.boxend);
-        cardsbmp = BitmapFactory.decodeResource(res, R.drawable.cardstack);
-        drawer = BitmapFactory.decodeResource(res, R.drawable.drawer);
+        if(note == null) {
+            note = BitmapFactory.decodeResource(res, R.drawable.fa_sticky_note);
+        }
+        if(box == null) {
+            box = BitmapFactory.decodeResource(res, R.drawable.box_no_end);
+        }
+        if(boxend == null) {
+            boxend = BitmapFactory.decodeResource(res, R.drawable.boxend);
+        }
+        if(cardsbmp == null) {
+            cardsbmp = BitmapFactory.decodeResource(res, R.drawable.cardstack);
+        }
+        if(drawer == null) {
+            drawer = BitmapFactory.decodeResource(res, R.drawable.drawer);
+        }
 
         src = new Rect(0,0, note.getWidth()-1, note.getHeight()-1);
         boxsrc = new Rect(0,0, box.getWidth()-1, box.getHeight()-1);
@@ -243,7 +257,7 @@ public class BoxView extends View {
      * Call this within measure to get the sizes right.
      */
     private void generateFlaggedNoteBitmap(){
-        if(note == null){
+        if(note == null || getVisibility() == INVISIBLE){
             return;
         }
         android.graphics.Bitmap.Config bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;

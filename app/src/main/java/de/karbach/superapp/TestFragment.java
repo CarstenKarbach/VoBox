@@ -232,7 +232,7 @@ public class TestFragment extends Fragment {
             if(realtest) {
                 Boolean isTestCompleted = testCompleted.get(position);
                 if (isTestCompleted != null && isTestCompleted == false) {
-                    boolean levelUp = card.boxUp();
+                    boolean levelUp = card.boxUp(getActivity());
                     testCompleted.set(position, true);
                     if(levelUp) {
                         lastToast = Toast.makeText(getActivity(), getString(R.string.toast_card_up), Toast.LENGTH_SHORT);

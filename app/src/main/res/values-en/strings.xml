@@ -72,4 +72,6 @@
     <string name="act_test">Test</string>
     <string name="act_box">Box</string>
     <string name="act_lists">Dynamic lists</string>
+    <string name="label_boxes">boxes</string>
+    <string name="label_nrboxes">number of boxes</string>
 </resources>

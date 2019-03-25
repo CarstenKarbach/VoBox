@@ -59,7 +59,7 @@ public class CardTest {
         card.setBox(1);
         for(int i=1; i<=5; i++){
             assertEquals(i, card.getBox());
-            card.boxUp();
+            card.boxUp(null);
         }
         assertEquals(5, card.getBox());
         card.boxDown();

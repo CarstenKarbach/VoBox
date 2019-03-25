@@ -70,6 +70,19 @@ public class Dictionary implements Serializable {
      */
     private String language;
 
+    public int getBoxcount() {
+        return boxcount;
+    }
+
+    public void setBoxcount(int boxcount) {
+        this.boxcount = boxcount;
+    }
+
+    /**
+     * maximum value for cards' boxes in this dictionary
+     */
+    private int boxcount = 5;
+
     public String getName() {
         return name;
     }
@@ -236,6 +249,7 @@ public class Dictionary implements Serializable {
         baseLanguage = other.baseLanguage;
         language = other.language;
         name = other.name;
+        boxcount = other.boxcount;
     }
 
     public void load(Context context){
@@ -281,6 +295,8 @@ public class Dictionary implements Serializable {
         result.append(language);
         result.append("\n");
         result.append(baseLanguage);
+        result.append("\n");
+        result.append("boxcount:"+boxcount);
         result.append("\n");
         for(Card card: cards){
             String exportedCard = card.export();
@@ -341,6 +357,12 @@ public class Dictionary implements Serializable {
             }
         }
         for(int i=2; i<lines.length; i++){
+            String boxcountKey = "boxcount:";
+            if(lines[i].indexOf(boxcountKey) == 0 ){
+                int boxCountParsedNumber = Integer.valueOf(lines[i].substring(boxcountKey.length()).trim());
+                result.setBoxcount(boxCountParsedNumber);
+                continue;
+            }
             Card card = Card.loadJSONOrCSV(lines[i], loadAll);
             if(card != null) {
                 result.addCard(card);

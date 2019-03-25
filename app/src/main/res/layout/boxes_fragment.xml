@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="8dp"
+        android:id="@+id/boxesframe"
         >
 
     <de.karbach.superapp.BoxView
@@ -48,6 +49,40 @@
         android:layout_marginTop="8dp"
         />
 
+    <de.karbach.superapp.BoxView
+        android:layout_height="72dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview6"
+        android:layout_marginTop="8dp"
+        />
+
+    <de.karbach.superapp.BoxView
+        android:layout_height="72dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview7"
+        android:layout_marginTop="8dp"
+        />
+
+    <de.karbach.superapp.BoxView
+        android:layout_height="72dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview8"
+        android:layout_marginTop="8dp"
+        />
+
+    <de.karbach.superapp.BoxView
+        android:layout_height="72dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview9"
+        android:layout_marginTop="8dp"
+        />
+
+    <de.karbach.superapp.BoxView
+        android:layout_height="72dp"
+        android:layout_width="match_parent"
+        android:id="@+id/boxview10"
+        android:layout_marginTop="8dp"
+        />
 </LinearLayout>
 
 </ScrollView>

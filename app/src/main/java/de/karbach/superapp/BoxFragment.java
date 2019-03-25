@@ -33,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -149,7 +150,8 @@ public class BoxFragment extends Fragment{
         popup.show();//showing popup menu
     }
 
-    public final static int[] boxids = new int[]{R.id.boxview1, R.id.boxview2, R.id.boxview3, R.id.boxview4, R.id.boxview5};
+    public final static int[] boxids = new int[]{R.id.boxview1, R.id.boxview2, R.id.boxview3, R.id.boxview4, R.id.boxview5,
+                                                 R.id.boxview6, R.id.boxview7, R.id.boxview8, R.id.boxview9, R.id.boxview10};
 
     public void updateBoxViews(View root){
         if(root == null){
@@ -158,7 +160,7 @@ public class BoxFragment extends Fragment{
         DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
         Dictionary dict = dm.getSelectedDictionary();
 
-        for(int box=1; box<=5; box++){
+        for(int box=1; box<=dict.getBoxcount(); box++){
             BoxView bv = root.findViewById(boxids[box-1]);
             bv.setLanguage1(dict.getBaseLanguage());
             bv.setLanguage2(dict.getLanguage());
@@ -223,10 +225,25 @@ public class BoxFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.boxes_fragment, container, false);
 
-        for(int i=1; i<=5; i++){
+        DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+        Dictionary dict = dm.getSelectedDictionary();
+
+        for(int i=1; i<=10; i++){
             BoxView boxi = result.findViewById(boxids[i-1]);
-            final int currentBox = i;
-            initGestureDetection(boxi, currentBox);
+            if(i <= dict.getBoxcount()){
+                final int currentBox = i;
+                initGestureDetection(boxi, currentBox);
+            }
+            else{
+                if(boxi.getParent() instanceof LinearLayout) {
+                    LinearLayout boxesFrame = (LinearLayout) boxi.getParent();
+                    boxesFrame.removeView(boxi);
+                    if (boxesFrame.getChildCount() == 0 && boxesFrame.getParent() instanceof LinearLayout) {
+                        LinearLayout globalParent = (LinearLayout) boxesFrame.getParent();
+                        globalParent.removeView(boxesFrame);
+                    }
+                }
+            }
         }
 
         return result;

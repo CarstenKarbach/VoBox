@@ -24,6 +24,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import de.karbach.superapp.data.Card;
+import de.karbach.superapp.data.Dictionary;
+import de.karbach.superapp.data.DictionaryManagement;
+
 import static org.junit.Assert.*;
 
 /**
@@ -40,5 +44,31 @@ public class DictionaryFragmentTest {
 
         final Button deleteButton = activity.findViewById(R.id.delete_button);
         deleteButton.performClick();
+    }
+
+    @Test
+    public void testCardUpWithDifferentMaxValue(){
+        DictionaryActivity activity = Robolectric.buildActivity(DictionaryActivity.class).setup().get();
+
+        Dictionary dict = new Dictionary("mydict");
+        dict.setBoxcount(2);
+        Card card = new Card("a", "b");
+
+        DictionaryManagement dm  = DictionaryManagement.getInstance(activity);
+        dm.addDictionaryObject(dict);
+        dm.selectDictionary(dict.getName());
+
+        assertEquals(1, card.getBox());
+        card.boxUp(activity);
+        assertEquals(2, card.getBox());
+        card.boxUp(activity);
+        assertEquals(2, card.getBox());
+
+        dict.setBoxcount(3);
+        card.boxUp(activity);
+        assertEquals(3, card.getBox());
+        card.boxUp(activity);
+        assertEquals(3, card.getBox());
+
     }
 }

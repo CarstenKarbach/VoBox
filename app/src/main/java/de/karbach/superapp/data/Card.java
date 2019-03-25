@@ -18,6 +18,8 @@
 
 package de.karbach.superapp.data;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -106,12 +108,18 @@ public class Card implements Serializable {
         this.lang2 = lang2;
     }
 
-    public boolean boxUp() {
+    public boolean boxUp(Context context) {
+        int maxvalue = 5;
+        if(context != null) {
+            DictionaryManagement dm = DictionaryManagement.getInstance(context);
+            Dictionary dict = dm.getSelectedDictionary();
+            maxvalue = dict.getBoxcount();
+        }
         box++;
-        if (box <= 5) {
+        if (box <= maxvalue) {
             return true;
         } else {
-            box = 5;
+            box = maxvalue;
             return false;
         }
     }

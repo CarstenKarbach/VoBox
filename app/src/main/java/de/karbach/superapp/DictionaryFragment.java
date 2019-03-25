@@ -156,6 +156,19 @@ public class DictionaryFragment extends Fragment{
         if(mode == Mode.NEW){
             deleteButton.setVisibility(View.INVISIBLE);
         }
+
+        int boxcount = 5;
+        if(currentDict != null) {
+            boxcount = currentDict.getBoxcount();
+        }
+        final Spinner boxSpinner = view.findViewById(R.id.boxcountspinner);
+        for (int i = 0; i < boxSpinner.getCount(); i++) {
+            String cvalue = (String) boxSpinner.getAdapter().getItem(i);
+            if(Integer.valueOf(cvalue) == boxcount){
+                boxSpinner.setSelection(i);
+                break;
+            }
+        }
     }
 
     private class FlagAdapter extends BaseAdapter {
@@ -297,10 +310,13 @@ public class DictionaryFragment extends Fragment{
                 Dictionary dict = dm.getSelectedDictionary();
                 Spinner languageSpinner = getView().findViewById(R.id.flag_selection2);
                 Spinner baselanguageSpinner = getView().findViewById(R.id.flag_selection1);
+                Spinner boxcountSpinner = getView().findViewById(R.id.boxcountspinner);
                 String language = (String) languageSpinner.getSelectedItem();
                 String baselanguage = (String) baselanguageSpinner.getSelectedItem();
+                int boxcount = Integer.valueOf((String) boxcountSpinner.getSelectedItem());
                 dict.setLanguage(language);
                 dict.setBaseLanguage(baselanguage);
+                dict.setBoxcount(boxcount);
                 dict.save(getActivity());
 
                 String toast = getString(R.string.toast_new_dict_saved, newDict);

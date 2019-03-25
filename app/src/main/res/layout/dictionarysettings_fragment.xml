@@ -78,6 +78,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="100"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="30"
+                android:text="@string/label_boxes"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="10dp"
+                />
+            <Spinner
+                android:id="@+id/boxcountspinner"
+                android:layout_width="0dp"
+                android:layout_weight="70"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:prompt="@string/label_nrboxes"
+                android:entries="@array/boxValues"
+                android:textAlignment="center"
+                />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="100"
             android:id="@+id/countrow"
             >
             <TextView
@@ -94,6 +119,7 @@
                 android:layout_height="wrap_content"
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
+                android:textAlignment="center"
                 />
         </TableRow>
         <TableRow

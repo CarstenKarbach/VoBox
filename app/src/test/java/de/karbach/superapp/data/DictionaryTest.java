@@ -175,9 +175,18 @@ public class DictionaryTest {
         assertEquals(0, dict.getCardsForBox(2).size());
         assertEquals(0, dict.getCardsForBox(20).size());
 
-        card1.boxUp();
-        card2.boxUp();
+        card1.boxUp(null);
+        card2.boxUp(null);
         assertEquals(0, dict.getCardsForBox(1).size());
         assertEquals(2, dict.getCardsForBox(2).size());
+    }
+
+    @Test
+    public void testloadImportedDictionary(){
+        Dictionary dict = Dictionary.loadImported("Englisch;\nDeutsch;\nboxcount:7\n[\"ja\",\"yes\",null,null,\"1\"]\n[\"nein\",\"no\",null,null,\"1\"]\n[\"danke\",\"thank you\",null,null,\"1\"]", true);
+        assertEquals("Englisch", dict.getLanguage());
+        assertEquals("Deutsch", dict.getBaseLanguage());
+        assertEquals(3, dict.getCards().size());
+        assertEquals(7, dict.getBoxcount());
     }
 }
