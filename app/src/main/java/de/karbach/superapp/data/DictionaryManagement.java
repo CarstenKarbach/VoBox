@@ -73,8 +73,15 @@ public class DictionaryManagement {
      */
     private Context context;
 
+    /**
+     * Key for shared preferences where to store all dictionary names the user created
+     */
     private static final String LANGUAGES_ARRAY = "de.karbach.superapp.data.DictionaryManagement.languageArray";
 
+    /**
+     *
+     * @return set of dictionary names available
+     */
     public Set<String> readDictionaryList(){
         Set<String> defaultSet = new HashSet<String>();
         String[] defaults = context.getResources().getStringArray(R.array.default_languages_array);
@@ -84,6 +91,10 @@ public class DictionaryManagement {
         return sp.getStringSet(DictionaryManagement.LANGUAGES_ARRAY, defaultSet);
     }
 
+    /**
+     *
+     * @return set of dictionary names as String array
+     */
     public String[] readDictionaryArray(){
         Set<String> set = readDictionaryList();
         String[] result = set.toArray(new String[0]);
@@ -91,6 +102,10 @@ public class DictionaryManagement {
         return result;
     }
 
+    /**
+     * Init DictionaryManagement in Singleton context
+     * @param context
+     */
     private DictionaryManagement(Context context){
         this.context = context;
         dicts = new ArrayList<Dictionary>();
@@ -121,6 +136,11 @@ public class DictionaryManagement {
         }
     }
 
+    /**
+     * Get singleton of dictionary management for the given context
+     * @param context
+     * @return singleton instance
+     */
     public static DictionaryManagement getInstance(Context context){
         if(instance != null){
             return instance;
@@ -129,6 +149,10 @@ public class DictionaryManagement {
         return instance;
     }
 
+    /**
+     * Store the selected dictionary name in preferences
+     * @param selectedName
+     */
     protected void storeSelectedInPreferences(String selectedName){
         SharedPreferences sharedPref = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -136,11 +160,22 @@ public class DictionaryManagement {
         editor.commit();
     }
 
+    /**
+     *
+     * @return the stored dictionary name, which was selected
+     */
     protected String getStoredSelectedDictionaryName(){
         SharedPreferences sharedPref = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         return sharedPref.getString(languageSelectKey, null);
     }
 
+    /**
+     * Select a dictionary. The selected dictionary is used in many activities
+     * e.g. for finding words for boxes or for editing the dictionary preferences.
+     * Creates new dictionary if no dictionary with that name exists.
+     * @param name
+     * @return the selected dictionary
+     */
     public Dictionary selectDictionary(String name){
         if(name == null){
             selected = null;
@@ -164,6 +199,11 @@ public class DictionaryManagement {
         return null;
     }
 
+    /**
+     * Directly add a dictionary into the list of dictionaries
+     * @param dict
+     * @return true on success, false on error
+     */
     public boolean addDictionaryObject(Dictionary dict){
         if(dict == null || dict.getName() == null){
             return false;
@@ -183,6 +223,10 @@ public class DictionaryManagement {
         return true;
     }
 
+    /**
+     * Create a new dictionary, load data if available, add dictionary to the dicts variable.
+     * @param name
+     */
     public void addDictionary(String name){
         for(Dictionary dict: dicts){
             if(dict.getName().equals(name)){
@@ -198,6 +242,11 @@ public class DictionaryManagement {
         addDictionaryObject(newDict);
     }
 
+    /**
+     * Get access to a dictionary with the given name
+     * @param name
+     * @return found dictionary, null if none exists with that name
+     */
     public Dictionary getDictionary(String name){
         for(Dictionary dict: dicts){
             if(name == null && dict.getName() == null){
@@ -210,6 +259,11 @@ public class DictionaryManagement {
         return null;
     }
 
+    /**
+     *
+     * @param name
+     * @return true if dictionary exists for that name, false if not
+     */
     public boolean dictionaryExists(String name){
         return getDictionary(name) != null;
     }
@@ -236,6 +290,12 @@ public class DictionaryManagement {
         }
     }
 
+    /**
+     * Rename a dictionary from old to new name
+     * @param oldname
+     * @param newName
+     * @return true on success, false on error
+     */
     public boolean renameDictionary(String oldname, String newName){
         if(newName == null || newName.length()<=0){
             return false;
@@ -261,6 +321,10 @@ public class DictionaryManagement {
         return selected;
     }
 
+    /**
+     * Replace an existing dictionary object with the name of newDictionary with the given value.
+     * @param newDictionary
+     */
     public void replaceDictionary(Dictionary newDictionary){
         int existingPos = -1;
         String newName = newDictionary.getName();
@@ -283,6 +347,12 @@ public class DictionaryManagement {
         saveAll();
     }
 
+    /**
+     * Merge cards of newDictionary into the existing dictionary with the same name.
+     * Afterwards, the existing dictionary will contain the old cards and the new ones.
+     * If there are cards with the same lang1 value, these are updated.
+     * @param newDictionary
+     */
     public void integrateDictionary(Dictionary newDictionary){
         Dictionary existingDict = getDictionary(newDictionary.getName());
         if(existingDict == null){
@@ -296,6 +366,10 @@ public class DictionaryManagement {
         saveAll();
     }
 
+    /**
+     * Save data for all dictionaries.
+     * Saves them to file.
+     */
     public void saveAll(){
         for(Dictionary dict: dicts){
             dict.save(context);
