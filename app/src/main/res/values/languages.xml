@@ -35,33 +35,33 @@
         <item>Andere</item>
     </string-array>
     <string-array name="all_languages_display_array">
-        <item>Bulgarisch</item>
-        <item>Dänisch</item>
-        <item>Deutsch</item>
-        <item>Englisch</item>
-        <item>Estnisch</item>
-        <item>Finnisch</item>
-        <item>Französisch</item>
-        <item>Griechisch</item>
+        <item>Bulgarian</item>
+        <item>Danish</item>
+        <item>German</item>
+        <item>English</item>
+        <item>Estonian</item>
+        <item>Finnish</item>
+        <item>French</item>
+        <item>Greek</item>
         <item>Hindi</item>
-        <item>Irisch</item>
-        <item>Italienisch</item>
-        <item>Kroatisch</item>
-        <item>Litauisch</item>
-        <item>Maltesisch</item>
+        <item>Irish</item>
+        <item>Italian</item>
+        <item>Croatian</item>
+        <item>Lithuanian</item>
+        <item>Maltese</item>
         <item>Mandarin</item>
-        <item>Niederländisch</item>
-        <item>Polnisch</item>
-        <item>Portugiesisch</item>
-        <item>Rumänisch</item>
-        <item>Russisch</item>
-        <item>Schwedisch</item>
-        <item>Slowakisch</item>
-        <item>Slowenisch</item>
-        <item>Spanisch</item>
-        <item>Tschechisch</item>
-        <item>Ungarisch</item>
-        <item>Andere</item>
+        <item>Dutch</item>
+        <item>Polish</item>
+        <item>Portuguese</item>
+        <item>Romanian</item>
+        <item>Russian</item>
+        <item>Swedish</item>
+        <item>Slovak</item>
+        <item>Slovene</item>
+        <item>Spanish</item>
+        <item>Czech</item>
+        <item>Hungarian</item>
+        <item>Other</item>
     </string-array>
     <array name="flags">
         <item>@drawable/flag_bulgarien</item>

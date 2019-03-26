@@ -66,14 +66,22 @@ public class Dictionary implements Serializable {
     private String baseLanguage;
 
     /**
-     * The language for the second language
+     * The language for the second language, which the user is learning
      */
     private String language;
 
+    /**
+     *
+     * @return maximum value for cards' boxes in this dictionary
+     */
     public int getBoxcount() {
         return boxcount;
     }
 
+    /**
+     * Set maximum value for cards' boxes in this dictionary
+     * @param boxcount maximum value for cards' boxes in this dictionary
+     */
     public void setBoxcount(int boxcount) {
         this.boxcount = boxcount;
     }

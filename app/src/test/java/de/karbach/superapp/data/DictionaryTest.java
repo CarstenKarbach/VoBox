@@ -81,6 +81,15 @@ public class DictionaryTest {
         dict.deleteCard(another);
         dict.deleteCard(another2);
         assertEquals(0, dict.getCards().size());
+
+        dict.deleteCard(77);
+        Card nocard = dict.getCardByLang1(null);
+        assertNull(nocard);
+        int posnocard = dict.getPosForCard(nocard);
+        assertEquals(-1, posnocard);
+
+        boolean result = dict.saveToObj(null);
+        assertFalse(result);
     }
 
     @Test
