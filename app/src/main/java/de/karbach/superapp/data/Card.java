@@ -71,43 +71,87 @@ public class Card implements Serializable {
      */
     private String lesson = null;
 
+    /**
+     *
+     * @return Name of the lesson, to which this card belongs to
+     */
     public String getLesson() {
         return lesson;
     }
 
+    /**
+     *
+     * @param lesson Name of the lesson, to which this card belongs to
+     */
     public void setLesson(String lesson) {
         this.lesson = lesson;
     }
 
+    /**
+     *
+     * @return The type of the word, e.g. adjective, verb, noun
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     *
+     * @param type The type of the word, e.g. adjective, verb, noun
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     *
+     * @return Vocabulary in second language
+     */
     public String getLang2() {
         return lang2;
     }
 
+    /**
+     *
+     * @param lang2 Vocabulary in second language
+     */
     public void setLang2(String lang2) {
         this.lang2 = lang2;
     }
 
+    /**
+     *
+     * @return Vocabulary in first language
+     */
     public String getLang1() {
         return lang1;
     }
 
+    /**
+     *
+     * @param lang1 Vocabulary in first language
+     */
     public void setLang1(String lang1) {
         this.lang1 = lang1;
     }
 
+    /**
+     *
+     * @param lang1 Vocabulary in first language, e.g. Deutsch
+     * @param lang2 Vocabulary in second language, e.g. German
+     */
     public Card(String lang1, String lang2) {
         this.lang1 = lang1;
         this.lang2 = lang2;
     }
 
+    /**
+     * Try to bring card into next box. Works only until max box value is reached.
+     * Maximum value is set per dictionary or default value 5 is used if no context is given.
+     *
+     * @param context used to get the selected dictionary for an individual max box count
+     * @return true if value was increased, false if value was not increased due to max boundary
+     */
     public boolean boxUp(Context context) {
         int maxvalue = 5;
         if(context != null) {
@@ -124,6 +168,11 @@ public class Card implements Serializable {
         }
     }
 
+    /**
+     * Try to decrease box for a card. Minimum value is 1.
+     *
+     * @return true if value was decreased, false if that failed due to min boundary.
+     */
     public boolean boxDown() {
         box--;
         if (box < 1) {
@@ -134,6 +183,11 @@ public class Card implements Serializable {
         }
     }
 
+    /**
+     * Export card as string in JSON array format.
+     *
+     * @return String in JSON format
+     */
     public String export() {
         JSONArray array = new JSONArray();
         String[] values = new String[]{lang1, lang2, type, lesson, String.valueOf(box)};
@@ -145,6 +199,13 @@ public class Card implements Serializable {
         return array.toString();
     }
 
+    /**
+     * Load a card from any known format.
+     *
+     * @param anyString eithor JSON format or CSV
+     * @param loadAll if true, load also the old box value of the card
+     * @return the loaded Card instance
+     */
     public static Card loadJSONOrCSV(String anyString, boolean loadAll){
         if(anyString.startsWith("[") ){
             return loadImported(anyString, loadAll);
@@ -154,6 +215,13 @@ public class Card implements Serializable {
         }
     }
 
+    /**
+     * Load card from CSV formatted string.
+     *
+     * @param csvString e.g. "Wort;word;Typ;3;2"
+     * @param loadAll if true, try to load the box of the card, too
+     * @return loaded card, null on error
+     */
     public static Card loadImportedCSV(String csvString, boolean loadAll) {
         if(csvString == null ){
             return null;
@@ -205,6 +273,13 @@ public class Card implements Serializable {
         return result;
     }
 
+    /**
+     * Load card from JSON array in String.
+     *
+     * @param jsonString JSON string, e.g. ["danke","thank you",null,null,"1"]
+     * @param loadAll if true, try to load the box of the card, too
+     * @return loaded card, null on error
+     */
     public static Card loadImported(String jsonString, boolean loadAll) {
         try {
             JSONArray array = new JSONArray(jsonString);
@@ -245,6 +320,13 @@ public class Card implements Serializable {
         }
     }
 
+    /**
+     * Convert string to simple string used for searches.
+     * Makes string lower case and replaced Umlauts.
+     *
+     * @param input original value, e.g. Übergänge -> results in ubergange
+     * @return simpler string for searches
+     */
     public static String toSimpleString(String input){
         if(input == null){
             return null;
@@ -260,6 +342,12 @@ public class Card implements Serializable {
         return input;
     }
 
+    /**
+     * Check if this card matches for a search string.
+     *
+     * @param simpleSearch the search value to match against this card
+     * @return true if card matches search string, false otherwise
+     */
     public boolean matchesSearch(String simpleSearch){
         if(simpleSearch == null){
             return false;

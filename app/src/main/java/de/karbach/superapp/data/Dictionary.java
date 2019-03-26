@@ -91,10 +91,18 @@ public class Dictionary implements Serializable {
      */
     private int boxcount = 5;
 
+    /**
+     *
+     * @return The name of the dictionary for identification of the dictionary.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name The name of the dictionary for identification of the dictionary.
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -104,12 +112,20 @@ public class Dictionary implements Serializable {
      */
     private String name;
 
+    /**
+     * Default base language is set to Deutsch here
+     * @param name The name of the dictionary for identification of the dictionary.
+     */
     public Dictionary(String name){
         cards = new ArrayList<Card>();
         this.name = name;
         this.setBaseLanguage("Deutsch");
     }
 
+    /**
+     * Add a card to this dictionary or modify an existing card, if a car with the same lang1 value already exists.
+     * @param card the added card
+     */
     public void addCard(Card card){
         if(card == null){
             return;
@@ -131,6 +147,10 @@ public class Dictionary implements Serializable {
         cards.add(card);
     }
 
+    /**
+     * Delete a card at a given position
+     * @param pos the position of the card in the stack
+     */
     public void deleteCard(int pos){
         if(pos< 0 || pos >= cards.size()){
             return;
@@ -138,10 +158,18 @@ public class Dictionary implements Serializable {
         cards.remove(pos);
     }
 
+    /**
+     * Delete a card object from the dictionary
+     * @param card
+     */
     public void deleteCard(Card card){
         cards.remove(card);
     }
 
+    /**
+     * Allows read/write access to the cards of the dictionary.
+     * @return the cards in the dictionary
+     */
     public ArrayList<Card> getCards(){
         return cards;
     }
@@ -149,7 +177,7 @@ public class Dictionary implements Serializable {
     /**
      * Use language 1 value as key to search for a card
      * @param lang1 the value for language 1
-     * @return the Card found, or null if not
+     * @return the card found, or null if not
      */
     public Card getCardByLang1(String lang1){
         if(lang1 == null){
@@ -178,26 +206,51 @@ public class Dictionary implements Serializable {
         return -1;
     }
 
+    /**
+     *
+     * @return Base language, usually German, but can be changed on a per dictionary basis
+     */
     public String getBaseLanguage() {
         return baseLanguage;
     }
 
+    /**
+     *
+     * @param language Base language, usually German, but can be changed on a per dictionary basis
+     */
     public void setBaseLanguage(String language) {
         this.baseLanguage = language;
     }
 
+    /**
+     *
+     * @return The language for the second language, which the user is learning
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     *
+     * @param language The language for the second language, which the user is learning
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
 
+    /**
+     *
+     * @return string filename used to store this dictionary, e.g. Englisch.txt
+     */
     public String getFilenameForStore(){
         return getFilenameForStore("txt");
     }
 
+    /**
+     *
+     * @param ending e.g. "txt"
+     * @return name+"."+ending as string
+     */
     public String getFilenameForStore(String ending){
         String filename = "dictionary."+ending;
         if(name != null){
@@ -206,18 +259,31 @@ public class Dictionary implements Serializable {
         return filename;
     }
 
+    /**
+     * Check if file for this dictionary exists already
+     * @param context
+     * @return true if file exists, false otherwise
+     */
     public boolean dictionaryFileExists(Context context){
         String filename = this.getFilenameForStore();
         File file = context.getFileStreamPath(filename);
         return file.exists();
     }
 
+    /**
+     * If file exists, load data (cards, boxcount, language) from file
+     * @param context
+     */
     public void loadIfPossible(Context context){
         if(dictionaryFileExists(context)){
             load(context);
         }
     }
 
+    /**
+     * Delete the file for the dictionary, if it exists.
+     * @param context
+     */
     public void deleteFile(Context context){
         String filename = this.getFilenameForStore();
         File file = context.getFileStreamPath(filename);
@@ -226,14 +292,20 @@ public class Dictionary implements Serializable {
         }
     }
 
+    /**
+     * Save this dictionary to file
+     * @param context
+     * @return true on success, false on error
+     */
     public boolean save(Context context){
         File result = exportToFile(getFilenameForStore(), context, false);
         return result != null;
     }
 
     /**
-     * Save this dictionary to file
+     * Save this dictionary to file, use object serialization.
      * @param context needed context to save data.
+     * @return true on success, false on error
      */
     public boolean saveToObj(Context context){
         String filename = this.getFilenameForStore("obj");
@@ -248,6 +320,10 @@ public class Dictionary implements Serializable {
         }
     }
 
+    /**
+     * Copy all data from the other dictionary to this dictionary.
+     * @param other e.g. a loaded dictionary
+     */
     private void initWithDictionary(Dictionary other){
         if(other == null){
             return;
@@ -260,6 +336,10 @@ public class Dictionary implements Serializable {
         boxcount = other.boxcount;
     }
 
+    /**
+     * Load dictionary from file ointo this dictionary.
+     * @param context
+     */
     public void load(Context context){
         String filename = getFilenameForStore();
         File toLoad = context.getFileStreamPath(filename);
@@ -270,8 +350,9 @@ public class Dictionary implements Serializable {
     }
 
     /**
-     * Load last saved board from file.
-     * Save board into this instance
+     * Load last saved dictionary from file.
+     * Save dictionary into this instance.
+     * Uses object serialization.
      * @param context needed context to load data from.
      * @throws IOException
      * @throws FileNotFoundException
@@ -287,6 +368,11 @@ public class Dictionary implements Serializable {
         initWithDictionary(loaded);
     }
 
+    /**
+     * Get all cards in a given box
+     * @param box the box for the cards
+     * @return list of cards in this box
+     */
     public ArrayList<Card> getCardsForBox(int box){
         ArrayList<Card> result = new ArrayList<Card>();
         for(Card card: cards){
@@ -297,7 +383,10 @@ public class Dictionary implements Serializable {
         return result;
     }
 
-
+    /**
+     *
+     * @return string representation of this card
+     */
     public String export(){
         StringBuilder result = new StringBuilder();
         result.append(language);
@@ -314,6 +403,13 @@ public class Dictionary implements Serializable {
         return result.toString();
     }
 
+    /**
+     * Load dictionary expecting format generated by export.
+     * @param uri file location
+     * @param loadAll if true, load boxes for cards, too
+     * @param context
+     * @return the loaded dictionary, null on error
+     */
     public static Dictionary loadFromUri(Uri uri, boolean loadAll, Context context){
         if (! TextUtils.equals(uri.getScheme(), "file") && ! TextUtils.equals(uri.getScheme(), "content")) {
             return null;
@@ -343,6 +439,12 @@ public class Dictionary implements Serializable {
         return loadImported(dict.toString(), loadAll);
     }
 
+    /**
+     * Load dictionary directly from a string
+     * @param dictExportString format generated by export()
+     * @param loadAll if true, load boxes for cards, too
+     * @return the loaded dictionary, null on error
+     */
     public static Dictionary loadImported(String dictExportString, boolean loadAll){
         String[] lines = dictExportString.split("\n");
         Dictionary result = null;
@@ -380,6 +482,11 @@ public class Dictionary implements Serializable {
         return result;
     }
 
+    /**
+     * Start intent to send / share the exported dictionary.
+     * Dictionary is exported with the export() function.
+     * @param context
+     */
     public void sendExportedDictionary(Context context){
         File exportedFile = exportToFile(getFilenameForStore("txt"), context, true);
         if(exportedFile == null){
@@ -393,6 +500,14 @@ public class Dictionary implements Serializable {
         context.startActivity(intent);
     }
 
+    /**
+     * Export dictionary with export() function and store that string to the given file.
+     * Example call: exportToFile(getFilenameForStore("txt"), context, true)
+     * @param filename e.g. "Englisch.txt"
+     * @param context
+     * @param external if true try to store on SD card like, otherwise in internal filesystem
+     * @return file handle on success
+     */
     public File exportToFile(String filename, Context context, boolean external){
         File result = null;
         if(!external){
