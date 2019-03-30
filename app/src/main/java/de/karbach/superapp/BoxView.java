@@ -145,6 +145,11 @@ public class BoxView extends View {
 
     private int level = 0;
 
+    public static void clearFlags(){
+        flag1 = null;
+        flag2 = null;
+    }
+
     public void setLanguage1(String lang1){
         Resources res = getResources();
         if(flag1 == null) {

@@ -29,9 +29,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
@@ -73,6 +79,27 @@ public class StarterActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         return new StarterFragment();
+    }
+
+    /**
+     * Load the content of a raw file as string result.
+     * @param resourceid the raw file ID, e.g. R.raw.example_de_en_csv
+     * @return null on error, otherwise content of the file as String
+     */
+    public String loadRawFile(int resourceid){
+        InputStream inputstream = getResources().openRawResource(resourceid);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream));
+        String content = "";
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                content = content+line+"\n";
+                line = reader.readLine();
+            }
+        }catch(IOException ioexception){
+            return null;
+        }
+        return content;
     }
 
     @Override

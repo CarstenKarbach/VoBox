@@ -55,6 +55,11 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class BoxFragment extends Fragment{
 
+    /**
+     *
+     * @param box
+     * @return number of cards in the box of the currently selected dirctionary
+     */
     protected int getCardNumberInBox(int box){
         DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
         Dictionary dict = dm.getSelectedDictionary();
@@ -63,6 +68,12 @@ public class BoxFragment extends Fragment{
         return boxCards.size();
     }
 
+    /**
+     * Init training for a given box. Start TestActivity.
+     * @param box the box to train in
+     * @param realTest if true, cards are put up and down the box numbers
+     * @param askForLanguage2 if true, show base language (e.g. German) and ask for the other(e.g. English). If false ask for the base language
+     */
     public void startBoxTraining(int box, boolean realTest, boolean askForLanguage2){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
@@ -77,6 +88,10 @@ public class BoxFragment extends Fragment{
         startActivity(intent);
     }
 
+    /**
+     * Start card list activity for a box
+     * @param box the box to show card list of
+     */
     public void showList(int box){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
@@ -89,6 +104,10 @@ public class BoxFragment extends Fragment{
         startActivity(intent);
     }
 
+    /**
+     * Show popup menu for a box
+     * @param box
+     */
     public void showPopup(int box){
         int boxsize = getCardNumberInBox(box);
         if(boxsize == 0){
@@ -150,15 +169,24 @@ public class BoxFragment extends Fragment{
         popup.show();//showing popup menu
     }
 
+    /**
+     * IDs for all possible box views
+     */
     public final static int[] boxids = new int[]{R.id.boxview1, R.id.boxview2, R.id.boxview3, R.id.boxview4, R.id.boxview5,
                                                  R.id.boxview6, R.id.boxview7, R.id.boxview8, R.id.boxview9, R.id.boxview10};
 
+    /**
+     * Place cards into box views
+     * @param root root view of this fragment
+     */
     public void updateBoxViews(View root){
         if(root == null){
             return;
         }
         DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
         Dictionary dict = dm.getSelectedDictionary();
+
+        BoxView.clearFlags();
 
         for(int box=1; box<=dict.getBoxcount(); box++){
             BoxView bv = root.findViewById(boxids[box-1]);
@@ -170,12 +198,26 @@ public class BoxFragment extends Fragment{
         }
     }
 
+    /**
+     * Get access to GestureListener for a box
+     * @param box
+     * @return GestureListener for box.
+     */
     public GestureDetector.OnGestureListener getGestureListener(int box) {
         return mGestureListenerList.get(box-1);
     }
 
+    /**
+     * Stores GestureListener for each box
+     */
     private Map<Integer, GestureDetector.OnGestureListener> mGestureListenerList = new HashMap<Integer, GestureDetector.OnGestureListener>();
 
+    /**
+     * Initialize GestureListener for boxview.
+     * Start listening for tocuh and fling events.
+     * @param boxview
+     * @param currentbox
+     */
     public void initGestureDetection(final BoxView boxview, final int currentbox){
         final GestureDetector.OnGestureListener listener = new GestureDetector.OnGestureListener(){
             @Override

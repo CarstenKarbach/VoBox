@@ -66,6 +66,34 @@ public class StarterFragment extends Fragment {
         }
     }
 
+    /**
+     * Find spinner with dictionaries and set to the selected dictionary.
+     * @param rootView root view of fragment
+     */
+    protected void fillDictionarySpinner(View rootView){
+        if(dictSpinnerPresenter != null){
+            dictSpinnerPresenter.freeMe();
+        }
+        final Spinner select = (Spinner) rootView.findViewById(R.id.language_selection);
+        if(select != null){
+            dictSpinnerPresenter = new DictSpinnerPresenter(getActivity(), select);
+            dictSpinnerPresenter.updateSelectedDictionary();
+
+            select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String value = select.getItemAtPosition(position).toString();
+                    DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
+                    dm.selectDictionary(value);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,25 +147,6 @@ public class StarterFragment extends Fragment {
             boxImage.setOnClickListener(boxOnClick);
         }
 
-        final Spinner select = (Spinner) result.findViewById(R.id.language_selection);
-        if(select != null){
-            dictSpinnerPresenter = new DictSpinnerPresenter(getActivity(), select);
-            dictSpinnerPresenter.updateSelectedDictionary();
-
-            select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String value = select.getItemAtPosition(position).toString();
-                    DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
-                    dm.selectDictionary(value);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-        }
-
         final ImageButton actionsButton = (ImageButton) result.findViewById(R.id.actions_button);
         if(actionsButton != null){
             actionsButton.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +175,7 @@ public class StarterFragment extends Fragment {
                             }
                             if(item.getItemId() == R.id.dict_import){
                                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                                intent.setType("text/plain");
+                                intent.setType("text/*");
                                 startActivityForResult(intent, OPENFILECODE);
                             }
                             if(item.getItemId() == R.id.dict_new){
@@ -198,6 +207,15 @@ public class StarterFragment extends Fragment {
         }
 
         return result;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if(getView() != null) {
+            fillDictionarySpinner(getView());
+        }
     }
 
     /**

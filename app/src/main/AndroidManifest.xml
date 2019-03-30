@@ -21,8 +21,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain"/>
+                <data android:mimeType="text/*"/>
+                <data android:mimeType="application/vndms-excel"/>
                 <data android:pathPattern=".*\\.txt" />
+                <data android:pathPattern=".*\\.csv" />
             </intent-filter>
             <meta-data
                 android:name="android.app.default_searchable"

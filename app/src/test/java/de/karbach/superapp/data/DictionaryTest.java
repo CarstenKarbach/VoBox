@@ -25,8 +25,12 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowEnvironment;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
+import de.karbach.superapp.R;
 import de.karbach.superapp.StarterActivity;
 
 import static org.junit.Assert.*;
@@ -131,6 +135,19 @@ public class DictionaryTest {
         Dictionary dict = new Dictionary("test");
         dict.loadIfPossible(activity);
         assertEquals(0, dict.getCards().size());
+    }
+
+    @Test
+    public void testLoadExampleCSVFiles(){
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        int[] rawExamples = new int[]{R.raw.example_de_en_csv, R.raw.example_de_po_csv, R.raw.example_sp_po_csv};
+
+        for(int resid : rawExamples) {
+            String content = activity.loadRawFile(resid);
+            Dictionary dict = Dictionary.loadImported(content, true);
+            assertTrue(dict.getCards().size() > 0);
+        }
     }
 
     @Test

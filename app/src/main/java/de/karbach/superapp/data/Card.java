@@ -216,6 +216,11 @@ public class Card implements Serializable {
     }
 
     /**
+     * Allowed delimiters for imported card
+     */
+    public static final String[] delimiters = new String[]{";", ",", "|"};
+
+    /**
      * Load card from CSV formatted string.
      *
      * @param csvString e.g. "Wort;word;Typ;3;2"
@@ -227,7 +232,6 @@ public class Card implements Serializable {
             return null;
         }
         csvString = csvString.trim();
-        String[] delimiters = new String[]{";", ",", "|"};
         String delimiter = ";";
         //Find the used delimiter in this string
         for (String pd : delimiters) {
