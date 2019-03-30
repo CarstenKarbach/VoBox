@@ -87,16 +87,16 @@ public class StarterActivity extends SingleFragmentActivity {
      * @return null on error, otherwise content of the file as String
      */
     public String loadRawFile(int resourceid){
-        InputStream inputstream = getResources().openRawResource(resourceid);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream));
         String content = "";
         try {
+            InputStream inputstream = getResources().openRawResource(resourceid);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream));
             String line = reader.readLine();
             while (line != null) {
                 content = content+line+"\n";
                 line = reader.readLine();
             }
-        }catch(IOException ioexception){
+        }catch(Exception exception){
             return null;
         }
         return content;

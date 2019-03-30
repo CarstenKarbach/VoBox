@@ -50,41 +50,98 @@ import de.karbach.superapp.data.Card;
  */
 public class BoxView extends View {
 
+    /**
+     * Paint objects for draw method
+     */
     private Paint linePaint, transparentPaint, textpaint, centertextpaint, centertextpaintBlue, fillPaint, levelPaint;
 
+    /**
+     * Word as example word, which should fit into a card.
+     * Word is loaded as resource in constructor.
+     */
     private String exampleWord = null;
 
+    /**
+     * Encoded Bitmaps, loaded from resources.
+     */
     private static Bitmap note, box, boxend, drawer, cardsbmp, flag1, flag2;
+    /**
+     * Rectangles with size of source bitmaps, needed to draw them from src to dest location.
+     * src: Rect of source size for note
+     * box: Rect of source size for box
+     * ...
+     */
     private Rect src,boxsrc,boxendsrc, drawersrc,stacksrc, flagsrc;
 
+    /**
+     * Allows to move card list horizontally.
+     * This value is subtracted from cards position, see {@link #drawBox(Canvas) drawBox}
+     * Between -height and maxOffset
+     *
+     * If negative, empty box is shown on the left end of the cards.
+     * Set to 0 to fit first card to the end of the box frame to the left.
+     */
     private int offset = 0;
 
+    /**
+     * Start velocity for flinging
+     */
     private float flingvelocity = 0;
+    /**
+     * Start time for flinging
+     */
     private long startTime;
+    /**
+     * parameters for fling curve
+     */
     private int startOffset, turningPointTime, turningPointOffset;
+    /**
+     * Acceleration used in x^2 equation for fling curve.
+     */
     private float acceleration;
 
+    /**
+     * Start flinging with given velocity
+     * @param velo
+     */
     public void fling(float velo){
         flingvelocity = -velo*0.001f;
         startTime = System.currentTimeMillis();
         startOffset = getOffset();
 
         int sign = flingvelocity < 0 ? -1 : 1;
-        acceleration = (-sign)*0.005f;
-        turningPointTime = Math.round( -flingvelocity / (2*acceleration) );
-        turningPointOffset = Math.round( acceleration * turningPointTime*turningPointTime+flingvelocity*turningPointTime+startOffset );
+        acceleration = (-sign)*0.005f;//Brakes in the oposite direction
+        turningPointTime = Math.round( -flingvelocity / (2*acceleration) );//Wendepunkt of equation
+        turningPointOffset = Math.round( acceleration * turningPointTime*turningPointTime+flingvelocity*turningPointTime+startOffset );//Actual target point of offset
 
         postInvalidate();
     }
 
+    /**
+     * Scroll indicator is drawn with this alpha value
+     * Between startAlpha (fully visible) and 0 (hidden)
+     */
     private int scrollAlpha = 0;
+    /**
+     * Starting alpha value, e.g. 120
+     */
     private int startAlpha = 0;
+    /**
+     * Start time for scroll indication
+     */
     private long scrollStartTime;
 
+    /**
+     * Show scroll indicator now with default alpha level
+     */
     public void startScrollIndicator(){
         setScrollAlpha(120);
     }
 
+    /**
+     * Set scroll value to a certain alpha level, start scroll animation
+     * @param alpha
+     */
     public void setScrollAlpha(int alpha){
         if(alpha <= 255 && alpha >= 0) {
             scrollAlpha = alpha;
@@ -93,13 +150,34 @@ public class BoxView extends View {
         }
     }
 
+    /**
+     * Precalculated data on a card used to optimize card drawing
+     */
     private class CardInfo{
+        /**
+         * Length of card text string for lang 1, card.getLang1().length()
+         */
         public int lang1Length;
+        /**
+         * Length of card text string for lang 2, card.getLang2().length()
+         */
         public int lang2Length;
 
+        /**
+         * Possibly shortened display text for language 1, e.g. "Vokabe..."
+         */
         public String displayText1;
+        /**
+         * Possibly shortened display text for language 2, e.g. "Vocabu..."
+         */
         public String displayText2;
 
+        /**
+         * @param lang1Length Length of card text string for lang 1, card.getLang1().length()
+         * @param lang2Length Length of card text string for lang 2, card.getLang2().length()
+         * @param displayText1 Possibly shortened display text for language 1, e.g. "Vokabe..."
+         * @param displayText2 Possibly shortened display text for language 2, e.g. "Vocabu..."
+         */
         public CardInfo(int lang1Length, int lang2Length, String displayText1, String displayText2){
             this.lang1Length = lang1Length;
             this.lang2Length = lang2Length;
@@ -108,9 +186,19 @@ public class BoxView extends View {
         }
     }
 
+    /**
+     * Cards to display in this view
+     */
     private List<Card> cards = new ArrayList<Card>();
+    /**
+     * Precalculated info on cards
+     */
     private Map<Card,CardInfo> cardsInfo = new HashMap<Card, CardInfo>();
 
+    /**
+     * Set new cards, calculate infos on cards, invalidate.
+     * @param cards
+     */
     public void setCards(List<Card> cards){
         this.cards = cards;
         cardsInfo.clear();
@@ -143,13 +231,23 @@ public class BoxView extends View {
         postInvalidate();
     }
 
+    /**
+     * The box level, usually 1..5
+     */
     private int level = 0;
 
+    /**
+     * Make sure, that flags are reloaded from file according to given languages
+     */
     public static void clearFlags(){
         flag1 = null;
         flag2 = null;
     }
 
+    /**
+     * Set the base language to use
+     * @param lang1
+     */
     public void setLanguage1(String lang1){
         Resources res = getResources();
         if(flag1 == null) {
@@ -158,6 +256,10 @@ public class BoxView extends View {
         flagsrc = new Rect(0,0, flag1.getWidth()-1, flag1.getHeight()-1);
     }
 
+    /**
+     * Set secondary display language
+     * @param lang2
+     */
     public void setLanguage2(String lang2){
         Resources res = getResources();
         if(flag2 == null) {
@@ -165,16 +267,28 @@ public class BoxView extends View {
         }
     }
 
+    /**
+     * Set level of the given box
+     * @param level
+     */
     public void setLevel(int level){
         this.level = level;
         measure();
         postInvalidate();
     }
 
+    /**
+     * @return current card list offset value (horizontal movement)
+     */
     public int getOffset(){
         return offset;
     }
 
+    /**
+     * Set the offset to use. E.g. used for implementing scrolling
+     * @param offset new offset
+     * @param fromUIThread if false, call postInvalidate to redraw this view
+     */
     public void setOffset(int offset, boolean fromUIThread){
         int origOffset = this.offset;
         if(offset > maxOffset){
@@ -192,8 +306,16 @@ public class BoxView extends View {
         }
     }
 
+    /**
+     * Helps to get flag Bitmaps for language names
+     */
     private PictureHelper pictureHelper;
 
+    /**
+     * Init box view, init Paint objects, load bitmaps
+     * @param context
+     * @param attrs
+     */
     public BoxView(Context context, AttributeSet attrs){
         super(context, attrs);
 
@@ -255,10 +377,17 @@ public class BoxView extends View {
         stacksrc = new Rect(0,0, cardsbmp.getWidth()-1, cardsbmp.getHeight()-1);
     }
 
+    /**
+     * Note bitmap with two flags for the given languages in it
+     */
     private Bitmap flaggedNoteBitmap;
+    /**
+     * Size of flaggedNoteBitmap
+     */
     private Rect flaggedNoteBitmapSrc = new Rect();
 
     /**
+     * Pregenerate an empty card only with the flags on.
      * Call this within measure to get the sizes right.
      */
     private void generateFlaggedNoteBitmap(){
@@ -288,11 +417,22 @@ public class BoxView extends View {
         flaggedNoteBitmapSrc.set(dest);
     }
 
+    /**
+     * Small drawer image according to size of this view
+     */
     private Bitmap smallDrawer;
+    /**
+     * Size of smallDrawer
+     */
     private Rect smallDrawerScr = new Rect();
 
     /**
-     * Pre generate smaller drawer image
+     * Used as target rect for drawer below each card
+     */
+    private Rect drawerTarget = new Rect();
+
+    /**
+     * Pre generate smaller drawer image for optimization
      */
     private void generateSmallDrawer(){
         if(drawer == null){
@@ -314,14 +454,23 @@ public class BoxView extends View {
         smallDrawerScr.set(drawerTarget);
     }
 
+    /**
+     * Target size of box on the left
+     */
     private Rect rescaleRectBox = new Rect();
+    /**
+     * Target size of closing element of the box
+     */
     private Rect rescaleRectBoxEnd = new Rect();
+    /**
+     * Target size of one drawer tile
+     */
     private Rect rescaleRectDrawer = new Rect();
 
     /**
      * Rescale the rect to the target height, but keep the aspect ratio.
-     * @param rect
-     * @param targetHeight
+     * @param rect rectangle to resize, in/out value
+     * @param targetHeight new height of rect
      */
     private void scaleRect(Rect rect, int targetHeight){
         if(targetHeight <= 0){
@@ -332,8 +481,15 @@ public class BoxView extends View {
         rect.set(rect.left, rect.top, rect.left+newWidth-1,rect.top+targetHeight-1);
     }
 
+    /**
+     * height of the example word drawn with textpaint
+     */
     private int exampleWordHeight;
 
+    /**
+     * Adjust textpaint.textsize so that example word fits horizontally into a card
+     * @param cardlength width of one card in pixels
+     */
     protected void measureTextSize(int cardlength){
         float textsize = textpaint.getTextSize();
         textpaint.getTextBounds(exampleWord, 0, exampleWord.length(), textrect);
@@ -355,21 +511,51 @@ public class BoxView extends View {
         centertextpaintBlue.setTextSize(textpaint.getTextSize());
     }
 
+    /**
+     * getWidth() and getHeight() of this view
+     */
     private int width, height;
 
-    private Rect boxdest, dest, stackdest, flagrect;
+    /**
+     * dest: used as Rect for some drawings
+     * stackdest: destination rect for card stack symbol in box
+     * flagrect: size of flag in target bitmap
+     */
+    private Rect dest, stackdest, flagrect;
+    /**
+     * Used for measurement of text size
+     */
     private Rect textrect = new Rect();
 
+    /**
+     * Rect used as target size on view canvas for the scroll indicator
+     */
     private Rect scrollIndicatorRect = new Rect();
 
+    /**
+     * Maximum allowed offset
+     */
     private int maxOffset;
 
+    /**
+     * Height in pixels for drawing level text
+     */
     private int levelheight;
 
+    /**
+     * exampleWord.length()
+     */
     private int exampleWordLength;
 
+    /**
+     * flagOffset: offset from left of a card to the beginning of a flag
+     * flagWidth: width of a flag on target card
+     */
     private int flagOffset, flagWidth;
 
+    /**
+     * Premeasure all parameters and rectangles to optimize drawing
+     */
     protected void measure(){
         width = getWidth();
         height = getHeight();
@@ -382,7 +568,6 @@ public class BoxView extends View {
 
         measureTextSize(height);
 
-        boxdest = new Rect(0, 0, height - 1, height - 1);
         dest = new Rect(0,0,0,0);
 
         maxOffset = cards.size()*height;
@@ -415,6 +600,9 @@ public class BoxView extends View {
         measure();
     }
 
+    /**
+     * Adapt the current offset according to fling equation
+     */
     protected void handleFling(){
         if(flingvelocity == 0){
             return;
@@ -436,6 +624,9 @@ public class BoxView extends View {
         }
     }
 
+    /**
+     * Animate alpha for scroll indicator
+     */
     protected void handleScrollAlpha(){
         if(scrollAlpha == 0){
             return;
@@ -452,13 +643,25 @@ public class BoxView extends View {
         }
     }
 
+    /**
+     * Frame around the draw area of a card
+     */
     private int padding = 10;
 
+    /**
+     * Actual drawing called externally by Android frameword
+     * @param canvas
+     */
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         this.drawBox(canvas);
     }
 
+    /**
+     * Draw this box into the given canvas.
+     * Special function for simpler testing.
+     * @param canvas
+     */
     public void drawBox(Canvas canvas) {
         int oldoffset = getOffset();
         handleFling();
@@ -522,12 +725,20 @@ public class BoxView extends View {
         canvas.drawBitmap(cardsbmp, stacksrc, stackdest, levelPaint);
 
         canvas.drawText(String.valueOf(cards.size()), height*5/6, height*5/6, centertextpaint);
-
+        //Ensure animation is shown
         if(flingvelocity != 0 || scrollAlpha > 0){
             invalidate();
         }
     }
 
+    /**
+     * Draw the scroll indicator showing which excerpt of all cards is currently visible
+     * @param canvas
+     * @param leftEnd
+     * @param maxright
+     * @param minleft
+     * @param cardssize
+     */
     private void drawScrollIndicator(Canvas canvas, int leftEnd, float maxright, float minleft, int cardssize){
         if(scrollAlpha > 0 && leftEnd >= width) {
             float displayCardsWidth = maxright - minleft;
@@ -551,8 +762,13 @@ public class BoxView extends View {
         }
     }
 
-    private Rect drawerTarget = new Rect();
-
+    /**
+     * Draw a card within the dest frame
+     * @param card card to draw
+     * @param dest target dest of entire card
+     * @param canvas canvas to draw into
+     * @param index index of card within the list of cards
+     */
     protected void drawCard(Card card, Rect dest, Canvas canvas, int index){
         canvas.drawBitmap(flaggedNoteBitmap, flaggedNoteBitmapSrc, dest, linePaint);
 

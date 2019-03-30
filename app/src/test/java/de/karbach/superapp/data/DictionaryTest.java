@@ -148,6 +148,9 @@ public class DictionaryTest {
             Dictionary dict = Dictionary.loadImported(content, true);
             assertTrue(dict.getCards().size() > 0);
         }
+
+        String errorLoad = activity.loadRawFile(R.array.default_languages_dictionary_samples);
+        assertNull(errorLoad);
     }
 
     @Test
