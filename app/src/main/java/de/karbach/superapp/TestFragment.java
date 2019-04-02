@@ -111,6 +111,9 @@ public class TestFragment extends Fragment {
      */
     private Drawable defaultBackground = null;
 
+    /**
+     * Switch which language is displayed and which is asked for.
+     */
     public void switchLanguages(){
         String lang1tmp = lang1;
         lang1 = lang2;
@@ -121,6 +124,11 @@ public class TestFragment extends Fragment {
         }
     }
 
+    /**
+     * Show whether card was checked already.
+     * @param card the card currently shown
+     * @param rootView root view of fragment
+     */
     protected void setStatusText(Card card, View rootView){
         if(rootView ==null){
             return;
@@ -137,6 +145,11 @@ public class TestFragment extends Fragment {
         status.setText(statusText);
     }
 
+    /**
+     * Load data from card and display it.
+     * @param card model
+     * @param rootView view
+     */
     protected void loadCard(Card card, View rootView){
         EditText lang1Text = (EditText) rootView.findViewById(R.id.testcard_lang1_text);
         EditText lang2Text = (EditText) rootView.findViewById(R.id.testcard_lang2_text);
@@ -177,6 +190,9 @@ public class TestFragment extends Fragment {
         setStatusText(card, rootView);
     }
 
+    /**
+     * Show the solution view to the uer.
+     */
     protected void showSolution(){
         View rootView = getView();
         if(rootView == null){
@@ -187,14 +203,25 @@ public class TestFragment extends Fragment {
         solutionRow.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Stores the last shown toast, allows to stop the toast whenever needed
+     */
     private Toast lastToast;
 
+    /**
+     * Stops showing the latest toast
+     */
     protected void stopLastToast(){
         if(lastToast != null){
             lastToast.cancel();
         }
     }
 
+    /**
+     * Check if solution given by the user is correct.
+     * Run boxUp / boxDown for the card. Start showing the real solution to the user.
+     * Check full text compare, but also try to remove brackets in the word before comparing.
+     */
     protected void checkSolution(){
         View rootView = getView();
 
@@ -261,6 +288,10 @@ public class TestFragment extends Fragment {
         answerShown = true;
     }
 
+    /**
+     *
+     * @return current card which is tested
+     */
     protected Card getCurrentCard(){
         if(testcards.size() == 0){
             return null;
@@ -280,7 +311,7 @@ public class TestFragment extends Fragment {
         Card card = getCurrentCard();
         loadCard(card, getView());
         answerShown = false;
-        //Show keyboard
+        //Show keyboard on the input field for language 2
         View rootView = getView();
         if(rootView == null){
             return;
@@ -293,6 +324,9 @@ public class TestFragment extends Fragment {
         mgr.showSoftInput(lang2Text, InputMethodManager.SHOW_IMPLICIT);
     }
 
+    /**
+     * Show next card
+     */
     protected void goNext(){
         position++;
         if(position >= testcards.size()){
@@ -302,6 +336,9 @@ public class TestFragment extends Fragment {
         initAfterMovement();
     }
 
+    /**
+     * Show previous card
+     */
     protected void goBack(){
         position--;
         if(position < 0){

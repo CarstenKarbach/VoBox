@@ -18,14 +18,24 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class DictionarySelectionFragment extends DialogFragment {
 
+    /**
+     * Callback interface
+     */
     public interface OnDictionarySelected{
         public void onDictionarySelected(String selected);
     }
 
+    /**
+     * Set callback instance
+     * @param callback
+     */
     public void setCallback(OnDictionarySelected callback) {
         this.callback = callback;
     }
 
+    /**
+     * Stores callback instance
+     */
     private OnDictionarySelected callback;
 
     @Nullable

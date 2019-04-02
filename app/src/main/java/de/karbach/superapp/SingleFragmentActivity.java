@@ -61,6 +61,10 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * create fragment, add it to the fragment_container
+     * @param savedInstanceState
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -96,6 +100,10 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Start an activity from here. Start it with flags FLAG_ACTIVITY_CLEAR_TOP and FLAG_ACTIVITY_SINGLE_TOP
+     * @param actClass the activity class to start
+     */
     private void goToActivity(Class actClass){
         Intent toMainIntent = new Intent(this, StarterActivity.class);
         toMainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -11,14 +11,29 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class DictSpinnerPresenter {
 
+    /**
+     * Context
+     */
     private Activity activity;
+    /**
+     * Spinner view
+     */
     private Spinner dictSpinner;
 
+    /**
+     * Store context and view
+     * @param activity
+     * @param dictSpinner
+     */
     public DictSpinnerPresenter(Activity activity, Spinner dictSpinner){
         this.activity = activity;
         this.dictSpinner = dictSpinner;
     }
 
+    /**
+     * Update adapter with all available dictionaries.
+     * Set the currently selected dictionary.
+     */
     public void updateSelectedDictionary(){
         DictionaryManagement dm = DictionaryManagement.getInstance(activity);
 
@@ -37,6 +52,10 @@ public class DictSpinnerPresenter {
         }
     }
 
+    /**
+     * Release storage of activity and spinner view.
+     * Call this, when view dictSpinner is destroyed or access to the presenter is nolonger needed.
+     */
     public void freeMe(){
         this.activity = null;
         this.dictSpinner = null;

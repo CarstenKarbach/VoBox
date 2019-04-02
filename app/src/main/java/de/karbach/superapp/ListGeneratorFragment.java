@@ -45,6 +45,10 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class ListGeneratorFragment extends Fragment {
 
+    /**
+     * Get access to all cards of the currently selected dictionary.
+     * @return list of all cards in selected dictionary, null if no dictionary is selected
+     */
     private ArrayList<Card> getAllCards(){
         Dictionary selected = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
         if(selected == null){
@@ -54,6 +58,11 @@ public class ListGeneratorFragment extends Fragment {
         return all;
     }
 
+    /**
+     * Get all cards, which match at least one of the given match strings.
+     * @param matches used as search filter
+     * @return cards, which match one of the matches filters
+     */
     private ArrayList<Card> getFilteredDictionary(List<String> matches){
         if(matches == null ||matches.size()==0){
             return new ArrayList<Card>();

@@ -16,9 +16,20 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class DictionaryAdapter extends BaseAdapter {
 
+    /**
+     * List of available dictionary names
+     */
     private String[] dictNames;
+    /**
+     * Actvity context for inflating view layout.
+     */
     private Activity activity;
 
+    /**
+     *
+     * @param dictNames List of available dictionary names
+     * @param activity context
+     */
     public DictionaryAdapter(String[] dictNames, Activity activity) {
         this.dictNames = dictNames;
         this.activity = activity;

@@ -25,8 +25,7 @@ import android.os.Bundle;
 /**
  * Created by Carsten on 28.12.2015.
  *
- * Activity showing a single card. It is used for inserting new cards
- * and for editing existing cards.
+ * Configures settings for a dictionary. You can create new dictionary or edit an existing.
  */
 public class DictionaryActivity extends SingleFragmentSaveOnPauseActivity {
     @Override

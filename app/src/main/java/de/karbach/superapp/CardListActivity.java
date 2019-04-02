@@ -54,6 +54,11 @@ public class CardListActivity extends SingleFragmentActivity {
      */
     public static final String PARAMBOX = "de.karbach.superapp.CardListActivity.box";
 
+    /**
+     * Read cards to show in this activity.
+     * Either loads cards according to PARAMBOX or cards found in the intent as SerializableExtra
+     * @return list of cards to show
+     */
     private ArrayList<Card> getCardsToShow(){
         int box = getIntent().getIntExtra(PARAMBOX, -1);
 
@@ -155,6 +160,9 @@ public class CardListActivity extends SingleFragmentActivity {
         return result;
     }
 
+    /**
+     * Tell the cardlist fragment of this activity about currently active cards to show.
+     */
     private void updateCardsInFragment(){
         CardListFragment cardlist = getMyFragment();
         if(cardlist != null){

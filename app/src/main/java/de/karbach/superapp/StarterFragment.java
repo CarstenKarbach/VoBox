@@ -56,10 +56,19 @@ import de.karbach.superapp.data.DictionaryManagement;
  */
 public class StarterFragment extends Fragment {
 
+    /**
+     * Request code for opening / loading a dictionary file
+     */
     public static  final int OPENFILECODE = 111;
 
+    /**
+     * Presenter for the dictionary spinner
+     */
     private DictSpinnerPresenter dictSpinnerPresenter;
 
+    /**
+     * Update the spinner view for the currently selected dictionary.
+     */
     public void updateSelection(){
         if(dictSpinnerPresenter != null){
             dictSpinnerPresenter.updateSelectedDictionary();

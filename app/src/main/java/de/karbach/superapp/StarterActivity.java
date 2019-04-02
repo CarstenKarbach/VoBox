@@ -44,8 +44,8 @@ import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
 
 /**
- * Entry point for this app. It shows the selected dictionary and the main activities
- * navigate go to.
+ * Entry point for this app. It shows the selected dictionary and the main activities to
+ * navigate to.
  * It also handles importing txt files as dictionaries.
  * A format like the following is accepted for import:
  *
@@ -122,13 +122,11 @@ public class StarterActivity extends SingleFragmentActivity {
         return false;
     }
 
-    /*
-         * Called from onNewIntent() for a SINGLE_TOP Activity
-         * or onCreate() for a new Activity. For onNewIntent(),
-         * remember to call setIntent() to store the most
-         * current Intent
-         *
-         */
+    /**
+     * Called from onNewIntent() for a SINGLE_TOP Activity
+     * or onCreate() for a new Activity. For onNewIntent().
+     * Import or integrate dictionaries.
+     */
     private void handleViewIntent() {
         // Get the Intent action
         Intent intent = getIntent();

@@ -35,10 +35,27 @@ import java.util.Map;
  */
 public class PictureHelper {
 
+    /**
+     * all available language IDs in German
+     */
     private List<String> allLanguages;
+    /**
+     * Resource IDs for flags to display.
+     * allFlags[0] corresponds to language allLanguages[0]
+     * allFlags[1] corresponds to language allLanguages[1]
+     * ...
+     */
     private List<Integer> allFlags;
+    /**
+     * Language to display to the user according to localization.
+     * E.g. this contains German for English localization, but Deutsch for German localization
+     */
     private List<String> allDisplayLanguages;
 
+    /**
+     * If no display name is found for a language, this name is returned
+     * Is loaded in constructur
+     */
     private String defaultDisplayLanguage;
 
     public PictureHelper(Context context){
@@ -52,6 +69,11 @@ public class PictureHelper {
         defaultDisplayLanguage = context.getResources().getString(R.string.lang_german);
     }
 
+    /**
+     * Get drawable resource id for a language id
+     * @param language language id in German
+     * @return resource ID for flag to draw for a language
+     */
     public int getDrawableResourceForLanguage(String language){
         int index = allLanguages.indexOf(language);
         if(index == -1) {
@@ -60,6 +82,11 @@ public class PictureHelper {
         return allFlags.get(index);
     }
 
+    /**
+     * Localizes language
+     * @param language German language ID
+     * @return corresponding localized display text for language
+     */
     public String getDisplaynameForLanguage(String language){
         int index = allLanguages.indexOf(language);
         if(index == -1) {

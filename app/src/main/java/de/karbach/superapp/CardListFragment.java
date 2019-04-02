@@ -68,6 +68,9 @@ public class CardListFragment extends ListFragment{
      */
     public static final int CARDCHANGERESULT = 1;
 
+    /**
+     * Generate views for all cards in the list
+     */
     public class CardAdapter extends ArrayAdapter<Card> {
 
         public String getLang1() {
@@ -243,6 +246,10 @@ public class CardListFragment extends ListFragment{
         }
     }
 
+    /**
+     * Set the cards to show. cardsAfterSearch is updated, too.
+     * @param newcards
+     */
     public void updateCards(List<Card> newcards){
         this.cards.clear();
         this.cards.addAll(newcards);
@@ -268,6 +275,10 @@ public class CardListFragment extends ListFragment{
      */
     private String lastSearch = null;
 
+    /**
+     * Filter cards by the search string.
+     * @param search the search string to match for
+     */
     public void search(String search){
         lastSearch = search;
         cardsAfterSearch.clear();
@@ -296,6 +307,10 @@ public class CardListFragment extends ListFragment{
      */
     private String lastSort = null;
 
+    /**
+     * Sort cards shown by the given language.
+     * @param language Language by which to sort the cards
+     */
     public void sortByLanguage(String language){
         lastSort = language;
         Comparator<Card> lang1Comparator = new Comparator<Card>() {

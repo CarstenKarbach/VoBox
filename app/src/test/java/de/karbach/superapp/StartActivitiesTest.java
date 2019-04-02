@@ -801,5 +801,14 @@ public class StartActivitiesTest {
         Intent data = new Intent();
         data.setData(uri);
         starterfragment.onActivityResult(StarterFragment.OPENFILECODE, Activity.RESULT_OK, data);
+
+        //Try to resume twice
+        starterfragment.onResume();
+        Spinner dictSpinner = starterfragment.getView().findViewById(R.id.language_selection);
+        String firstLanguage = dictSpinner.getSelectedItem().toString();
+        starterfragment.onResume();
+        dictSpinner = starterfragment.getView().findViewById(R.id.language_selection);
+        String secondLanguage = dictSpinner.getSelectedItem().toString();
+        assertEquals(firstLanguage, secondLanguage);
     }
 }

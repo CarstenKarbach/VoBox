@@ -55,14 +55,27 @@ import de.karbach.superapp.data.DictionaryManagement;
 /**
  * Created by Carsten on 29.12.2015.
  *
- * Show dictionary and allow to configure settings
+ * Show dictionary and allow to configure settings.
+ * Two modes: NEW for storing a new dictionary, edit for editing an existing dictionary.
  */
 public class DictionaryFragment extends Fragment{
 
+    /**
+     * Mode parameter loaded in create function
+     */
     public static String PARAMMODE = "de.karbach.superapp.DictionaryFragment.mode";
 
+    /**
+     * Available languages in German (used as ID in dictionary settings)
+     */
     public static List<String> languages;
 
+    /**
+     * Check if user is currently renaming the dictionary
+     * Compares selected dictionary name with the current name in dictionary_name edit text
+     * @param rootView
+     * @return true if user renames dictionary, false if not
+     */
     protected boolean isRenaming(View rootView){
         DictionaryManagement dm = DictionaryManagement.getInstance(getActivity());
         Dictionary selected = dm.getSelectedDictionary();
@@ -71,6 +84,11 @@ public class DictionaryFragment extends Fragment{
         return ! currentName.equals(selected.getName());
     }
 
+    /**
+     * Check if dictionary name in name view is already in use in {@link DictionaryManagement}
+     * @param rootView
+     * @return true if name is in use, false otherwise
+     */
     protected boolean nameAlreadyTaken(View rootView){
         final EditText nameview = rootView.findViewById(R.id.dictionary_name);
         if(nameview != null){
@@ -84,6 +102,12 @@ public class DictionaryFragment extends Fragment{
         return false;
     }
 
+    /**
+     * Set label for the button and enable state.
+     *
+     * @param button the button to adapt
+     * @param rootView root view of fragment
+     */
     protected void updateSaveLabel(Button button, View rootView){
         if(mode == Mode.EDIT){
             button.setText(getString(R.string.label_save));
@@ -101,6 +125,14 @@ public class DictionaryFragment extends Fragment{
         }
     }
 
+    /**
+     * Load current settings of dictionary into the view.
+     * In edit mode only the data of the currently selected dictionary can be shown.
+     * In new mode shows also dictionary data for dictionaries with the given name in name edit text
+     * E.g. load number of cards, number of boxes and languages in dict.
+     * @param fragmentView
+     * @param updateselected
+     */
     protected void reloadDictionaryData(View fragmentView, boolean updateselected){
         View view = fragmentView == null ? getView(): fragmentView;
         final EditText nameview = view.findViewById(R.id.dictionary_name);
@@ -171,10 +203,21 @@ public class DictionaryFragment extends Fragment{
         }
     }
 
+    /**
+     * Adapter for flags in language selection.
+     */
     private class FlagAdapter extends BaseAdapter {
 
+        /**
+         * List of languages to show.
+         * Usually identical to DictionaryFragment.languages
+         */
         private List<String> flags;
 
+        /**
+         *
+         * @param flags list of languages which can be selected
+         */
         public FlagAdapter(List<String> flags) {
             this.flags = flags;
         }
@@ -216,6 +259,10 @@ public class DictionaryFragment extends Fragment{
         }
     }
 
+    /**
+     * Crate flag adapter and connect it to spinner.
+     * @param rootView
+     */
     protected void setupLanguageSpinner(View rootView){
         int[] ids = new int[]{R.id.flag_selection1, R.id.flag_selection2};
         for(int id: ids) {
@@ -225,7 +272,7 @@ public class DictionaryFragment extends Fragment{
             languageSpinner.setAdapter(fa);
 
             if(id == R.id.flag_selection1){
-                int germanIndex = languages.indexOf(getString(R.string.lang_german));
+                int germanIndex = languages.indexOf("Deutsch");
                 if(germanIndex < 0){
                     germanIndex = 0;
                 }
@@ -233,7 +280,7 @@ public class DictionaryFragment extends Fragment{
             }
 
             if(id == R.id.flag_selection2){
-                int englishIndex = languages.indexOf(getString(R.string.lang_english));
+                int englishIndex = languages.indexOf("Englisch");
                 if(englishIndex < 0){
                     englishIndex = 1;
                 }
@@ -242,10 +289,18 @@ public class DictionaryFragment extends Fragment{
         }
     }
 
+    /**
+     * Mode type for this fragment's use.
+     * NEW: Create new dictionary
+     * EDIT: adapt existing dictionary
+     */
     public enum Mode {
         NEW, EDIT
     }
 
+    /**
+     * Currently active mode of this fragment
+     */
     private Mode mode = Mode.NEW;
 
     @Override
