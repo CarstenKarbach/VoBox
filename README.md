@@ -1,9 +1,32 @@
 # VoBox
 
-An Android app for learning vocabularies. You can add your own list of vocabularies to learn.
+An Android app for learning vocabulary. You can add your own list of dictionaries to learn.
 Each word mapping is saved in a card. The cards are organized in card boxes. You can test
 yourself. If your answers are right, the cards are placed in upper boxes, otherwise they
 are moved downward.
+
+![VoBox landing page](docs/start.png)
+
+## Use Cases
+
+This app can be used for
+
+- offline vocabularies for different languages
+- learning sets of technical terms for exams
+
+## Features
+
+The app supports the following features
+
+- add own word pairs
+- search in word list 
+- sharing vocabulary via file export and import
+- import dictionary from CSV file
+- create own dictionaries with arbitrary language mapping
+- train vocabulary without effect on word levels
+- test vocabulary, right answers lead to level up, wrong answers to level down
+- localization in English and German
+ 
 
 ## Getting Started
 
