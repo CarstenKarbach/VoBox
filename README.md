@@ -5,7 +5,7 @@ Each word mapping is saved in a card. The cards are organized in card boxes. You
 yourself. If your answers are right, the cards are placed in upper boxes, otherwise they
 are moved downward.
 
-![VoBox landing page](docs/start.png)
+![VoBox landing page](docs/start.png | width=300 )
 
 ## Use Cases
 
@@ -39,3 +39,5 @@ git clone https://github.com/CarstenKarbach/VoBox
 
 In Android Studio click on `Build->Make Module ... app` and wait for Gradle to build the app.
 Afterward, run the app on your target device by using the play button in the top menu bar.
+
+This project and all its resources are licensed under the [GNU General Public License v2.0](./LICENSE).
