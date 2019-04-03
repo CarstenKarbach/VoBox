@@ -5,7 +5,7 @@ Each word mapping is saved in a card. The cards are organized in card boxes. You
 yourself. If your answers are right, the cards are placed in upper boxes, otherwise they
 are moved downward.
 
-![VoBox landing page](docs/start.png | width=300 )
+![VoBox landing page](docs/start_small.png)
 
 ## Use Cases
 
