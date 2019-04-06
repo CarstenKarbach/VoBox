@@ -30,6 +30,7 @@
     <string name="toast_dict_not_created">Wörterbuch konnte nicht erstellt werden.</string>
     <string name="label_integrate_dict">in Wörterbuch integrieren</string>
     <string name="toast_error_import">Wörterbuch konnte nicht gelesen werden.</string>
+    <string name="toast_error_samelanguage">Bitte wählen Sie zwei verschiedene Sprachen. Die Änderungen wurden nicht übernommen.</string>
     <string name="checked">geprüft</string>
     <string name="toast_already_checked">Schon geprüft</string>
     <string name="toast_card_up">Karte hochgestuft</string>
@@ -73,4 +74,5 @@
     <string name="act_lists">Flexible Listen</string>
     <string name="label_boxes">Boxen</string>
     <string name="label_nrboxes">Anzahl Boxen</string>
+    <string name="alert_save_title">Änderungen speichern</string>
 </resources>

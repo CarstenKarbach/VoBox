@@ -218,4 +218,32 @@ public class DictionaryTest {
         assertEquals(3, dict.getCards().size());
         assertEquals(7, dict.getBoxcount());
     }
+
+    @Test
+    public void testSanitizeLanguages(){
+        Dictionary dict = Dictionary.loadImported("Deutsch;\nDeutsch;\nboxcount:7\n[\"ja\",\"yes\",null,null,\"1\"]\n[\"nein\",\"no\",null,null,\"1\"]\n[\"danke\",\"thank you\",null,null,\"1\"]", true);
+        assertNotEquals(dict.getBaseLanguage(), dict.getLanguage());
+
+        dict.setBaseLanguage("Deutsch");
+        dict.setLanguage("Deutsch");
+        dict.sanitizeLanguagesToDiffer();
+        assertNotEquals(dict.getBaseLanguage(), dict.getLanguage());
+
+        dict.setBaseLanguage("Deutsch");
+        dict.setLanguage("Englisch");
+        dict.sanitizeLanguagesToDiffer();
+        assertEquals("Deutsch", dict.getBaseLanguage());
+        assertEquals("Englisch", dict.getLanguage());
+
+        dict.setBaseLanguage("Französisch");
+        dict.setLanguage("Spanisch");
+        dict.sanitizeLanguagesToDiffer();
+        assertEquals("Französisch", dict.getBaseLanguage());
+        assertEquals("Spanisch", dict.getLanguage());
+
+        dict.setBaseLanguage("Französisch");
+        dict.setLanguage("Französisch");
+        dict.sanitizeLanguagesToDiffer();
+        assertNotEquals(dict.getBaseLanguage(), dict.getLanguage());
+    }
 }

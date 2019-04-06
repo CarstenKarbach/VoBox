@@ -55,6 +55,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.android.controller.ActivityController;
+import org.robolectric.annotation.Config;
 import org.robolectric.fakes.RoboMenu;
 import org.robolectric.fakes.RoboMenuItem;
 import org.robolectric.shadow.api.Shadow;
@@ -466,6 +467,17 @@ public class StartActivitiesTest {
         int res = ph.getDrawableResourceForLanguage(null);
         assertEquals(R.drawable.flag_german, res);
         assertEquals(starteractivity.getResources().getString(R.string.lang_german), ph.getDisplaynameForLanguage(null));
+    }
+
+    @Test @Config(qualifiers = "land")
+    public void startBoxActivityLandscape() {
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        dm.selectDictionary("Englisch");
+
+        ActivityController<BoxActivity> controller = Robolectric.buildActivity(BoxActivity.class);
+        controller.create().start().postCreate(null).resume();
     }
 
     @Test

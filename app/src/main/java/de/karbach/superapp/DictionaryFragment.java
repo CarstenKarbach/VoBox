@@ -18,8 +18,10 @@
 
 package de.karbach.superapp;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -368,6 +370,17 @@ public class DictionaryFragment extends Fragment{
                 Spinner boxcountSpinner = getView().findViewById(R.id.boxcountspinner);
                 String language = (String) languageSpinner.getSelectedItem();
                 String baselanguage = (String) baselanguageSpinner.getSelectedItem();
+
+                if(language != null && baselanguage != null && language.equals(baselanguage)){
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(getString(R.string.alert_save_title))
+                            .setMessage(getString(R.string.toast_error_samelanguage))
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(R.string.label_ok, null)
+                            .show();
+                    return;
+                }
+
                 int boxcount = Integer.valueOf((String) boxcountSpinner.getSelectedItem());
                 dict.setLanguage(language);
                 dict.setBaseLanguage(baselanguage);

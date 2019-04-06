@@ -31,6 +31,7 @@
     <string name="toast_dict_not_created">Could not create dictionary.</string>
     <string name="label_integrate_dict">merge into dictionary</string>
     <string name="toast_error_import">Could not read the dictionary.</string>
+    <string name="toast_error_samelanguage">Please, choose two different languages. These changes were not stored.</string>
     <string name="checked">tested</string>
     <string name="toast_already_checked">already tested</string>
     <string name="toast_card_up">card up</string>
@@ -74,4 +75,5 @@
     <string name="act_lists">Dynamic lists</string>
     <string name="label_boxes">boxes</string>
     <string name="label_nrboxes">number of boxes</string>
+    <string name="alert_save_title">save changes</string>
 </resources>

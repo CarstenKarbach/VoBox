@@ -17,12 +17,17 @@
  */
 package de.karbach.superapp;
 
+import android.app.AlertDialog;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
+import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowToast;
 
 import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
@@ -70,5 +75,38 @@ public class DictionaryFragmentTest {
         card.boxUp(activity);
         assertEquals(3, card.getBox());
 
+    }
+
+    @Test
+    public void testSaveSameLanguages(){
+        Dictionary dict = new Dictionary("mydict");
+        DictionaryActivity activity = Robolectric.buildActivity(DictionaryActivity.class).setup().get();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(activity);
+        dm.addDictionaryObject(dict);
+        dm.selectDictionary("mydict");
+
+        Spinner languageSpinner = activity.findViewById(R.id.flag_selection2);
+        Spinner baselanguageSpinner = activity.findViewById(R.id.flag_selection1);
+
+        languageSpinner.setSelection(0);
+        baselanguageSpinner.setSelection(0);
+
+        final Button saveButton = activity.findViewById(R.id.save_button);
+        saveButton.performClick();
+
+        AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+        ShadowAlertDialog shadowAlert = Shadows.shadowOf(dialog);
+        assertEquals(activity.getResources().getString(R.string.toast_error_samelanguage), shadowAlert.getMessage());
+
+        //Try to successfully save
+        ShadowAlertDialog.reset();
+
+        baselanguageSpinner.setSelection(1);
+        saveButton.performClick();
+
+        dialog = ShadowAlertDialog.getLatestAlertDialog();
+
+        assertNull(dialog);
     }
 }
