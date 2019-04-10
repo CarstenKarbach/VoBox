@@ -29,9 +29,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.karbach.superapp.R;
 import de.karbach.superapp.StarterActivity;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -245,5 +248,21 @@ public class DictionaryTest {
         dict.setLanguage("Französisch");
         dict.sanitizeLanguagesToDiffer();
         assertNotEquals(dict.getBaseLanguage(), dict.getLanguage());
+    }
+
+    @Test
+    public void testSanitizeWithAllowedValues(){
+        Dictionary dict = new Dictionary("sanit");
+        dict.setBaseLanguage("Abc");
+        dict.setLanguage("DEF");
+        List<String> allowed = Arrays.asList(new String[]{"Abc", "DEF"});
+        dict.sanitizeLanguagesWithAllowedValues(allowed);
+        assertEquals("Abc", dict.getBaseLanguage());
+        assertEquals("DEF", dict.getLanguage());
+
+        allowed = Arrays.asList(new String[]{"Deutsch", "Englisch"});
+        dict.sanitizeLanguagesWithAllowedValues(allowed);
+        assertNotEquals("Abc", dict.getBaseLanguage());
+        assertNotEquals("DEF", dict.getLanguage());
     }
 }

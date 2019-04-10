@@ -38,6 +38,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
@@ -152,6 +153,10 @@ public class StarterActivity extends SingleFragmentActivity {
             if (TextUtils.equals(dataUri.getScheme(), "file") || TextUtils.equals(dataUri.getScheme(), "content")) {
                 final Dictionary loaded = Dictionary.loadFromUri(dataUri, false, this);
                 if(loaded != null){
+                    //Make sure, languages are chosen from all_languages
+                    loaded.sanitizeLanguagesWithAllowedValues(Arrays.asList( this.getResources().getStringArray(R.array.all_languages_array) ));
+                    loaded.sanitizeLanguagesToDiffer();
+
                     AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                     final Context context = this;
                     alertDialog.setTitle(getString(R.string.import_dict));
