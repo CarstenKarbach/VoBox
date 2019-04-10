@@ -162,6 +162,32 @@ public class StartActivitiesTest {
     }
 
     @Test
+    public void testIntentIsClearedOnDialogClick(){
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        Intent intent = new Intent(starteractivity,StarterActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
+        Dictionary dict = dm.getDictionary("Englisch");
+
+        assertNotNull(dict);
+        File savedFile = dict.exportToFile("mystartintent.txt", starteractivity, false);
+        Uri uri = Uri.fromFile(savedFile);
+        intent.setData(uri);
+        ActivityController<StarterActivity> actController = Robolectric.buildActivity(StarterActivity.class);
+        actController.get().setIntent(intent);
+        StarterActivity intendedActivity = actController.create().get();
+
+        assertNotNull( intendedActivity.getIntent().getAction() );
+
+        //Click on buttons of alert dialog
+        AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+
+        assertNull( intendedActivity.getIntent().getAction() );
+    }
+
+    @Test
     public void testStartStarterActivityWithIntents(){
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
 
@@ -823,4 +849,6 @@ public class StartActivitiesTest {
         String secondLanguage = dictSpinner.getSelectedItem().toString();
         assertEquals(firstLanguage, secondLanguage);
     }
+
+
 }

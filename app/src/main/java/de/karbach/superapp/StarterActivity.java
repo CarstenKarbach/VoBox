@@ -123,6 +123,13 @@ public class StarterActivity extends SingleFragmentActivity {
     }
 
     /**
+     * Remove action from my intent to make to sure, that it is now longer used or handled
+     */
+    private void clearIntentAction(){
+        getIntent().setAction(null);
+    }
+
+    /**
      * Called from onNewIntent() for a SINGLE_TOP Activity
      * or onCreate() for a new Activity. For onNewIntent().
      * Import or integrate dictionaries.
@@ -131,6 +138,7 @@ public class StarterActivity extends SingleFragmentActivity {
         // Get the Intent action
         Intent intent = getIntent();
         String action = intent.getAction();
+
         /*
          * For ACTION_VIEW, the Activity is being asked to display data.
          * Get the URI.
@@ -150,6 +158,8 @@ public class StarterActivity extends SingleFragmentActivity {
                     alertDialog.setMessage(getString(R.string.question_how_import));
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.label_as_new), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            StarterActivity.this.clearIntentAction();
+
                             DictionaryManagement dm = DictionaryManagement.getInstance(context);
                             String loadedname = loaded.getName();
                             String newname = loadedname;
@@ -176,6 +186,8 @@ public class StarterActivity extends SingleFragmentActivity {
 
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.label_integrate_dict), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            StarterActivity.this.clearIntentAction();
+
                             //Show dicionary selection dialog
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                             Fragment prev = getFragmentManager().findFragmentByTag("dialog");
