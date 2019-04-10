@@ -130,7 +130,7 @@ public class CardListFragment extends ListFragment{
             Card c = getItem(position);
 
             if(langtext1 != null) {
-                if(lang1.equals(baseLanguage)) {
+                if(lang1 != null && lang1.equals(baseLanguage)) {
                     langtext1.setText(c.getLang1());
                 }
                 else {
@@ -139,7 +139,7 @@ public class CardListFragment extends ListFragment{
             }
 
             if(langtext2 != null) {
-                if(lang2.equals(baseLanguage)) {
+                if(lang2 != null && lang2.equals(baseLanguage)) {
                     langtext2.setText(c.getLang1());
                 }
                 else {
