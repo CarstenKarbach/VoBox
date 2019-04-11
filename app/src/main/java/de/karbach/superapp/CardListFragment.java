@@ -299,6 +299,8 @@ public class CardListFragment extends ListFragment{
 
         CardAdapter adapter = (CardAdapter)getListAdapter();
         adapter.notifyDataSetChanged();
+
+        getActivity().setTitle(search);
     }
 
     /**

@@ -48,7 +48,7 @@
                 android:value="de.karbach.superapp.StarterActivity" />
         </activity>
         <activity android:name=".CardListActivity"
-                  android:label="@string/act_listdict"
+                  android:label=""
                 android:launchMode="singleTop"
                   android:parentActivityName=".StarterActivity" >
             <meta-data

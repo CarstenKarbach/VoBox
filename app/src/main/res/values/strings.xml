@@ -76,4 +76,6 @@
     <string name="label_boxes">boxes</string>
     <string name="label_nrboxes">number of boxes</string>
     <string name="alert_save_title">save changes</string>
+    <string name="github_link">https://github.com/CarstenKarbach/VoBox</string>
+    <string name="info">info</string>
 </resources>

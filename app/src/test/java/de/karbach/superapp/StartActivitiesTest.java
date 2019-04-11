@@ -162,6 +162,18 @@ public class StartActivitiesTest {
     }
 
     @Test
+    public void testClickInfoButton() {
+        StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+        MenuItem infobutton = new RoboMenuItem(R.id.menu_item_info);
+        ShadowActivity shadow = Shadows.shadowOf(starteractivity);
+        shadow.clearNextStartedActivities();
+        assertNull(shadow.getNextStartedActivity());
+        starteractivity.onOptionsItemSelected(infobutton);
+
+        assertNotNull(shadow.getNextStartedActivity());
+    }
+
+    @Test
     public void testIntentIsClearedOnDialogClick(){
         StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
 

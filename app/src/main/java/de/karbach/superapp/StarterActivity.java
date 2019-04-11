@@ -28,8 +28,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -230,6 +234,32 @@ public class StarterActivity extends SingleFragmentActivity {
 
     @Override
     protected boolean addOptions() {
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean result =  super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        if(inflater != null){
+            inflater.inflate(R.menu.info_menu, menu);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_item_info:
+                Intent linkIntent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.parse(getString(R.string.github_link));
+                linkIntent.setData(uri);
+                startActivity(linkIntent);
+                return true;
+        }
+
         return false;
     }
 }
