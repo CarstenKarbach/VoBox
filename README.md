@@ -56,3 +56,130 @@ Afterward, run the app on your target device by using the play button in the top
 
 This project and all its resources are licensed under the [GNU General Public License v2.0](./LICENSE).
 
+## Manual
+
+This section serves as short user manual for key functions of the app.
+
+### Create your own dictionary
+
+You can create as many dictionaries as you like. E.g. for every language combination you would like to learn such
+as `English - French` or `Russian - Swedish` and even multiple dictionaries for the same langauge combination. In the
+latter case you can create dictionaries for every lesson in a book or for every chapter.
+
+New dictionaries are created by starting on the start screen. Click on the three blue bars next to the currently
+selected dictionary.
+
+![Dictionary Settings Popup](docs/en/new_dict1.png)
+
+From here, click on `new` for creating a new dictionary.
+
+![Create New Dictionary](docs/en/new_dict2.png)
+
+Choose a name, the base language and the language you are learning. Configure the number of
+card boxes and click on `ADD`. With that your new dictionary is created and you can start adding vocabulary.
+
+### Import dictionaries
+
+Adding hundreds of words on your mobile phone can be tedious work. Therefore, VoBox allows
+importing dictionaries created with spread sheets (e.g. with LibreOffice or Microsoft Office). To import a
+dictionary, create a CSV file in the format described below, then send it to your phone and open the file
+with the VoBox app.
+
+A dictionary in a spread sheet should look like this:
+
+| Deutsch  | Englisch |
+| -------- | -------- |
+| ja       | yes      |
+| nein     | no       |
+| nur      | just     |
+| ein      | a        |
+| Beispiel | example  |
+
+The first row needs to hold the language names. In the example above `Deutsch` is the base language
+and `Englisch` the language, which you would like to learn. These languages can be adapted while importing
+the dictionary into VoBox. You could also use `Language 1` and `Language 2` and choose the languages manually
+while importing, but the first row is required. Every following row holds a pair of words, the word in the first
+language in the first column, followed by its translation in the second column. 
+
+This file needs to be stored as CSV file with these properties:
+- Encoding: `UTF-8`
+- Delimiter between cells: `;`
+- File ending: `.csv`
+
+The above example should look like this in a plain text editor:
+
+```
+Deutsch;Englisch
+ja;yes
+nein;no
+nur;just
+ein;a
+Beispiel;example
+```
+
+Send this file to your mobile device and open it with VoBox. You can import it in two modes:
+- as new dictionary: a new dictionary is created with the imported words
+- merge into dictionary: choose an existing dictionary and add new words into it
+
+An example dictionary to import can be found here: ![de_en.csv](docs/example_dictionaries/de_en.csv)
+
+Here is a list of currently supported languages (use the German language names in the first row of your spread sheet):
+- Bulgarisch
+- Dänisch
+- Deutsch
+- Englisch
+- Estnisch
+- Finnisch
+- Französisch
+- Griechisch
+- Hindi
+- Irisch
+- Italienisch
+- Kroatisch
+- Litauisch
+- Maltesisch
+- Mandarin
+- Niederländisch
+- Polnisch
+- Portugiesisch
+- Rumänisch
+- Russisch
+- Schwedisch
+- Slowakisch
+- Slowenisch
+- Spanisch
+- Tschechisch
+- Ungarisch
+- Andere
+
+If you would like to have a language added, just send me a message or even better fork this repository, add the language and
+submit a merge request.
+
+#### Import in action
+
+Once the CSV file is send to your device, you can open and import it into VoBox. Please, find a step by step
+guide for importing a file below:
+
+- Find the file on your device and select it
+
+![Find the file](docs/en/import_csv1.png)
+
+- Choose the import mode for your dictionary
+
+![Choose import mode](docs/en/import_csv2.png)
+
+- Configure your dictionary
+
+![Configure new dictionary](docs/en/import_csv3.png)
+
+- Configure your dictionary
+
+![Configure new dictionary](docs/en/import_csv3.png)
+
+- Start learning with your new dictionary
+
+![Card boxes of new dictionary](docs/en/import_csv4.png)
+
+- Edit, manage, search in your dictionary
+
+![Card list](docs/en/import_csv5.png)
