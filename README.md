@@ -69,11 +69,11 @@ for multiple chapters of a book.
 New dictionaries are created by starting on the start screen. Click on the three blue bars next to the currently
 selected dictionary.
 
-<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/new_dict1.png">
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/new_dict1.png"/>
 
 From here, click on `new` for creating a new dictionary.
 
-<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/new_dict2.png">
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/new_dict2.png"/>
 
 Choose a name, the base language and the language you are learning. Configure the number of
 card boxes and click on `ADD`. With that your new dictionary is created and you can start adding vocabulary.
@@ -163,13 +163,13 @@ Creating a CSV file with a spread sheet should roughly look like this:
 
 - 1. Create your table with words in two columns, first row containing the language names
 
-<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv1.png">
+<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv1.png"/>
 
 - 2. Store the file as CSV with the properties given above
 
-<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv2.png">
+<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv2.png"/>
 
-<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv3.png">
+<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv3.png"/>
 
 #### Import in action
 
@@ -178,21 +178,21 @@ guide for importing a file below:
 
 - 1. Find the file on your device and select it
 
-<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv1.png">
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv1.png"/>
 
 - 2. Choose the import mode for your dictionary
 
-<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv2.png">
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv2.png"/>
 
 - 3. Configure your dictionary
 
-<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv3.png">
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv3.png"/>
 
 - 4. Start learning with your new dictionary
 
-<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv4.png">
-![Card boxes of new dictionary](docs/en/import_csv4.png)
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv4.png"/>
+
 
 - 5. Edit, manage, search in your dictionary
 
-<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv5.png">
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv5.png"/>
