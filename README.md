@@ -118,8 +118,8 @@ Beispiel;example
 ```
 
 Send this file to your mobile device and open it with VoBox. You can import it in two modes:
-- as new dictionary: a new dictionary is created with the imported words
-- merge into dictionary: choose an existing dictionary and add new words into it
+- `as new dictionary` a new dictionary is created with the imported words
+- `merge into dictionary` choose an existing dictionary and add new words into it
 
 An example dictionary to import can be found here: [de_en.csv](docs/example_dictionaries/de_en.csv)
 
@@ -167,9 +167,9 @@ Creating a CSV file with a spread sheet should roughly look like this:
 
 - 2. Store the file as CSV with the properties given above
 
-<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv2.png"/>
+<img width="400" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv2.png"/>
 
-<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv3.png"/>
+<img width="400" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv3.png"/>
 
 #### Import in action
 
