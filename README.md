@@ -63,17 +63,17 @@ This section serves as short user manual for key functions of the app.
 ### Create your own dictionary
 
 You can create as many dictionaries as you like. E.g. for every language combination you would like to learn such
-as `English - French` or `Russian - Swedish` and even multiple dictionaries for the same langauge combination. In the
-latter case you can create dictionaries for every lesson in a book or for every chapter.
+as `English - French` or `Russian - Swedish` and even multiple dictionaries for the same langauge combination, e.g.
+for multiple chapters of a book.
 
 New dictionaries are created by starting on the start screen. Click on the three blue bars next to the currently
 selected dictionary.
 
-![Dictionary Settings Popup](docs/en/new_dict1.png)
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/new_dict1.png">
 
 From here, click on `new` for creating a new dictionary.
 
-![Create New Dictionary](docs/en/new_dict2.png)
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/new_dict2.png">
 
 Choose a name, the base language and the language you are learning. Configure the number of
 card boxes and click on `ADD`. With that your new dictionary is created and you can start adding vocabulary.
@@ -121,9 +121,9 @@ Send this file to your mobile device and open it with VoBox. You can import it i
 - as new dictionary: a new dictionary is created with the imported words
 - merge into dictionary: choose an existing dictionary and add new words into it
 
-An example dictionary to import can be found here: ![de_en.csv](docs/example_dictionaries/de_en.csv)
+An example dictionary to import can be found here: [de_en.csv](docs/example_dictionaries/de_en.csv)
 
-Here is a list of currently supported languages (use the German language names in the first row of your spread sheet):
+This is a list of currently supported languages (use the German language names in the first row of your spread sheet):
 - Bulgarisch
 - Dänisch
 - Deutsch
@@ -153,33 +153,46 @@ Here is a list of currently supported languages (use the German language names i
 - Andere
 
 If you would like to have a language added, just send me a message or even better fork this repository, add the language and
-submit a merge request.
+submit a merge request. To start with, the list of languages is defined in [languages.xml](app/src/main/res/values/languages.xml),
+language flags are placed into the [drawable](app/src/main/res/drawable) folder and the mapping of language to corresponding 
+drawable image is also configured in the [languages.xml](app/src/main/res/values/languages.xml) file.
+
+#### Creating a CSV file
+
+Creating a CSV file with a spread sheet should roughly look like this:
+
+- 1. Create your table with words in two columns, first row containing the language names
+
+<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv1.png">
+
+- 2. Store the file as CSV with the properties given above
+
+<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv2.png">
+
+<img width="200" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/save_csv3.png">
 
 #### Import in action
 
 Once the CSV file is send to your device, you can open and import it into VoBox. Please, find a step by step
 guide for importing a file below:
 
-- Find the file on your device and select it
+- 1. Find the file on your device and select it
 
-![Find the file](docs/en/import_csv1.png)
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv1.png">
 
-- Choose the import mode for your dictionary
+- 2. Choose the import mode for your dictionary
 
-![Choose import mode](docs/en/import_csv2.png)
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv2.png">
 
-- Configure your dictionary
+- 3. Configure your dictionary
 
-![Configure new dictionary](docs/en/import_csv3.png)
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv3.png">
 
-- Configure your dictionary
+- 4. Start learning with your new dictionary
 
-![Configure new dictionary](docs/en/import_csv3.png)
-
-- Start learning with your new dictionary
-
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv4.png">
 ![Card boxes of new dictionary](docs/en/import_csv4.png)
 
-- Edit, manage, search in your dictionary
+- 5. Edit, manage, search in your dictionary
 
-![Card list](docs/en/import_csv5.png)
+<img width="320" src="https://github.com/CarstenKarbach/VoBox/raw/master/docs/en/import_csv5.png">
