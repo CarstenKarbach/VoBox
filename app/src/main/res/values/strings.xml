@@ -78,4 +78,9 @@
     <string name="alert_save_title">save changes</string>
     <string name="github_link">https://github.com/CarstenKarbach/VoBox</string>
     <string name="info">info</string>
+    <string name="label_translate">translate</string>
+    <string name="translation_header">Translation:</string>
+    <string name="label_translate_next">next</string>
+    <string name="label_translate_back">back</string>
+    <string name="no_translation_found">No translation found</string>
 </resources>

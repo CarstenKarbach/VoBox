@@ -9,10 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:paddingTop="32dp"
-        android:paddingBottom="32dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:orientation="vertical"
         android:id="@+id/cardframe"
         >
@@ -33,12 +33,20 @@
                 />
             <EditText
                 android:id="@+id/lang1_text"
-                android:layout_weight="80"
+                android:layout_weight="70"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/search_hint"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
+                />
+            <ProgressBar
+                android:layout_weight="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                android:id="@+id/lang1_translation_progress"
                 />
         </TableRow>
 
@@ -58,12 +66,63 @@
                 />
             <EditText
                 android:id="@+id/lang2_text"
-                android:layout_weight="80"
+                android:layout_weight="70"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/label_translation"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
+                />
+            <ProgressBar
+                android:layout_weight="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                android:id="@+id/lang2_translation_progress"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:id="@+id/translation_bar"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/translation_header"
+                android:paddingRight="4dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/found_translations"
+                android:text="0/0"
+                android:paddingRight="4dp"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/translate_next"
+                android:text="@string/label_translate_next"
+                style="@style/BlueButton"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/translate_back"
+                android:text="@string/label_translate_back"
+                style="@style/BlueButton"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/translate_done"
+                android:text="@string/label_ok"
+                style="@style/BlueButton"
                 />
         </TableRow>
 
@@ -82,6 +141,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/save_button"
             android:text="@string/label_save"
+            style="@style/BlueButton"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/translate_button"
+            android:text="@string/label_translate"
+            android:visibility="gone"
             style="@style/BlueButton"
             />
         <Button

@@ -23,18 +23,27 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+import java.util.Map;
+
+import de.karbach.superapp.data.AutoTranslator;
 import de.karbach.superapp.data.Card;
 import de.karbach.superapp.data.Dictionary;
 import de.karbach.superapp.data.DictionaryManagement;
@@ -71,6 +80,21 @@ public class CardFragment extends Fragment {
      */
     private String lang1Key = null;
 
+    /**
+     * Received translations
+     */
+    private List<String> translations = null;
+
+    /**
+     * Position in translations, which is currently shown
+     */
+    private int translationPos = -1;
+
+    /**
+     * language name, for which the edit box can be adapted
+     */
+    private String translationTargetLanguage=null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +104,47 @@ public class CardFragment extends Fragment {
         Bundle arguments = getArguments();
         if(arguments != null) {
             lang1Key = arguments.getString(PARAMLANG1KEY);
+        }
+    }
+
+    /**
+     * Reset translations state. Make translation bar invisible
+     * @param rootView current root view of the fragment
+     */
+    protected void clearTranslations(View rootView){
+        final TableRow translationBar = rootView.findViewById(R.id.translation_bar);
+        translationBar.setVisibility(View.GONE);
+        translations = null;
+        translationPos = -1;
+        final ProgressBar lang1Progress = rootView.findViewById(R.id.lang1_translation_progress);
+        final ProgressBar lang2Progress = rootView.findViewById(R.id.lang2_translation_progress);
+        lang1Progress.setVisibility(View.INVISIBLE);
+        lang2Progress.setVisibility(View.INVISIBLE);
+        translationTargetLanguage=null;
+    }
+
+    /**
+     * Display currently selected translation
+     */
+    protected void showCurrentTranslation(){
+        View rootView = getView();
+        TextView transStats = rootView.findViewById(R.id.found_translations);
+        if(translations != null) {
+            transStats.setText( (translationPos+1) + "/" + translations.size());
+        }
+        else{
+            transStats.setText("0/0");
+        }
+        Dictionary cdict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
+        if(cdict != null){
+            TextView targetField = null;
+            if(cdict.getBaseLanguage().equals(translationTargetLanguage)){
+                targetField = rootView.findViewById(R.id.lang1_text);
+            }
+            else{
+                targetField = rootView.findViewById(R.id.lang2_text);
+            }
+            targetField.setText(translations.get(translationPos));
         }
     }
 
@@ -110,6 +175,133 @@ public class CardFragment extends Fragment {
 
         final TextView lang1 = (TextView) result.findViewById(R.id.lang1_text);
         final TextView lang2 = (TextView) result.findViewById(R.id.lang2_text);
+
+        final Button translate = (Button) result.findViewById(R.id.translate_button);
+        //Progress bars for translations
+        final ProgressBar lang1Progress = result.findViewById(R.id.lang1_translation_progress);
+        final ProgressBar lang2Progress = result.findViewById(R.id.lang2_translation_progress);
+        final TableRow translationBar = result.findViewById(R.id.translation_bar);
+        //Needed to position the translation bar
+        final LinearLayout cardFrame = result.findViewById(R.id.cardframe);
+        clearTranslations(result);
+
+        translate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearTranslations(CardFragment.this.getView());
+
+                AutoTranslator translator = new AutoTranslator();
+                String word = lang1.getText().toString();
+                Dictionary cdict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
+                String sourceLang = "Englisch";
+                String targetLang = "Deutsch";
+                TextView ctarget = lang2;
+                ProgressBar cprogress = lang2Progress;
+                int ctranslationBarPosition = 2;
+                if(cdict != null){
+                    sourceLang = cdict.getBaseLanguage();
+                    targetLang = cdict.getLanguage();
+                }
+                if(lang2.hasFocus()){
+                    word = lang2.getText().toString();
+                    sourceLang = cdict.getLanguage();
+                    targetLang = cdict.getBaseLanguage();
+                    ctarget = lang1;
+                    cprogress = lang1Progress;
+                    ctranslationBarPosition = 1;
+                }
+                //Text field, where new translations are placed
+                final TextView targetForTranslation = ctarget;
+                //Progress bar for targetForTranslation
+                final ProgressBar translationProgressbar = cprogress;
+                //Position where to add the translation bar
+                final int translationBarPosition = ctranslationBarPosition;
+
+                translationTargetLanguage = targetLang;
+                translationProgressbar.setVisibility(View.VISIBLE);
+                //Start asynch task and come back by callback
+                translator.startTranslation(word, sourceLang, targetLang, new AutoTranslator.TranslationReceiver() {
+                    @Override
+                    public void receiveTranslation(List<String> translations) {
+                        translationProgressbar.setVisibility(View.INVISIBLE);
+                        if(translations == null || translations.size() == 0){
+                            Toast.makeText(getActivity(), getString(R.string.no_translation_found), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        CardFragment.this.translations = translations;
+                        translationPos = 0;
+
+                        cardFrame.removeView(translationBar);
+                        cardFrame.addView(translationBar, translationBarPosition);
+                        translationBar.setVisibility(View.VISIBLE);
+                        showCurrentTranslation();
+                    }
+                });
+            }
+        });
+        //Show next possible translation
+        Button nextTranslation = result.findViewById(R.id.translate_next);
+        nextTranslation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(translations == null){
+                    return;
+                }
+                translationPos++;
+                if(translationPos >= translations.size()){
+                    translationPos = 0;
+                }
+                showCurrentTranslation();
+            }
+        });
+        //Show previous translation
+        Button backTranslation = result.findViewById(R.id.translate_back);
+        backTranslation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(translations == null){
+                    return;
+                }
+                translationPos--;
+                if(translationPos < 0){
+                    translationPos = translations.size()-1;
+                }
+                showCurrentTranslation();
+            }
+        });
+        //Close translation bar
+        Button translationDone = result.findViewById(R.id.translate_done);
+        translationDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(translations == null){
+                    return;
+                }
+                clearTranslations(getView());
+            }
+        });
+
+        TextWatcher translateVisibleWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int visible = View.VISIBLE;
+                if( (lang1.getText() == null || lang1.getText().toString().length() == 0) &&
+                        (lang2.getText() == null || lang2.getText().toString().length() == 0)){
+                    visible = View.GONE;
+                }
+                translate.setVisibility(visible);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        lang1.addTextChangedListener(translateVisibleWatcher);
+        lang2.addTextChangedListener(translateVisibleWatcher);
 
         if(card != null){
             if(lang1 != null){
@@ -182,6 +374,10 @@ public class CardFragment extends Fragment {
                         result.putExtra(PARAMLANG1KEY, lang1Key);//Return the new identifier of the card
                         getActivity().setResult(Activity.RESULT_OK, result);
                     }
+
+                    translationBar.setVisibility(View.GONE);
+                    translations = null;
+                    translationPos = -1;
                 }
             });
         }
