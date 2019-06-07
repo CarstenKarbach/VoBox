@@ -158,7 +158,6 @@ public class DictionaryTest {
 
     @Test
     public void testSaveAndLoad(){
-        ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
         StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
         Dictionary dict = new Dictionary("test");
         Card card1 = new Card("a", "b");

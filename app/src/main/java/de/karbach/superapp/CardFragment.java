@@ -126,7 +126,7 @@ public class CardFragment extends Fragment {
     /**
      * Display currently selected translation
      */
-    protected void showCurrentTranslation(){
+    public void showCurrentTranslation(){
         View rootView = getView();
         TextView transStats = rootView.findViewById(R.id.found_translations);
         if(translations != null) {
@@ -144,7 +144,12 @@ public class CardFragment extends Fragment {
             else{
                 targetField = rootView.findViewById(R.id.lang2_text);
             }
-            targetField.setText(translations.get(translationPos));
+            if(translations == null) {
+                targetField.setText("");
+            }
+            else {
+                targetField.setText(translations.get(translationPos));
+            }
         }
     }
 

@@ -48,8 +48,10 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -65,6 +67,7 @@ import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowContentResolver;
 import org.robolectric.shadows.ShadowEnvironment;
 import org.robolectric.shadows.ShadowPopupMenu;
+import org.robolectric.shadows.ShadowToast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,6 +85,7 @@ import static org.junit.Assert.*;
  * Start all activities you can find. Run basic behaviour on each activity.
  */
 @RunWith(RobolectricTestRunner.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StartActivitiesTest {
 
     @Test
@@ -264,6 +268,77 @@ public class StartActivitiesTest {
         }
 
         controller.visible().pause();
+    }
+
+    @Test
+    public void translationInCardFragment(){
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        CardActivity cardactivity = Robolectric.buildActivity(CardActivity.class).setup().get();
+
+        DictionaryManagement dm = DictionaryManagement.getInstance(cardactivity);
+        dm.selectDictionary("Englisch");
+
+        Button next = (Button) cardactivity.findViewById(R.id.translate_next);
+        next.performClick();
+        Button back = (Button) cardactivity.findViewById(R.id.translate_back);
+        back.performClick();
+        Button transdone = (Button) cardactivity.findViewById(R.id.translate_done);
+        transdone.performClick();
+
+        CardFragment cf = (CardFragment) cardactivity.getFragmentManager().findFragmentById(R.id.fragment_container);
+        cf.showCurrentTranslation();
+
+        final TextView lang1 = (TextView) cardactivity.findViewById(R.id.lang1_text);
+        lang1.setText("");
+
+        assertEquals("", lang1.getText().toString());
+
+        final TextView lang2 = (TextView) cardactivity.findViewById(R.id.lang2_text);
+        lang2.setText("example");
+        lang2.setFocusableInTouchMode(true);
+        lang2.requestFocus();
+
+        Button translate = (Button) cardactivity.findViewById(R.id.translate_button);
+        translate.performClick();
+
+        Robolectric.flushBackgroundThreadScheduler();
+
+        assertNotEquals("", lang1.getText().toString());
+
+        //Translate in other direction
+        lang1.setText("Physik");
+        lang1.setFocusableInTouchMode(true);
+        lang1.requestFocus();
+
+        lang2.setText("");
+
+        translate.performClick();
+        Robolectric.flushBackgroundThreadScheduler();
+        assertNotEquals("", lang2.getText().toString());
+
+        next.performClick();
+
+        back.performClick();
+
+        for(int i=0; i<100; i++){
+            next.performClick();
+        }
+        for(int i=0; i<100; i++){
+            back.performClick();
+        }
+
+        transdone.performClick();
+
+        //No translation
+        lang1.setText("lkasldkasolaksdla");
+        lang1.setFocusableInTouchMode(true);
+        lang1.requestFocus();
+
+        ShadowToast.reset();
+        assertNull(ShadowToast.getLatestToast());
+        translate.performClick();
+        assertNotNull(ShadowToast.getLatestToast());
     }
 
     @Test
@@ -792,7 +867,9 @@ public class StartActivitiesTest {
     }
 
     @Test
-    public void testStarterFragment(){
+    public void firstTestStarterFragment(){
+        ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
+
         StarterActivity starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
 
         DictionaryManagement dm = DictionaryManagement.getInstance(starteractivity);
@@ -816,6 +893,8 @@ public class StartActivitiesTest {
         dm.addDictionaryObject(dict);
         dm.selectDictionary("newtesttest");
 
+        dm.getSelectedDictionary().sendExportedDictionary(starteractivity);
+
         starteractivity = Robolectric.buildActivity(StarterActivity.class).setup().get();
 
         Button newCardButton = starteractivity.findViewById(R.id.newcard_button);
@@ -830,6 +909,7 @@ public class StartActivitiesTest {
         actionsButton = starteractivity.findViewById(R.id.actions_button);
         actionsButton.performClick();
         popMenu = ShadowPopupMenu.getLatestPopupMenu();
+
         for(int id: ids) {
             MenuItem menuitem = new RoboMenuItem(id);
             Shadows.shadowOf(popMenu).getOnMenuItemClickListener().onMenuItemClick(menuitem);
