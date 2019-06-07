@@ -9,6 +9,7 @@ import org.xml.sax.InputSource;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,11 +35,17 @@ import javax.xml.xpath.XPathFactory;
  */
 public class AutoTranslator {
 
+    public enum RETURN_CODES{
+        SUCCESS,//Translations found
+        NO_NETWORK, //No network connection
+        ERROR //Some other error occurred
+    }
+
     /**
      * Callback interface for finished translations
      */
     public static interface TranslationReceiver{
-        public void receiveTranslation(List<String> translations);
+        public void receiveTranslation(List<String> translations, RETURN_CODES rc);
     }
 
     /**
@@ -51,6 +58,9 @@ public class AutoTranslator {
         private TranslationReceiver receiver;
         //If this is true, translation is searched on the right side of the table, otherwise on the left side
         private boolean translationIsRight=true;
+
+        // Stores return code for the task
+        private RETURN_CODES rc;
 
         /**
          *
@@ -81,6 +91,7 @@ public class AutoTranslator {
                 nodes = (NodeList) xpath.evaluate(expression, inputSrc, XPathConstants.NODESET);
             }
             catch(XPathExpressionException exception){
+                rc = RETURN_CODES.ERROR;
                 return null;
             }
 
@@ -125,16 +136,22 @@ public class AutoTranslator {
                 url = new URL(endpoint);
             }
             catch(MalformedURLException exception){
+                rc = RETURN_CODES.ERROR;
                 return null;
             }
             HttpURLConnection urlConnection = null;
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                rc = RETURN_CODES.SUCCESS;
                 List<String> result = readTranslations(in);
                 return result;
             }
             catch(IOException exception){
+                rc = RETURN_CODES.NO_NETWORK;
+                if(exception instanceof FileNotFoundException){
+                    rc = RETURN_CODES.ERROR;
+                }
                 return null;
             } finally {
                 if(urlConnection!=null){
@@ -146,7 +163,7 @@ public class AutoTranslator {
         @Override
         protected void onPostExecute(List<String> result) {
             super.onPostExecute(result);
-            receiver.receiveTranslation(result);
+            receiver.receiveTranslation(result, rc);
         }
     }
 

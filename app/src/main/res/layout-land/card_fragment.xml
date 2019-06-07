@@ -103,6 +103,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/translation_header"
                     android:paddingRight="4dp"
+                    android:layout_gravity="center_vertical"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -110,27 +111,48 @@
                     android:id="@+id/found_translations"
                     android:text="0/0"
                     android:paddingRight="4dp"
+                    android:layout_gravity="center_vertical"
                     />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/translate_next"
-                    android:text="@string/label_translate_next"
-                    style="@style/BlueButton"
-                    />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/fa_arrow_left"
+                    android:scaleType="fitCenter"
+                    android:background="@color/colorPrimary"
+                    android:padding="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:id="@+id/translate_back"
-                    android:text="@string/label_translate_back"
-                    style="@style/BlueButton"
                     />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/fa_arrow_right"
+                    android:scaleType="fitCenter"
+                    android:background="@color/colorPrimary"
+                    android:padding="4dp"
+                    android:layout_marginRight="4dp"
+                    android:id="@+id/translate_next"
+                    />
+                <ImageButton
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/fa_check"
+                    android:scaleType="fitCenter"
+                    android:background="@color/colorPrimary"
+                    android:padding="4dp"
+                    android:layout_marginRight="4dp"
                     android:id="@+id/translate_done"
-                    android:text="@string/label_ok"
-                    style="@style/BlueButton"
+                    />
+                <ImageButton
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/fa_close"
+                    android:scaleType="fitCenter"
+                    android:background="@color/colorPrimary"
+                    android:padding="4dp"
+                    android:layout_marginRight="4dp"
+                    android:id="@+id/translate_decline"
                     />
             </TableRow>
 

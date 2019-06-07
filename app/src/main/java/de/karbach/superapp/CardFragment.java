@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -227,9 +228,13 @@ public class CardFragment extends Fragment {
                 //Start asynch task and come back by callback
                 translator.startTranslation(word, sourceLang, targetLang, new AutoTranslator.TranslationReceiver() {
                     @Override
-                    public void receiveTranslation(List<String> translations) {
+                    public void receiveTranslation(List<String> translations, AutoTranslator.RETURN_CODES rc) {
                         translationProgressbar.setVisibility(View.INVISIBLE);
-                        if(translations == null || translations.size() == 0){
+                        if(rc == AutoTranslator.RETURN_CODES.NO_NETWORK){
+                            Toast.makeText(getActivity(), getString(R.string.no_network), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        else if(rc == AutoTranslator.RETURN_CODES.ERROR || translations == null || translations.size() == 0){
                             Toast.makeText(getActivity(), getString(R.string.no_translation_found), Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -245,7 +250,7 @@ public class CardFragment extends Fragment {
             }
         });
         //Show next possible translation
-        Button nextTranslation = result.findViewById(R.id.translate_next);
+        ImageButton nextTranslation = result.findViewById(R.id.translate_next);
         nextTranslation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,7 +265,7 @@ public class CardFragment extends Fragment {
             }
         });
         //Show previous translation
-        Button backTranslation = result.findViewById(R.id.translate_back);
+        ImageButton backTranslation = result.findViewById(R.id.translate_back);
         backTranslation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -275,13 +280,26 @@ public class CardFragment extends Fragment {
             }
         });
         //Close translation bar
-        Button translationDone = result.findViewById(R.id.translate_done);
+        ImageButton translationDone = result.findViewById(R.id.translate_done);
         translationDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(translations == null){
                     return;
                 }
+                clearTranslations(getView());
+            }
+        });
+        //Dont translate
+        ImageButton translationDecline = result.findViewById(R.id.translate_decline);
+        translationDecline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(translations == null){
+                    return;
+                }
+                translations.set(translationPos, "");
+                showCurrentTranslation();
                 clearTranslations(getView());
             }
         });

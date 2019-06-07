@@ -82,4 +82,5 @@
     <string name="label_translate_next">weiter</string>
     <string name="label_translate_back">zurück</string>
     <string name="no_translation_found">Keine Übersetzung gefunden</string>
+    <string name="no_network">Keine Internet Verbindung</string>
 </resources>

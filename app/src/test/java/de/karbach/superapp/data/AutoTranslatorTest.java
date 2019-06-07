@@ -22,7 +22,7 @@ public class AutoTranslatorTest {
         final List<String> foundtranslations = new ArrayList<String>();
         AutoTranslator.TranslationReceiver receiver = new AutoTranslator.TranslationReceiver() {
             @Override
-            public void receiveTranslation(List<String> translations) {
+            public void receiveTranslation(List<String> translations, AutoTranslator.RETURN_CODES rc) {
                 foundtranslations.clear();
                 if(translations != null){
                     foundtranslations.addAll(translations);

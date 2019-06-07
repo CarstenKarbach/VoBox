@@ -279,11 +279,11 @@ public class StartActivitiesTest {
         DictionaryManagement dm = DictionaryManagement.getInstance(cardactivity);
         dm.selectDictionary("Englisch");
 
-        Button next = (Button) cardactivity.findViewById(R.id.translate_next);
+        ImageButton next = (ImageButton) cardactivity.findViewById(R.id.translate_next);
         next.performClick();
-        Button back = (Button) cardactivity.findViewById(R.id.translate_back);
+        ImageButton back = (ImageButton) cardactivity.findViewById(R.id.translate_back);
         back.performClick();
-        Button transdone = (Button) cardactivity.findViewById(R.id.translate_done);
+        ImageButton transdone = (ImageButton) cardactivity.findViewById(R.id.translate_done);
         transdone.performClick();
 
         CardFragment cf = (CardFragment) cardactivity.getFragmentManager().findFragmentById(R.id.fragment_container);
@@ -329,6 +329,27 @@ public class StartActivitiesTest {
         }
 
         transdone.performClick();
+
+        //Dont use translation
+        lang2.setText("example");
+        lang2.setFocusableInTouchMode(true);
+        lang2.requestFocus();
+        translate.performClick();
+        Robolectric.flushBackgroundThreadScheduler();
+        assertNotEquals("", lang1.getText().toString());
+        ImageButton donttranslate = (ImageButton) cardactivity.findViewById(R.id.translate_decline);
+        donttranslate.performClick();
+        assertEquals("", lang1.getText().toString());
+        //Dont translate other direction
+        lang1.setText("Beispiel");
+        lang1.setFocusableInTouchMode(true);
+        lang1.requestFocus();
+        translate.performClick();
+        Robolectric.flushBackgroundThreadScheduler();
+        assertNotEquals("", lang2.getText().toString());
+        donttranslate.performClick();
+        assertEquals("", lang2.getText().toString());
+
 
         //No translation
         lang1.setText("lkasldkasolaksdla");
