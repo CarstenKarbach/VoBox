@@ -170,12 +170,15 @@ public class AutoTranslator {
     /**
      * Init background task to run get request and parse for translations.
      * Once translations are found, the receiver is informed. On error null is handed back to the receiver.
+     * This function is only needed for testing. Use shorter version for normal usage, see below.
      * @param text the source to translate
      * @param sourceLanguage the source language, e.g. deutsch
      * @param targetLanguage the target language, e.g. englisch
      * @param receiver translation receiver callback
+     * @param encoding url encoding charset
+     * @param urlPrefix prefix for translation page
      */
-    public void startTranslation(String text, String sourceLanguage, String targetLanguage, TranslationReceiver receiver){
+    public void startTranslation(String text, String sourceLanguage, String targetLanguage, TranslationReceiver receiver, String encoding, String urlPrefix){
         sourceLanguage = sourceLanguage.toLowerCase();
         targetLanguage = targetLanguage.toLowerCase();
         boolean translationIsRight = true;
@@ -186,13 +189,26 @@ public class AutoTranslator {
             translationIsRight = false;
             sideParam = "side=right";
         }
-        String url = "https://dict.leo.org/"+sourceLanguage+"-"+targetLanguage+"/"+text+"?"+sideParam;
+        String url = urlPrefix+sourceLanguage+"-"+targetLanguage+"/"+text+"?"+sideParam;
         try {
-            url = "https://dict.leo.org/" + sourceLanguage + "-" + targetLanguage + "/" + URLEncoder.encode(text, "UTF-8")+"?"+sideParam;
+            url = urlPrefix + sourceLanguage + "-" + targetLanguage + "/" + URLEncoder.encode(text, encoding)+"?"+sideParam;
         }
         catch(UnsupportedEncodingException exception){
         }
+        System.out.println(url);
         RequestTranslationTask task = new RequestTranslationTask(receiver, translationIsRight);
         task.execute(url);
+    }
+
+    /**
+     * Init background task to run get request and parse for translations.
+     * Once translations are found, the receiver is informed. On error null is handed back to the receiver.
+     * @param text the source to translate
+     * @param sourceLanguage the source language, e.g. deutsch
+     * @param targetLanguage the target language, e.g. englisch
+     * @param receiver translation receiver callback
+     */
+    public void startTranslation(String text, String sourceLanguage, String targetLanguage, TranslationReceiver receiver){
+        this.startTranslation(text, sourceLanguage, targetLanguage, receiver, "UTF-8", "https://dict.leo.org/");
     }
 }

@@ -4,6 +4,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowEnvironment;
+import org.robolectric.shadows.ShadowWifiManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,4 +57,19 @@ public class AutoTranslatorTest {
         assertTrue(foundtranslations.isEmpty() );
     }
 
+    @Test
+    public void testExceptions(){
+        AutoTranslator translator = new AutoTranslator();
+        AutoTranslator.TranslationReceiver receiver = new AutoTranslator.TranslationReceiver() {
+            @Override
+            public void receiveTranslation(List<String> translations, AutoTranslator.RETURN_CODES rc) {
+            }
+        };
+        translator.startTranslation("test", "deutsch", "englisch", receiver, "UTUT", "https://dict.leo.org/");
+
+        //Test network connection disabled
+
+        //Malformed url
+        translator.startTranslation("malformed", "deutsch", "englisch", receiver, "UTUT", "file...");
+    }
 }
