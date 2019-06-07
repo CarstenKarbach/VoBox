@@ -195,7 +195,6 @@ public class AutoTranslator {
         }
         catch(UnsupportedEncodingException exception){
         }
-        System.out.println(url);
         RequestTranslationTask task = new RequestTranslationTask(receiver, translationIsRight);
         task.execute(url);
     }
