@@ -96,6 +96,11 @@ public class CardFragment extends Fragment {
      */
     private String translationTargetLanguage=null;
 
+    /**
+     * Backup value for target text field of translation, which is changed during translations
+     */
+    private String backupBeforeTranslation;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,19 +127,23 @@ public class CardFragment extends Fragment {
         lang1Progress.setVisibility(View.INVISIBLE);
         lang2Progress.setVisibility(View.INVISIBLE);
         translationTargetLanguage=null;
+        backupBeforeTranslation = null;
     }
 
     /**
      * Display currently selected translation
      */
-    public void showCurrentTranslation(){
-        View rootView = getView();
+    public void showCurrentTranslation(View rootView){
+        final TableRow translationBar = rootView.findViewById(R.id.translation_bar);
+
         TextView transStats = rootView.findViewById(R.id.found_translations);
         if(translations != null) {
             transStats.setText( (translationPos+1) + "/" + translations.size());
+            translationBar.setVisibility(View.VISIBLE);
         }
         else{
             transStats.setText("0/0");
+            translationBar.setVisibility(View.GONE);
         }
         Dictionary cdict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
         if(cdict != null){
@@ -152,6 +161,28 @@ public class CardFragment extends Fragment {
                 targetField.setText(translations.get(translationPos));
             }
         }
+    }
+
+    /**
+     * Setup translationbar on creation of view
+     */
+    public void initTranslationBar(View rootView){
+        if(translations == null){
+            return;
+        }
+        Dictionary cdict = DictionaryManagement.getInstance(getActivity()).getSelectedDictionary();
+        if(cdict != null){
+            int targetPosition = 1;
+            if(! cdict.getBaseLanguage().equals(translationTargetLanguage)){
+                targetPosition = 2;
+            }
+
+            final TableRow translationBar = rootView.findViewById(R.id.translation_bar);
+            final LinearLayout cardFrame = rootView.findViewById(R.id.cardframe);
+            cardFrame.removeView(translationBar);
+            cardFrame.addView(translationBar, targetPosition);
+        }
+        showCurrentTranslation(rootView);
     }
 
     @Nullable
@@ -189,7 +220,7 @@ public class CardFragment extends Fragment {
         final TableRow translationBar = result.findViewById(R.id.translation_bar);
         //Needed to position the translation bar
         final LinearLayout cardFrame = result.findViewById(R.id.cardframe);
-        clearTranslations(result);
+        initTranslationBar(result);
 
         translate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +235,7 @@ public class CardFragment extends Fragment {
                 TextView ctarget = lang2;
                 ProgressBar cprogress = lang2Progress;
                 int ctranslationBarPosition = 2;
+                backupBeforeTranslation = lang2.getText().toString();
                 if(cdict != null){
                     sourceLang = cdict.getBaseLanguage();
                     targetLang = cdict.getLanguage();
@@ -215,6 +247,7 @@ public class CardFragment extends Fragment {
                     ctarget = lang1;
                     cprogress = lang1Progress;
                     ctranslationBarPosition = 1;
+                    backupBeforeTranslation = lang1.getText().toString();
                 }
                 //Text field, where new translations are placed
                 final TextView targetForTranslation = ctarget;
@@ -244,7 +277,7 @@ public class CardFragment extends Fragment {
                         cardFrame.removeView(translationBar);
                         cardFrame.addView(translationBar, translationBarPosition);
                         translationBar.setVisibility(View.VISIBLE);
-                        showCurrentTranslation();
+                        showCurrentTranslation(getView());
                     }
                 });
             }
@@ -261,7 +294,7 @@ public class CardFragment extends Fragment {
                 if(translationPos >= translations.size()){
                     translationPos = 0;
                 }
-                showCurrentTranslation();
+                showCurrentTranslation(getView());
             }
         });
         //Show previous translation
@@ -276,7 +309,7 @@ public class CardFragment extends Fragment {
                 if(translationPos < 0){
                     translationPos = translations.size()-1;
                 }
-                showCurrentTranslation();
+                showCurrentTranslation(getView());
             }
         });
         //Close translation bar
@@ -298,8 +331,8 @@ public class CardFragment extends Fragment {
                 if(translations == null){
                     return;
                 }
-                translations.set(translationPos, "");
-                showCurrentTranslation();
+                translations.set(translationPos, backupBeforeTranslation);
+                showCurrentTranslation(getView());
                 clearTranslations(getView());
             }
         });
@@ -398,9 +431,7 @@ public class CardFragment extends Fragment {
                         getActivity().setResult(Activity.RESULT_OK, result);
                     }
 
-                    translationBar.setVisibility(View.GONE);
-                    translations = null;
-                    translationPos = -1;
+                    clearTranslations(getView());
                 }
             });
         }

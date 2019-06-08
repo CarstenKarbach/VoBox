@@ -97,6 +97,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_horizontal"
                 android:id="@+id/translation_bar"
+                android:visibility="gone"
                 >
                 <TextView
                     android:layout_width="wrap_content"

@@ -274,7 +274,8 @@ public class StartActivitiesTest {
     public void translationInCardFragment(){
         StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
 
-        CardActivity cardactivity = Robolectric.buildActivity(CardActivity.class).setup().get();
+        ActivityController<CardActivity> controller = Robolectric.buildActivity(CardActivity.class).setup();
+        CardActivity cardactivity = controller.get();
 
         DictionaryManagement dm = DictionaryManagement.getInstance(cardactivity);
         dm.selectDictionary("Englisch");
@@ -287,7 +288,7 @@ public class StartActivitiesTest {
         transdone.performClick();
 
         CardFragment cf = (CardFragment) cardactivity.getFragmentManager().findFragmentById(R.id.fragment_container);
-        cf.showCurrentTranslation();
+        cf.showCurrentTranslation(cf.getView());
 
         final TextView lang1 = (TextView) cardactivity.findViewById(R.id.lang1_text);
         lang1.setText("");
@@ -334,21 +335,23 @@ public class StartActivitiesTest {
         lang2.setText("example");
         lang2.setFocusableInTouchMode(true);
         lang2.requestFocus();
+        String old = lang1.getText().toString();
         translate.performClick();
         Robolectric.flushBackgroundThreadScheduler();
         assertNotEquals("", lang1.getText().toString());
         ImageButton donttranslate = (ImageButton) cardactivity.findViewById(R.id.translate_decline);
         donttranslate.performClick();
-        assertEquals("", lang1.getText().toString());
+        assertEquals(old, lang1.getText().toString());
         //Dont translate other direction
         lang1.setText("Beispiel");
         lang1.setFocusableInTouchMode(true);
         lang1.requestFocus();
+        old = lang2.getText().toString();
         translate.performClick();
         Robolectric.flushBackgroundThreadScheduler();
         assertNotEquals("", lang2.getText().toString());
         donttranslate.performClick();
-        assertEquals("", lang2.getText().toString());
+        assertEquals(old, lang2.getText().toString());
 
 
         //No translation
@@ -360,6 +363,15 @@ public class StartActivitiesTest {
         assertNull(ShadowToast.getLatestToast());
         translate.performClick();
         assertNotNull(ShadowToast.getLatestToast());
+
+        //Test init with existing translations
+        lang1.setText("Rotation");
+        lang1.setFocusableInTouchMode(true);
+        lang1.requestFocus();
+        translate.performClick();
+        Robolectric.flushBackgroundThreadScheduler();
+
+        cf.initTranslationBar(cf.getView());
     }
 
     @Test
