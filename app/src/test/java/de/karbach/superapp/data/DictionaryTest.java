@@ -17,18 +17,21 @@
  */
 package de.karbach.superapp.data;
 
+import android.net.Uri;
 import android.os.Environment;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowContentResolver;
 import org.robolectric.shadows.ShadowEnvironment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,6 +157,8 @@ public class DictionaryTest {
 
         String errorLoad = activity.loadRawFile(R.array.default_languages_dictionary_samples);
         assertNull(errorLoad);
+
+        Dictionary moredict = Dictionary.loadImported(";;\n", true);
     }
 
     @Test
@@ -247,6 +252,11 @@ public class DictionaryTest {
         dict.setLanguage("Französisch");
         dict.sanitizeLanguagesToDiffer();
         assertNotEquals(dict.getBaseLanguage(), dict.getLanguage());
+
+        dict.setBaseLanguage(null);
+        dict.setLanguage(null);
+        dict.sanitizeLanguagesToDiffer();
+        assertNotEquals(dict.getBaseLanguage(), dict.getLanguage());
     }
 
     @Test
@@ -264,4 +274,23 @@ public class DictionaryTest {
         assertNotEquals("Abc", dict.getBaseLanguage());
         assertNotEquals("DEF", dict.getLanguage());
     }
+
+    @Test
+    public void loadFromInvalidUri(){
+        StarterActivity activity = Robolectric.buildActivity(StarterActivity.class).setup().get();
+
+        Uri uri = Uri.parse("http://www.google.de");
+        Dictionary result = Dictionary.loadFromUri(uri, true, null);
+        assertNull(result);
+
+        try {
+            uri = Uri.parse("content:das ist ein test");
+            result = Dictionary.loadFromUri(uri, true, activity);
+            assertNull(result);
+        }
+        catch(UnsupportedOperationException exc){
+        }
+    }
+
+
 }
