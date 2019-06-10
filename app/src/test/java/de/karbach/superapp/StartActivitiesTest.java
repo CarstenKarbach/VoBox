@@ -289,6 +289,7 @@ public class StartActivitiesTest {
 
         CardFragment cf = (CardFragment) cardactivity.getFragmentManager().findFragmentById(R.id.fragment_container);
         cf.showCurrentTranslation(cf.getView());
+        cf.startTranslationForward("test", "englisch", "deutsch");
 
         final TextView lang1 = (TextView) cardactivity.findViewById(R.id.lang1_text);
         lang1.setText("");

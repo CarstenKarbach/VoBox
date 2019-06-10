@@ -168,6 +168,39 @@ public class AutoTranslator {
     }
 
     /**
+     * Generate URL to download translation from.
+     * @param text the source to translate
+     * @param sourceLanguage the source language, e.g. deutsch
+     * @param targetLanguage the target language, e.g. englisch
+     * @param encoding url encoding charset
+     * @param urlPrefix prefix for translation page
+     * @return URL to forward to to show translation
+     */
+    public String getUrlForTranslation(String text, String sourceLanguage, String targetLanguage, String encoding, String urlPrefix){
+        if(encoding == null){
+            encoding = "UTF-8";
+        }
+        if(urlPrefix == null){
+            urlPrefix = "https://dict.leo.org/";
+        }
+        sourceLanguage = sourceLanguage.toLowerCase();
+        targetLanguage = targetLanguage.toLowerCase();
+        String sideParam = "side=left";
+        if(sourceLanguage.equals("deutsch")){//
+            sourceLanguage = targetLanguage;
+            targetLanguage = "deutsch";
+            sideParam = "side=right";
+        }
+        String url = urlPrefix+sourceLanguage+"-"+targetLanguage+"/"+text+"?"+sideParam;
+        try {
+            url = urlPrefix + sourceLanguage + "-" + targetLanguage + "/" + URLEncoder.encode(text, encoding)+"?"+sideParam;
+        }
+        catch(UnsupportedEncodingException exception){
+        }
+        return url;
+    }
+
+    /**
      * Init background task to run get request and parse for translations.
      * Once translations are found, the receiver is informed. On error null is handed back to the receiver.
      * This function is only needed for testing. Use shorter version for normal usage, see below.
@@ -179,21 +212,10 @@ public class AutoTranslator {
      * @param urlPrefix prefix for translation page
      */
     public void startTranslation(String text, String sourceLanguage, String targetLanguage, TranslationReceiver receiver, String encoding, String urlPrefix){
-        sourceLanguage = sourceLanguage.toLowerCase();
-        targetLanguage = targetLanguage.toLowerCase();
+        String url = getUrlForTranslation(text, sourceLanguage, targetLanguage, encoding, urlPrefix);
         boolean translationIsRight = true;
-        String sideParam = "side=left";
-        if(sourceLanguage.equals("deutsch")){//
-            sourceLanguage = targetLanguage;
-            targetLanguage = "deutsch";
+        if(url.indexOf("side=right") != -1){
             translationIsRight = false;
-            sideParam = "side=right";
-        }
-        String url = urlPrefix+sourceLanguage+"-"+targetLanguage+"/"+text+"?"+sideParam;
-        try {
-            url = urlPrefix + sourceLanguage + "-" + targetLanguage + "/" + URLEncoder.encode(text, encoding)+"?"+sideParam;
-        }
-        catch(UnsupportedEncodingException exception){
         }
         RequestTranslationTask task = new RequestTranslationTask(receiver, translationIsRight);
         task.execute(url);

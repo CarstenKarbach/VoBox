@@ -72,4 +72,16 @@ public class AutoTranslatorTest {
         //Malformed url
         translator.startTranslation("malformed", "deutsch", "englisch", receiver, "UTUT", "file...");
     }
+
+    @Test
+    public void getTranslationURLTest(){
+        AutoTranslator translator = new AutoTranslator();
+        String url = translator.getUrlForTranslation("test", "englisch", "deutsch", null, null);
+        assertNotNull(url);
+
+        url = translator.getUrlForTranslation("kohle", "deutsch", "englisch", null, null);
+        assertNotNull(url);
+
+        System.out.println(url);
+    }
 }

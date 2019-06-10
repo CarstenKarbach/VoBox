@@ -21,6 +21,7 @@ package de.karbach.superapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -185,6 +186,19 @@ public class CardFragment extends Fragment {
         showCurrentTranslation(rootView);
     }
 
+    /**
+     * Start intent for translation isntead of translating yourself
+     */
+    public void startTranslationForward(String text, String sourceLang, String targetLang){
+        AutoTranslator translator = new AutoTranslator();
+        String url = translator.getUrlForTranslation(text, sourceLang, targetLang, null, null);
+
+        Intent linkIntent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(url);
+        linkIntent.setData(uri);
+        startActivity(linkIntent);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -257,6 +271,10 @@ public class CardFragment extends Fragment {
                 final int translationBarPosition = ctranslationBarPosition;
 
                 translationTargetLanguage = targetLang;
+
+                //Translation via intent
+                //startTranslationForward(word, sourceLang, targetLang);
+
                 translationProgressbar.setVisibility(View.VISIBLE);
                 //Start asynch task and come back by callback
                 translator.startTranslation(word, sourceLang, targetLang, new AutoTranslator.TranslationReceiver() {
