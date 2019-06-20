@@ -3,12 +3,14 @@ package de.karbach.superapp.data;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,10 +20,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -78,9 +82,19 @@ public class AutoTranslator {
          * @return list of parsed translations
          */
         private List<String> readTranslations(InputStream in){
+            Scanner scanner = new Scanner(in);
+            String inputString = "";
+            while(scanner.hasNext()){
+                inputString = inputString+scanner.nextLine()+"\n";
+            }
+            if(inputString.indexOf("<html") == -1 || inputString.indexOf("</html>") == -1) {
+                inputString = "<html>\n" + inputString + "\n</html>";
+            }
+            InputStream stringStream = new ByteArrayInputStream(inputString.getBytes());
+
             List<String> result = new ArrayList<String>();
             // create an InputSource object from /res/raw
-            InputSource inputSrc = new InputSource(new BufferedReader(new InputStreamReader(in)));
+            InputSource inputSrc = new InputSource(new BufferedReader(new InputStreamReader(stringStream)));
             // query XPath instance, this is the parser
             XPath xpath = XPathFactory.newInstance().newXPath();
             // specify the xpath expression
@@ -91,6 +105,10 @@ public class AutoTranslator {
                 nodes = (NodeList) xpath.evaluate(expression, inputSrc, XPathConstants.NODESET);
             }
             catch(XPathExpressionException exception){
+                rc = RETURN_CODES.ERROR;
+                return null;
+            }
+            catch(DOMException domEx){
                 rc = RETURN_CODES.ERROR;
                 return null;
             }
