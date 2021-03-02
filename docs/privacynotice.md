@@ -3,10 +3,10 @@
 <h2 id="dsg-general-controller">Verantwortlicher</h2>
 <p>
 Carsten Karbach<br/>
-Wilhelmstraße 8<br/>  
-52428 Jülich<br/>
+Kleiner Griechenmarkt 79<br/>  
+50676 Köln<br/>
 <br/>
-Telefon: +491781432564<br/>  
+Telefon: +4917669631992<br/>  
 E-Mail: carstenkarbach@gmx.de<br/>  
 </p>
 <br/>
